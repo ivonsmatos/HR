@@ -1,0 +1,245 @@
+<!--
+Helix Secretary - Chat Widget Component (HTMX + Tailwind)
+Arquivo: apps/assistant/templates/assistant/partials/chat_bubble.html
+
+Design System (Onyx Palette):
+- Container: #00080D (Black) + border #274B59 (Teal)
+- User Message: bg-#274B59 text-#D0E5F2
+- Assistant Message: bg-#122E40 text-#FFFFFF
+- Loading Indicator: Animated spinner
+
+HTMX Integration:
+- hx-post="/api/chat/message/" para enviar mensagens
+- hx-swap="innerHTML" para atualizar conversa
+- hx-indicator="#loading" para mostrar loading state
+-->
+
+<div
+  id="helix-chat-widget"
+  class="fixed bottom-4 right-4 w-96 h-[600px] bg-[#00080D] rounded-lg shadow-2xl border-2 border-[#274B59] flex flex-col overflow-hidden"
+>
+  <!-- Header -->
+  <div
+    class="bg-gradient-to-r from-[#122E40] to-[#274B59] text-[#D0E5F2] px-4 py-3 flex justify-between items-center"
+  >
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path
+          d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5z"
+        ></path>
+      </svg>
+      <h3 class="font-semibold">Helix Secretary</h3>
+    </div>
+    <button
+      onclick="document.getElementById('helix-chat-widget').classList.add('hidden')"
+      class="text-[#D0E5F2] hover:text-white transition"
+    >
+      ✕
+    </button>
+  </div>
+
+  <!-- Messages Container -->
+  <div
+    id="chat-messages"
+    class="flex-1 overflow-y-auto p-4 space-y-4 bg-[#00080D]"
+    hx-swap="beforeend"
+  >
+    <!-- Welcome Message -->
+    <div class="flex gap-2 mb-4">
+      <div class="flex-shrink-0">
+        <span
+          class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-[#274B59]"
+        >
+          <span class="text-[#D0E5F2] text-sm">H</span>
+        </span>
+      </div>
+      <div class="bg-[#122E40] text-[#D0E5F2] rounded-lg p-3 max-w-xs">
+        <p class="text-sm">
+          Olá! Sou Helix, seu secretário executivo. Como posso ajudá-lo?
+        </p>
+        <span class="text-xs text-[#274B59] mt-1 block"
+          >{{ now|date:"H:i" }}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Indicator (Hidden by default) -->
+  <div
+    id="chat-loading"
+    class="hidden px-4 py-2 flex items-center gap-2"
+    hx-indicator="#chat-loading"
+  >
+    <div class="flex gap-1">
+      <div
+        class="w-2 h-2 bg-[#274B59] rounded-full animate-bounce"
+        style="animation-delay: 0s"
+      ></div>
+      <div
+        class="w-2 h-2 bg-[#274B59] rounded-full animate-bounce"
+        style="animation-delay: 0.2s"
+      ></div>
+      <div
+        class="w-2 h-2 bg-[#274B59] rounded-full animate-bounce"
+        style="animation-delay: 0.4s"
+      ></div>
+    </div>
+    <span class="text-xs text-[#D0E5F2]">Helix is typing...</span>
+  </div>
+
+  <!-- Input Form -->
+  <div class="bg-[#122E40] border-t border-[#274B59] px-4 py-3">
+    <form
+      hx-post="/api/chat/message/"
+      hx-target="#chat-messages"
+      hx-swap="innerHTML"
+      hx-on::after-request="
+        if (event.detail.xhr.status === 200) {
+          document.getElementById('chat-input').value = '';
+          document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+        }
+      "
+      class="flex gap-2"
+    >
+      {% csrf_token %}
+
+      <!-- Hidden conversation ID -->
+      <input
+        type="hidden"
+        name="conversation_id"
+        value="{{ conversation.id }}"
+      />
+
+      <!-- Message Input -->
+      <input
+        id="chat-input"
+        type="text"
+        name="message"
+        placeholder="Digite sua pergunta..."
+        class="flex-1 bg-[#00080D] text-[#D0E5F2] border border-[#274B59] rounded px-3 py-2 text-sm placeholder-[#274B59] focus:outline-none focus:border-[#D0E5F2] transition"
+        required
+        autocomplete="off"
+      />
+
+      <!-- Send Button -->
+      <button
+        type="submit"
+        class="bg-[#274B59] hover:bg-[#1F3A4A] text-[#D0E5F2] px-4 py-2 rounded font-medium transition"
+        hx-indicator="#chat-loading"
+      >
+        ↑
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Chat Message Template (rendered via HTMX) -->
+<template id="user-message-template">
+  <div class="flex gap-2 justify-end">
+    <div class="bg-[#274B59] text-[#D0E5F2] rounded-lg p-3 max-w-xs">
+      <p class="text-sm">{{ message }}</p>
+      <span class="text-xs text-[#9FBFC9] mt-1 block">{{ timestamp }}</span>
+    </div>
+  </div>
+</template>
+
+<template id="assistant-message-template">
+  <div class="flex gap-2">
+    <div class="flex-shrink-0">
+      <span
+        class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-[#274B59]"
+      >
+        <span class="text-[#D0E5F2] text-sm">H</span>
+      </span>
+    </div>
+    <div class="bg-[#122E40] text-[#D0E5F2] rounded-lg p-3 max-w-xs">
+      <p class="text-sm">{{ response }}</p>
+
+      <!-- Citations (if available) -->
+      {% if citations %}
+      <div class="mt-2 text-xs border-t border-[#274B59] pt-2 text-[#9FBFC9]">
+        <p class="font-semibold mb-1">Fontes:</p>
+        <ul class="space-y-1">
+          {% for citation in citations %}
+          <li>
+            •
+            <a href="#" class="text-[#D0E5F2] hover:underline"
+              >{{ citation.title }}</a
+            >
+            (Seção {{ citation.chunk_index }})
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <span class="text-xs text-[#274B59] mt-1 block">{{ timestamp }}</span>
+    </div>
+  </div>
+</template>
+
+<style>
+  /* Custom scrollbar for messages */
+  #chat-messages::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  #chat-messages::-webkit-scrollbar-track {
+    background: #00080d;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb {
+    background: #274b59;
+    border-radius: 3px;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #1f3a4a;
+  }
+
+  /* Focus state for accessibility */
+  #chat-input:focus {
+    box-shadow: 0 0 0 2px rgba(39, 75, 89, 0.2);
+  }
+</style>
+
+<script>
+  /**
+   * Chat Widget Controller (HTMX)
+   *
+   * Handles:
+   * - Message rendering
+   * - Auto-scroll to latest
+   * - Loading states
+   * - Error handling
+   */
+
+  document.addEventListener("htmx:afterSwap", function (event) {
+    if (event.detail.target.id === "chat-messages") {
+      // Auto-scroll to bottom
+      const messagesContainer = document.getElementById("chat-messages");
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      // Hide loading indicator
+      document.getElementById("chat-loading").classList.add("hidden");
+    }
+  });
+
+  document.addEventListener("htmx:beforeRequest", function (event) {
+    if (event.detail.target.closest("form")) {
+      // Show loading indicator
+      document.getElementById("chat-loading").classList.remove("hidden");
+    }
+  });
+
+  document.addEventListener("htmx:responseError", function (event) {
+    console.error("Chat error:", event.detail);
+    document.getElementById("chat-loading").classList.add("hidden");
+
+    // Show error message
+    const errorMsg = document.createElement("div");
+    errorMsg.className = "bg-red-900 text-red-200 rounded p-3 text-sm";
+    errorMsg.textContent = "Erro ao enviar mensagem. Tente novamente.";
+    document.getElementById("chat-messages").appendChild(errorMsg);
+  });
+</script>

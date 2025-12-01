@@ -1,0 +1,224 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Helix - Secretário
+Executivo{% endblock %} {% block content %}
+<div class="bg-[#00080D] min-h-screen text-[#D0E5F2]">
+  <div class="container mx-auto px-4 py-8">
+    {# Header #}
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-[#D0E5F2] mb-2">
+        Helix - Secretário Executivo
+      </h1>
+      <p class="text-[#D0E5F2] opacity-70">
+        Assistente inteligente local com base em conhecimento
+      </p>
+    </div>
+
+    {# Main Content Grid #}
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      {# Sidebar - Conversations #}
+      <div class="lg:col-span-1">
+        <div class="bg-[#122E40] rounded-lg border border-[#274B59] p-4">
+          {# New Conversation Button #}
+          <button
+            hx-post="{% url 'assistant:create_conversation' %}"
+            hx-target="#conversations-list"
+            hx-swap="beforeend"
+            class="w-full bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-4 py-2 rounded mb-4 transition"
+          >
+            + Nova Conversa
+          </button>
+
+          {# Conversations List #}
+          <div id="conversations-list" class="space-y-2">
+            <h3 class="text-sm font-semibold text-[#274B59] mb-3">
+              Conversas Recentes
+            </h3>
+
+            {% for conversation in conversations %}
+            <a
+              href="#"
+              hx-get="{% url 'assistant:chat_interface' %}"
+              hx-vals='{"conversation_id": {{ conversation.id }}}'
+              hx-target="#chat-window"
+              hx-swap="innerHTML"
+              class="block p-2 rounded hover:bg-[#274B59] transition text-sm truncate {% if conversation == active_conversation %}bg-[#274B59]{% endif %}"
+            >
+              {{ conversation.title }}
+              <span class="text-xs opacity-70 block">
+                {{ conversation.created_at|date:"d/m H:i" }}
+              </span>
+            </a>
+            {% empty %}
+            <p class="text-xs opacity-50">Nenhuma conversa ainda</p>
+            {% endfor %}
+          </div>
+
+          {# Health Status #}
+          <div class="mt-6 pt-4 border-t border-[#274B59]">
+            <p class="text-xs font-semibold mb-2">Status do Sistema</p>
+            {% if helix_status.ollama_running %}
+            <p class="text-xs text-green-400">✓ Ollama: Online</p>
+            {% else %}
+            <p class="text-xs text-red-400">✗ Ollama: Offline</p>
+            {% endif %} {% if helix_status.models_available %}
+            <p class="text-xs text-green-400">✓ Modelos carregados</p>
+            {% else %}
+            <p class="text-xs text-yellow-400">⚠ Modelos indisponíveis</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {# Main Chat Area #}
+      <div class="lg:col-span-3">
+        <div
+          id="chat-window"
+          class="bg-[#122E40] rounded-lg border border-[#274B59] p-6 min-h-96"
+        >
+          {# Messages Container #}
+          <div
+            id="chat-messages"
+            class="space-y-4 mb-6 max-h-96 overflow-y-auto"
+            hx-get="{% url 'assistant:chat_history' active_conversation.id %}"
+            hx-trigger="load"
+            hx-swap="innerHTML"
+          >
+            {# Welcome message #}
+            <div class="flex justify-start mb-4">
+              <div class="flex gap-3">
+                <div
+                  class="w-8 h-8 rounded-full bg-[#274B59] text-[#D0E5F2] flex items-center justify-center text-xs font-bold"
+                >
+                  H
+                </div>
+                <div
+                  class="bg-[#274B59] text-[#D0E5F2] rounded-lg px-4 py-3 max-w-md"
+                >
+                  <p class="text-sm">
+                    Olá! Eu sou o Helix, seu secretário executivo. Como posso
+                    ajudá-lo hoje?
+                  </p>
+                  <span class="text-xs text-[#D0E5F2] opacity-70 mt-2 block"
+                    >{{ now|date:"H:i" }}</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            {# Chat history loads here #} {% for message in history %} {%
+            include 'assistant/partials/messages.html' with message=message %}
+            {% endfor %}
+          </div>
+
+          {# Input Form #}
+          <form
+            hx-post="{% url 'assistant:chat_message' %}"
+            hx-target="#chat-messages"
+            hx-swap="innerHTML swap:1s"
+            hx-indicator="#chat-loading"
+            class="flex gap-2"
+          >
+            {% csrf_token %}
+            <input
+              type="hidden"
+              name="conversation_id"
+              value="{{ active_conversation.id }}"
+            />
+
+            <input
+              type="text"
+              name="message"
+              placeholder="Digite sua mensagem aqui..."
+              class="flex-1 bg-[#00080D] text-[#D0E5F2] border border-[#274B59] rounded px-4 py-2 placeholder-[#D0E5F2] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[#274B59]"
+              autocomplete="off"
+            />
+
+            <button
+              type="submit"
+              class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-2 rounded transition font-semibold"
+            >
+              Enviar
+            </button>
+          </form>
+
+          {# Loading Indicator #}
+          <div id="chat-loading" class="htmx-indicator flex justify-start mt-4">
+            <div
+              class="bg-[#274B59] text-[#D0E5F2] rounded-lg px-4 py-2 flex items-center gap-2"
+            >
+              <div class="flex gap-1">
+                <span
+                  class="h-2 w-2 bg-[#D0E5F2] rounded-full animate-bounce"
+                  style="animation-delay: 0s"
+                ></span>
+                <span
+                  class="h-2 w-2 bg-[#D0E5F2] rounded-full animate-bounce"
+                  style="animation-delay: 0.2s"
+                ></span>
+                <span
+                  class="h-2 w-2 bg-[#D0E5F2] rounded-full animate-bounce"
+                  style="animation-delay: 0.4s"
+                ></span>
+              </div>
+              <span class="text-xs">Processando...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# Document Management Section #}
+    <div class="mt-8 bg-[#122E40] rounded-lg border border-[#274B59] p-6">
+      <h2 class="text-xl font-bold text-[#D0E5F2] mb-4">
+        Base de Conhecimento
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {# Ingestion Button #}
+        <button
+          hx-post="{% url 'assistant:ingest_documents' %}"
+          hx-target="#ingestion-result"
+          hx-swap="innerHTML"
+          class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-3 rounded font-semibold transition"
+        >
+          📄 Importar Documentos
+        </button>
+
+        {# Documents List Button #}
+        <button
+          hx-get="{% url 'assistant:list_documents' %}"
+          hx-target="#documents-list"
+          hx-swap="innerHTML"
+          class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-3 rounded font-semibold transition"
+        >
+          📚 Ver Documentos
+        </button>
+      </div>
+
+      {# Ingestion Result #}
+      <div id="ingestion-result" class="mt-4"></div>
+
+      {# Documents List #}
+      <div id="documents-list" class="mt-4"></div>
+    </div>
+  </div>
+</div>
+
+{# Auto-scroll script #}
+<script>
+  document.body.addEventListener('htmx:afterSwap', function(event) {
+    if (event.detail.target.id === 'chat-messages') {
+      const messagesDiv = document.getElementById('chat-messages');
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  });
+
+  {# Focus input after message send #}
+  document.body.addEventListener('htmx:afterRequest', function(event) {
+    if (event.detail.xhr.status < 400) {
+      const input = document.querySelector('input[name="message"]');
+      if (input) input.value = '';
+      input?.focus();
+    }
+  });
+</script>
+{% endblock %}

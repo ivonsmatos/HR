@@ -260,5 +260,68 @@
         return response.json();
       };
     </script>
+
+    <!-- Helix Chat Widget Injection (FASE D) -->
+    {% if user.is_authenticated and helix.status %}
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <!-- Chat Widget Container -->
+    <div id="helix-chat-widget">
+      {% include "assistant/partials/chat_bubble.html" with
+      conversation=helix.current_conversation
+      ollama_available=helix.ollama_available %}
+    </div>
+
+    <!-- Widget Styles -->
+    <style>
+      /* Helix Chat Widget Global Styles */
+      #helix-chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      /* Smooth animations */
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      #helix-chat-widget {
+        animation: slideIn 0.3s ease-out;
+      }
+
+      /* HTMX Loading States */
+      .htmx-settling .htmx-added.htmx-added {
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+      }
+
+      .htmx-added.htmx-added {
+        opacity: 1;
+      }
+
+      .htmx-indicator {
+        display: none;
+      }
+
+      .htmx-request .htmx-indicator {
+        display: block;
+      }
+
+      .htmx-request.htmx-settling .htmx-indicator {
+        display: none;
+      }
+    </style>
+    {% endif %}
   </body>
 </html>
