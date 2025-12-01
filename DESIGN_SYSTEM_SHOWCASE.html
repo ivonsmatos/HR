@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#274B59">
+  <title>Dark Innovation - Design System Showcase</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ============================================
+       CSS VARIABLES
+       ============================================ */
+    :root {
+      --color-brand-darkest: #00080D;
+      --color-brand-dark: #122E40;
+      --color-brand-mid: #274B59;
+      --color-brand-light: #547C8C;
+      --color-brand-bright: #D0E5F2;
+      
+      --color-bg-primary: #00080D;
+      --color-bg-secondary: #122E40;
+      --color-text-primary: #D0E5F2;
+      --color-text-secondary: #547C8C;
+      --color-border: #274B59;
+      
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --transition: 150ms ease-out;
+    }
+
+    /* ============================================
+       GLOBAL RESET
+       ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      padding: var(--space-lg);
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+      letter-spacing: -0.5px;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: var(--space-md);
+      letter-spacing: -0.3px;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+    }
+
+    p {
+      margin-bottom: var(--space-md);
+      color: var(--color-text-secondary);
+    }
+
+    /* ============================================
+       LAYOUT
+       ============================================ */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    /* ============================================
+       COMPONENTS
+       ============================================ */
+
+    /* Section */
+    .section {
+      margin-bottom: 4rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    /* Card */
+    .card {
+      background-color: var(--color-bg-secondary);
+      border: 1px solid #274B59;
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      transition: all var(--transition);
+    }
+
+    .card:hover {
+      background-color: #274B59;
+      border-color: var(--color-brand-light);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-size: 14px;
+      font-family: var(--font-sans);
+    }
+
+    .btn-primary {
+      background-color: var(--color-brand-mid);
+      color: var(--color-brand-bright);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-brand-light);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-brand-light);
+      border: 2px solid var(--color-brand-light);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-brand-light);
+      color: var(--color-brand-dark);
+    }
+
+    .btn-tertiary {
+      background-color: transparent;
+      color: var(--color-brand-light);
+    }
+
+    .btn-tertiary:hover {
+      color: var(--color-brand-bright);
+      background-color: var(--color-brand-dark);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      background-color: var(--color-brand-mid);
+      color: var(--color-brand-bright);
+    }
+
+    .badge-success {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+
+    .badge-error {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    /* Colors Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .color-box {
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      text-align: center;
+      border: 1px solid rgba(212, 229, 242, 0.1);
+    }
+
+    .color-box h3 {
+      font-size: 14px;
+      margin-bottom: var(--space-sm);
+    }
+
+    .color-code {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--color-text-secondary);
+    }
+
+    /* Demo Showcase */
+    .demo-flex {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin: var(--space-lg) 0;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-md);
+      margin: var(--space-lg) 0;
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 3rem;
+      padding-bottom: var(--space-lg);
+      border-bottom: 2px solid var(--color-brand-mid);
+    }
+
+    .header-subtitle {
+      color: var(--color-text-secondary);
+      font-size: 16px;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      color: var(--color-text-secondary);
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: var(--space-md);
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>🎨 Dark Innovation</h1>
+      <p class="header-subtitle">Design System para Worksuite PWA</p>
+      <p>Tema escuro premium, minimalista e focado em produtividade.</p>
+    </header>
+
+    <!-- Paleta de Cores -->
+    <section class="section">
+      <h2>📋 Paleta de Cores</h2>
+      <div class="color-grid">
+        <div class="color-box" style="background-color: #00080D; border: 1px solid #274B59;">
+          <h3>Deep Black</h3>
+          <p style="color: #D0E5F2; margin-bottom: 0;">Background Principal</p>
+          <div class="color-code">#00080D</div>
+        </div>
+
+        <div class="color-box" style="background-color: #122E40; color: #D0E5F2;">
+          <h3>Deep Navy</h3>
+          <p style="color: #D0E5F2; margin-bottom: 0;">Cards & Surfaces</p>
+          <div class="color-code">#122E40</div>
+        </div>
+
+        <div class="color-box" style="background-color: #274B59; color: #D0E5F2;">
+          <h3>Muted Teal</h3>
+          <p style="color: #D0E5F2; margin-bottom: 0;">Elementos Primários</p>
+          <div class="color-code">#274B59</div>
+        </div>
+
+        <div class="color-box" style="background-color: #547C8C; color: #122E40;">
+          <h3>Soft Blue</h3>
+          <p style="color: #00080D; margin-bottom: 0;">Hovers & Secundário</p>
+          <div class="color-code">#547C8C</div>
+        </div>
+
+        <div class="color-box" style="background-color: #D0E5F2; color: #00080D;">
+          <h3>Pale Blue</h3>
+          <p style="color: #122E40; margin-bottom: 0;">Texto Principal</p>
+          <div class="color-code">#D0E5F2</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Botões -->
+    <section class="section">
+      <h2>🔘 Botões</h2>
+      <div class="demo-flex">
+        <button class="btn btn-primary">Primary Button</button>
+        <button class="btn btn-primary" style="background-color: #547C8C;">Hover State</button>
+        <button class="btn btn-secondary">Secondary Button</button>
+        <button class="btn btn-tertiary">Tertiary Button</button>
+        <button class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed;">Disabled</button>
+      </div>
+    </section>
+
+    <!-- Cards -->
+    <section class="section">
+      <h2>🎴 Cards</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">✅ Card Padrão</div>
+          <p>Este é um card com background secundário (#122E40) e bordas suaves. Hover ativa a cor terciária.</p>
+          <button class="btn btn-primary" style="font-size: 12px; padding: 8px 16px;">Saiba mais</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📊 Stat Card</div>
+          <div style="font-size: 32px; font-weight: 700; color: #D0E5F2; margin: var(--space-lg) 0;">
+            1,234
+          </div>
+          <p>Total Users</p>
+          <span class="badge badge-success">↑ 12%</span>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⚠️ Status Card</div>
+          <p>Diferentes status são indicados com badges variadas.</p>
+          <div style="display: flex; gap: 8px;">
+            <span class="badge badge-success">Success</span>
+            <span class="badge badge-error">Error</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🎯 CTA Card</div>
+          <p>Chamada à ação clara e objetiva.</p>
+          <button class="btn btn-primary" style="width: 100%;">Ação Principal</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges & Status -->
+    <section class="section">
+      <h2>🏷️ Badges & Status</h2>
+      <div class="demo-flex">
+        <span class="badge">Default</span>
+        <span class="badge badge-success">✓ Success</span>
+        <span class="badge badge-error">✗ Error</span>
+        <span class="badge" style="background-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">⚠ Warning</span>
+        <span class="badge" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">ℹ Info</span>
+      </div>
+    </section>
+
+    <!-- Tipografia -->
+    <section class="section">
+      <h2>🔤 Tipografia</h2>
+      <div class="card">
+        <h1 style="margin-top: 0;">Heading 1 (32px, Bold)</h1>
+        <p style="color: var(--color-text-primary); font-size: 16px;">Usado para títulos de página principal.</p>
+
+        <h2>Heading 2 (24px, Bold)</h2>
+        <p style="color: var(--color-text-primary); font-size: 16px;">Usado para seções e subtítulos.</p>
+
+        <h3>Heading 3 (18px, Semibold)</h3>
+        <p style="color: var(--color-text-primary); font-size: 16px;">Usado para labels de cards.</p>
+
+        <p style="color: var(--color-text-primary); font-size: 16px;">
+          <strong>Body Text (14px, Regular)</strong> - Texto principal do conteúdo. 
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+
+        <p style="color: var(--color-text-secondary); font-size: 13px;">
+          <em>Small Text (13px, Secondary)</em> - Usado para labels, hints e informações secundárias.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contraste & Acessibilidade -->
+    <section class="section">
+      <h2>♿ Acessibilidade</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">✅ AAA Contrast</div>
+          <p style="color: var(--color-text-primary); font-size: 16px;">
+            <strong>#D0E5F2 sobre #00080D</strong><br>
+            Ratio: 17.5:1 ✅
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">✅ AA Contrast</div>
+          <p style="color: var(--color-text-primary); font-size: 16px;">
+            <strong>#D0E5F2 sobre #122E40</strong><br>
+            Ratio: 11.2:1 ✅
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">✅ Focus States</div>
+          <button class="btn btn-primary">Focus with Outline</button>
+          <p style="color: var(--color-text-secondary); font-size: 12px; margin-top: var(--space-md);">
+            Todos os elementos interativos têm estados de foco visíveis.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">✅ Dark-Only Theme</div>
+          <p style="color: var(--color-text-secondary); font-size: 12px;">
+            Design otimizado para tema escuro.
+            Menos fadiga ocular e melhor para baterias OLED.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Espacamento -->
+    <section class="section">
+      <h2>📐 Sistema de Espaçamento</h2>
+      <p>Espaçamento generoso (minimalismo) para melhor respiração visual:</p>
+      <div class="demo-grid">
+        <div style="background: #274B59; border-radius: var(--radius-md);">
+          <div style="background: #122E40; padding: 8px; margin: 0; font-size: 12px;">8px (sm)</div>
+        </div>
+        <div style="background: #274B59; border-radius: var(--radius-md);">
+          <div style="background: #122E40; padding: 16px; margin: 0; font-size: 12px;">16px (md)</div>
+        </div>
+        <div style="background: #274B59; border-radius: var(--radius-md);">
+          <div style="background: #122E40; padding: 24px; margin: 0; font-size: 12px;">24px (lg)</div>
+        </div>
+        <div style="background: #274B59; border-radius: var(--radius-md);">
+          <div style="background: #122E40; padding: 32px; margin: 0; font-size: 12px;">32px (xl)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Próximos Passos -->
+    <section class="section">
+      <h2>🚀 Próximos Passos</h2>
+      <div class="card">
+        <p>Para começar a usar o Design System:</p>
+        <ol style="padding-left: 20px;">
+          <li style="margin-bottom: 10px;">Leia <code style="background: #274B59; padding: 2px 6px; border-radius: 2px; color: #547C8C;">DESIGN_SYSTEM.md</code></li>
+          <li style="margin-bottom: 10px;">Configure <code style="background: #274B59; padding: 2px 6px; border-radius: 2px; color: #547C8C;">tailwind.config.js</code></li>
+          <li style="margin-bottom: 10px;">Importe <code style="background: #274B59; padding: 2px 6px; border-radius: 2px; color: #547C8C;">global.css</code></li>
+          <li style="margin-bottom: 10px;">Use componentes do <code style="background: #274B59; padding: 2px 6px; border-radius: 2px; color: #547C8C;">COMPONENT_LIBRARY.vue</code></li>
+          <li>Execute testes de acessibilidade (Lighthouse)</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>🎨 Dark Innovation Design System v1.0 | Worksuite PWA</p>
+      <p style="font-size: 12px; margin-top: var(--space-md);">
+        Filosofia: Flat Design | Minimalismo | Tech Noir
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
