@@ -402,8 +402,8 @@ Este projeto está sob a licença MIT.
 
 ## 📧 Contact
 
-- **Author**: Ivon Smatos
-- **Email**: ivon@example.com
+- **Author**: Ivon Matos
+- **Email**: contato@ivonmatos.com.br
 - **GitHub**: @ivonsmatos
 
 ---
