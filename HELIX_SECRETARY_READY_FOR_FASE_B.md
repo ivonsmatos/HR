@@ -9,6 +9,7 @@
 **Fase A (Backend Infrastructure)** foi **100% implementada**.
 
 ✅ **O que você tem agora**:
+
 - Django app `apps/assistant/` com 5 modelos de dados
 - Vector storage pronto (pgvector com 1536 dimensões)
 - Migration file que ativa extensão pgvector
@@ -23,7 +24,9 @@
 ## 🎯 Fase B: O Que Será Implementado
 
 ### **Task 1: Document Ingestion** (90 min)
+
 Implementar pipeline que:
+
 1. Lê documentos de `docs/` folder
 2. Faz parsing de markdown/html/text
 3. Divide em chunks (~1000 tokens, overlap 200)
@@ -31,6 +34,7 @@ Implementar pipeline que:
 5. Armazena em PostgreSQL com pgvector
 
 **Classes a implementar em `services.py`**:
+
 ```python
 DocumentIngestion.discover_documents()      # Listar arquivos
 DocumentIngestion.parse_document()          # Ler e detectar tipo
@@ -42,13 +46,16 @@ DocumentIngestion.ingest_documents()        # Pipeline completo
 ---
 
 ### **Task 2: RAG Pipeline - Retrieval** (60 min)
+
 Implementar busca por similaridade:
+
 1. Converter query para embedding
 2. Buscar chunks similares usando pgvector
 3. Filtrar por threshold de relevância
 4. Retornar top-K chunks com contexto
 
 **Classes a implementar**:
+
 ```python
 RAGPipeline.retrieve_context()    # Query → similar chunks
 RAGPipeline.build_prompt()        # Format contexto com citações
@@ -57,7 +64,9 @@ RAGPipeline.build_prompt()        # Format contexto com citações
 ---
 
 ### **Task 3: Conversational Chat** (90 min)
+
 Implementar fluxo completo de conversa:
+
 1. Recuperar contexto RAG
 2. Adicionar histórico da conversa
 3. Construir prompt estruturado
@@ -66,6 +75,7 @@ Implementar fluxo completo de conversa:
 6. Retornar resposta
 
 **Classe a implementar**:
+
 ```python
 HelixAssistant.chat()    # Full conversation flow (ASYNC)
 ```
@@ -73,7 +83,9 @@ HelixAssistant.chat()    # Full conversation flow (ASYNC)
 ---
 
 ### **Task 4: API Endpoints** (45 min)
+
 Fazer as views funcionais em `apps/assistant/views.py`:
+
 ```python
 POST /api/chat/message/           # Send message
 POST /api/chat/new/               # Create conversation
@@ -85,7 +97,9 @@ GET  /api/documents/              # List documents
 ---
 
 ### **Task 5: Background Tasks** (45 min)
+
 Implementar `apps/assistant/tasks.py` com Celery:
+
 ```python
 ingest_documents_task()      # Background ingestion
 batch_embeddings_task()      # Batch embeddings
@@ -95,7 +109,9 @@ cleanup_conversations_task() # Archive old chats
 ---
 
 ### **Task 6: Testing & Error Handling** (90 min)
+
 Criar testes em `tests/test_assistant_services.py`:
+
 - Unit tests para DocumentIngestion
 - Unit tests para RAGPipeline
 - Integration tests end-to-end
@@ -105,22 +121,24 @@ Criar testes em `tests/test_assistant_services.py`:
 
 ## 📝 Tempo Estimado Fase B
 
-| Task | Tempo | Prioridade |
-|------|-------|-----------|
-| 1. Document Ingestion | 90 min | ⭐⭐⭐ |
-| 2. RAG Pipeline | 60 min | ⭐⭐⭐ |
-| 3. Chat Flow | 90 min | ⭐⭐⭐ |
-| 4. API Endpoints | 45 min | ⭐⭐ |
-| 5. Background Tasks | 45 min | ⭐⭐ |
-| 6. Tests | 90 min | ⭐⭐ |
-| **TOTAL** | **~420 min** | **(7 horas)** |
+| Task                  | Tempo        | Prioridade    |
+| --------------------- | ------------ | ------------- |
+| 1. Document Ingestion | 90 min       | ⭐⭐⭐        |
+| 2. RAG Pipeline       | 60 min       | ⭐⭐⭐        |
+| 3. Chat Flow          | 90 min       | ⭐⭐⭐        |
+| 4. API Endpoints      | 45 min       | ⭐⭐          |
+| 5. Background Tasks   | 45 min       | ⭐⭐          |
+| 6. Tests              | 90 min       | ⭐⭐          |
+| **TOTAL**             | **~420 min** | **(7 horas)** |
 
 ---
 
 ## 🔧 Preparação Técnica
 
 ### 1. **Environment Variables**
+
 Adicione ao `.env`:
+
 ```bash
 # OpenAI Configuration
 OPENAI_API_KEY=sk-... (sua chave)
@@ -134,6 +152,7 @@ LLM_TEMPERATURE=0.3
 ```
 
 ### 2. **Database Setup**
+
 ```bash
 # Aplicar migrations (ativa pgvector extension)
 python manage.py migrate
@@ -143,6 +162,7 @@ python manage.py createsuperuser
 ```
 
 ### 3. **Install Dependencies**
+
 ```bash
 # Se ainda não instalou
 pip install -r requirements.txt
@@ -152,6 +172,7 @@ python -c "import langchain; print(langchain.__version__)"
 ```
 
 ### 4. **Create docs/ Folder**
+
 ```bash
 # Se não existir
 mkdir docs/
@@ -163,16 +184,19 @@ mkdir docs/
 ## 📚 Recursos Disponíveis
 
 1. **HELIX_SECRETARY_FASE_B_PLANNING.md**
+
    - Roadmap detalhado de cada task
    - Sub-tasks com checkboxes
    - Code snippets e exemplos
 
 2. **apps/assistant/services.py**
+
    - Skeleton com 340+ linhas
    - Docstrings explicando cada método
    - TODO comments indicando onde implementar
 
 3. **apps/assistant/models.py**
+
    - 5 modelos bem estruturados
    - Vector field já definido (1536 dims)
    - Índices otimizados
@@ -187,7 +211,9 @@ mkdir docs/
 ## 🎯 Estratégia de Implementação
 
 ### Opção A: **Linear** (Recomendado)
+
 Fazer Fase B completa em ordem:
+
 1. DocumentIngestion
 2. RAGPipeline.retrieve_context
 3. RAGPipeline.build_prompt
@@ -195,14 +221,18 @@ Fazer Fase B completa em ordem:
 5. Views + Tests
 
 ### Opção B: **Iterativo** (Rápido)
+
 MVP com funcionalidade mínima:
+
 1. Mock DocumentIngestion (usar docs pré-carregados)
 2. Basic RAGPipeline (retornar chunks aleatórios)
 3. Simple chat (sem embeddings ainda)
 4. Refinar iterativamente
 
 ### Opção C: **Paralelo** (Avançado)
+
 Fazer tarefas independentes em paralelo:
+
 - Task 1 & 2 juntas (ingestion + retrieval)
 - Task 3 & 4 juntas (chat + views)
 - Task 5 & 6 juntas (tasks + tests)
@@ -243,15 +273,19 @@ python manage.py runserver
 ## 🚨 Possíveis Blockers & Soluções
 
 ### ❌ "ModuleNotFoundError: No module named 'django_tenants'"
+
 **Solução**: `pip install -r requirements.txt`
 
 ### ❌ "psycopg2 error: feature not supported"
+
 **Solução**: Migration ativa extensão pgvector, mas garanta PostgreSQL 15+
 
 ### ❌ "OpenAI API key invalid"
+
 **Solução**: Verificar `.env` tem `OPENAI_API_KEY=sk-...` válida
 
 ### ❌ "pgvector extension not found"
+
 **Solução**: Extensão é criada na migration 0001_initial
 
 ---
@@ -276,7 +310,7 @@ User Query
     │
     └→ [Database] Create Message record
         └→ Save response + context_sources
-    
+
 Response → Client (HTMX)
 ```
 
@@ -285,6 +319,7 @@ Response → Client (HTMX)
 ## 📖 Key Concepts
 
 ### **pgvector for Similarity Search**
+
 ```sql
 -- Buscar chunks similares
 SELECT * FROM assistant_documentchunk
@@ -294,6 +329,7 @@ LIMIT 5
 ```
 
 ### **RAG Pattern**
+
 ```
 Context = Retrieve Similar Documents
 Prompt = System Prompt + Context + Query
@@ -301,6 +337,7 @@ Response = LLM(Prompt)
 ```
 
 ### **Streaming Responses** (Fase C)
+
 ```python
 # HTMX pode consumir respostas streaming
 async for chunk in llm.astream(prompt):
@@ -335,11 +372,13 @@ async for chunk in llm.astream(prompt):
 ## 🎓 Próximas Fases Após B
 
 ### **Fase C: HTMX UI** (4-5 horas)
+
 - Chat window component
 - Streaming responses
 - Tailwind styling
 
 ### **Fase D: Integration** (2-3 horas)
+
 - Chat button em base.html
 - Settings page
 - Polish & optimization
@@ -354,5 +393,5 @@ Consulte `HELIX_SECRETARY_FASE_B_PLANNING.md` para detalhes de cada task.
 
 ---
 
-*Documentação criada com ❤️ para SyncRH Onyx*  
-*Última atualização: 2024*
+_Documentação criada com ❤️ para SyncRH Onyx_  
+_Última atualização: 2024_

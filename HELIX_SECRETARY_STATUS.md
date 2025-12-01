@@ -11,11 +11,13 @@
 ### Fase A: Backend Environment Setup (COMPLETO)
 
 ✅ **1. Estrutura Django App**
+
 - Criada app `apps/assistant/` com todas as funcionalidades base
 - 8 arquivos criados (~1,160 linhas de código)
 - Integração completa com django-tenants (multi-tenancy)
 
 ✅ **2. Database Models (5 modelos)**
+
 - `Document` - Armazena documentos ingeridos (TenantAware)
 - `DocumentChunk` - **Com vector field para pgvector embeddings** ⭐
 - `Conversation` - Sessões de chat por usuário (TenantAware)
@@ -23,17 +25,20 @@
 - `HelixConfig` - Configurações por tenant (TenantAware)
 
 ✅ **3. Integração Django**
+
 - App adicionada a `INSTALLED_APPS`
 - Migration file criada com extensão pgvector
 - Admin interface completa para todos os modelos
 - URL routing preparada
 
 ✅ **4. Dependencies RAG**
+
 - 5 bibliotecas adicionadas ao requirements.txt
 - langchain, openai, pgvector, etc.
 - Todas instaladas no ambiente
 
 ✅ **5. Code Skeleton**
+
 - `services.py` - 340+ linhas com 3 classes principais
 - `views.py` - 150+ linhas com stubs para API endpoints
 - `admin.py` - Interface completa com 140 linhas
@@ -66,6 +71,7 @@ apps/assistant/
 ## 🔑 Key Features Implementados
 
 ### Vector Storage (pgvector) ⭐
+
 ```python
 # DocumentChunk.embedding - ArrayField(FloatField, 1536)
 # Armazena embeddings do OpenAI (text-embedding-3-small)
@@ -73,12 +79,14 @@ apps/assistant/
 ```
 
 ### Multi-Tenancy
+
 ```python
 # Document, Conversation, HelixConfig herdam de TenantAwareModel
 # Isolamento de dados por company automaticamente
 ```
 
 ### Admin Interface Completo
+
 - List displays otimizados
 - Fieldsets agrupados
 - Readonly fields apropriados
@@ -86,6 +94,7 @@ apps/assistant/
 - Filter dropdowns por company, status, dates
 
 ### RAG Infrastructure
+
 - Classes skeleton para:
   - `DocumentIngestion` - Ingerir docs
   - `RAGPipeline` - Buscar contexto
@@ -96,9 +105,11 @@ apps/assistant/
 ## 🚀 Próximas Fases
 
 ### Fase B: Services & RAG Implementation
+
 📍 **Próximo passo** - Implementar o pipeline RAG completo
 
 **Tarefas principais**:
+
 1. **DocumentIngestion** - Ingerir docs do `docs/` folder
 2. **RAGPipeline** - Busca por similaridade em pgvector
 3. **HelixAssistant** - Chat com contexto
@@ -108,12 +119,14 @@ apps/assistant/
 **Documentação**: `HELIX_SECRETARY_FASE_B_PLANNING.md`
 
 ### Fase C: HTMX UI & Frontend
+
 - Chat window component
 - HTMX streaming responses
 - Tailwind CSS styling (Onyx palette)
 - Modal/drawer implementation
 
 ### Fase D: Integration & Polish
+
 - Floating chat button em base.html
 - Settings page para Helix
 - Analytics e logging
@@ -123,16 +136,16 @@ apps/assistant/
 
 ## ✨ Highlights
 
-| Feature | Status | Details |
-|---------|--------|---------|
-| **Multi-tenancy** | ✅ | Via django-tenants + TenantAwareModel |
-| **Vector Storage** | ✅ | pgvector com 1536-dim embeddings |
-| **Admin Interface** | ✅ | 5 modelos com UI completa |
-| **RAG Skeleton** | ✅ | Services prontas para implementação |
-| **Error Handling** | ⏳ | Fase B - Implementar retry logic |
-| **Celery Tasks** | ⏳ | Fase B - Background processing |
-| **HTMX UI** | ⏳ | Fase C - Chat window |
-| **Integration** | ⏳ | Fase D - Final polish |
+| Feature             | Status | Details                               |
+| ------------------- | ------ | ------------------------------------- |
+| **Multi-tenancy**   | ✅     | Via django-tenants + TenantAwareModel |
+| **Vector Storage**  | ✅     | pgvector com 1536-dim embeddings      |
+| **Admin Interface** | ✅     | 5 modelos com UI completa             |
+| **RAG Skeleton**    | ✅     | Services prontas para implementação   |
+| **Error Handling**  | ⏳     | Fase B - Implementar retry logic      |
+| **Celery Tasks**    | ⏳     | Fase B - Background processing        |
+| **HTMX UI**         | ⏳     | Fase C - Chat window                  |
+| **Integration**     | ⏳     | Fase D - Final polish                 |
 
 ---
 
@@ -169,16 +182,19 @@ Django 5.0.1 + DRF 3.14.0
 ## 🔧 Para Próxima Sessão
 
 1. **Instalar dependências do projeto**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 2. **Aplicar migrations**
+
    ```bash
    python manage.py migrate
    ```
 
 3. **Iniciar Fase B implementation**
+
    - Começar com `DocumentIngestion.ingest_documents()`
    - Depois `RAGPipeline.retrieve_context()`
    - Depois `HelixAssistant.chat()`
@@ -192,16 +208,19 @@ Django 5.0.1 + DRF 3.14.0
 ## 💡 Notas de Implementação
 
 ### Vector Embeddings
+
 - Usando `ArrayField(FloatField, size=1536)` com Django PostgreSQL
 - Suporta `<->` operator do pgvector para similaridade
 - Não precisa de extensão separada, apenas `CREATE EXTENSION vector` (na migration)
 
 ### Multi-tenancy
+
 - `Document`, `Conversation`, `HelixConfig` filtram por `company` automaticamente
 - Garante isolamento de dados entre clientes
 - Índices otimizados para queries com `(company, ...)`
 
 ### RAG Flow
+
 ```
 User Message
   ↓
@@ -232,6 +251,7 @@ return response
 ## 📞 Suporte
 
 Documentação detalhada:
+
 - **Fase A Summary**: `HELIX_SECRETARY_FASE_A_SUMMARY.md`
 - **Fase B Planning**: `HELIX_SECRETARY_FASE_B_PLANNING.md`
 - **Models Reference**: `apps/assistant/models.py`
