@@ -1,5 +1,5 @@
 """
-Django settings for HR Worksuite Clone - DEVELOPMENT ENVIRONMENT
+Django settings for SyncRH - DEVELOPMENT ENVIRONMENT
 
 This settings file is for development only. Use environment variables for configuration.
 Database: PostgreSQL (multi-tenant with schema isolation via django-tenants)

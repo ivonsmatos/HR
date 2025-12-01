@@ -3,14 +3,17 @@
 ## ✅ O QUE FOI FEITO
 
 ### Modificações em 3 arquivos:
+
 1. ✅ **config/settings.py** - Monitoring + Sentry
 2. ✅ **config/urls.py** - Health check endpoints
 3. ✅ **github/workflows/ci-cd.yml** - Coverage gate
 
 ### 57 Testes Prontos:
+
 - ✅ `tests/test_core_auth_expanded.py` - 57 testes novos
 
 ### Guias Criados:
+
 - ✅ `START_HERE_NOW.md` - ← COMECE POR AQUI!
 - ✅ `BALANCED_IMPLEMENTATION_GUIDE.md` - Guia detalhado
 - ✅ `BALANCED_IMPLEMENTATION_READY.md` - Quick ref
@@ -42,11 +45,11 @@ start htmlcov/index.html
 
 ## 📊 RESULTADO ESPERADO
 
-| Métrica | Antes | Depois | Δ |
-|---------|-------|--------|---|
-| Testes | 14 | 64+ | +350% |
-| Coverage | 20% | 60%+ | +200% |
-| Score | 8.2/10 | 8.8/10 | +0.6 |
+| Métrica  | Antes  | Depois | Δ     |
+| -------- | ------ | ------ | ----- |
+| Testes   | 14     | 64+    | +350% |
+| Coverage | 20%    | 60%+   | +200% |
+| Score    | 8.2/10 | 8.8/10 | +0.6  |
 
 ---
 

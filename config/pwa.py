@@ -1,11 +1,11 @@
-# PWA Configuration for Worksuite Clone
+# PWA Configuration for SyncRH
 """
 Progressive Web App (PWA) Configuration
 Enables offline support, installability, and app-like experience
 """
 
 # PWA Settings
-PWA_APP_NAME = "Worksuite Clone"
+PWA_APP_NAME = "SyncRH"
 PWA_APP_DESCRIPTION = "Enterprise ERP System - Multi-tenant SaaS"
 PWA_APP_THEME_COLOR = "#3B82F6"
 PWA_APP_BACKGROUND_COLOR = "#FFFFFF"

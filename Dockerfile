@@ -1,4 +1,4 @@
-# Worksuite HR PWA - Multi-stage Docker build
+# SyncRH - Multi-stage Docker build
 
 # Stage 1: Builder
 FROM python:3.11-slim as builder

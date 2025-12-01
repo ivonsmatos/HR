@@ -1,10 +1,10 @@
-# Worksuite Clone - Enterprise ERP System
+# SyncRH - Enterprise ERP System
 
 Comprehensive Django 5.x multi-tenant SaaS application for enterprise resource planning.
 
 ## 📋 Project Overview
 
-**Worksuite Clone** é um ERP empresarial modular construído com Django 5.x e PostgreSQL, suportando multi-tenancy com isolamento de schema. O sistema é dividido em 9 domínios principais (25+ apps), cada um com funcionalidades específicas para gestão completa de recursos humanos, projetos, finanças, CRM e recrutamento.
+**SyncRH** é um ERP empresarial modular construído com Django 5.x e PostgreSQL, suportando multi-tenancy com isolamento de schema. O sistema é dividido em 9 domínios principais (25+ apps), cada um com funcionalidades específicas para gestão completa de recursos humanos, projetos, finanças, CRM e recrutamento.
 
 ## 🏗️ Architecture
 
@@ -61,7 +61,7 @@ HR/
 
 ## 🌐 Progressive Web App (PWA)
 
-**Worksuite Clone** é um **Progressive Web App** completo:
+**SyncRH** é um **Progressive Web App** completo:
 
 - ✅ **Instalável** - Instale como aplicativo nativo
 - ✅ **Offline-first** - Funciona sem conexão de internet
