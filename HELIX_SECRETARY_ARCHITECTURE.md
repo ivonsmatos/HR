@@ -84,36 +84,36 @@ HR/
 
 ### Arquivos Criados/Modificados
 
-| Tipo | Qtd | Linhas | Status |
-|------|-----|--------|--------|
-| **App Files** | 8 | 1,160 | ✅ |
-| **Migrations** | 1 | 200+ | ✅ |
-| **Config** | 1 | (+1) | ✅ |
-| **Dependencies** | 1 | (+5) | ✅ |
-| **Documentation** | 5 | 2,000+ | ✅ |
-| **TOTAL** | **17** | **~3,400** | ✅ |
+| Tipo              | Qtd    | Linhas     | Status |
+| ----------------- | ------ | ---------- | ------ |
+| **App Files**     | 8      | 1,160      | ✅     |
+| **Migrations**    | 1      | 200+       | ✅     |
+| **Config**        | 1      | (+1)       | ✅     |
+| **Dependencies**  | 1      | (+5)       | ✅     |
+| **Documentation** | 5      | 2,000+     | ✅     |
+| **TOTAL**         | **17** | **~3,400** | ✅     |
 
 ### Modelos Django
 
-| Modelo | Campos | Índices | Status |
-|--------|--------|---------|--------|
-| **Document** | 9 | 2 | ✅ |
-| **DocumentChunk** | 8 | 1 | ✅ |
-| **Conversation** | 6 | 1 | ✅ |
-| **Message** | 7 | 2 | ✅ |
-| **HelixConfig** | 7 | 1 | ✅ |
+| Modelo            | Campos | Índices | Status |
+| ----------------- | ------ | ------- | ------ |
+| **Document**      | 9      | 2       | ✅     |
+| **DocumentChunk** | 8      | 1       | ✅     |
+| **Conversation**  | 6      | 1       | ✅     |
+| **Message**       | 7      | 2       | ✅     |
+| **HelixConfig**   | 7      | 1       | ✅     |
 
 ### API Endpoints
 
-| Método | Endpoint | Status |
-|--------|----------|--------|
-| **GET** | `/chat/` | Stub ⏳ |
-| **GET** | `/chat/window/` | Stub ⏳ |
-| **POST** | `/api/chat/message/` | Stub ⏳ |
-| **GET** | `/api/chat/history/<id>/` | Stub ⏳ |
-| **POST** | `/api/chat/new/` | Stub ⏳ |
-| **GET** | `/api/documents/` | Stub ⏳ |
-| **POST** | `/api/documents/ingest/` | Stub ⏳ |
+| Método   | Endpoint                  | Status  |
+| -------- | ------------------------- | ------- |
+| **GET**  | `/chat/`                  | Stub ⏳ |
+| **GET**  | `/chat/window/`           | Stub ⏳ |
+| **POST** | `/api/chat/message/`      | Stub ⏳ |
+| **GET**  | `/api/chat/history/<id>/` | Stub ⏳ |
+| **POST** | `/api/chat/new/`          | Stub ⏳ |
+| **GET**  | `/api/documents/`         | Stub ⏳ |
+| **POST** | `/api/documents/ingest/`  | Stub ⏳ |
 
 ---
 
