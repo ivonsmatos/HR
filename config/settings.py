@@ -208,33 +208,17 @@ LOGGING = {
             "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
             "style": "{",
         },
-        "json": {
-            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
-            "format": "%(asctime)s %(name)s %(levelname)s %(message)s",
-        },
     },
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
-        "performance": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": "logs/performance.log",
-            "maxBytes": 10485760,  # 10MB
-            "backupCount": 5,
-            "formatter": "json",
-        },
     },
     "loggers": {
         "django": {
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": False,
-        },
-        "performance": {
-            "handlers": ["performance", "console"],
-            "level": "DEBUG",
             "propagate": False,
         },
     },
