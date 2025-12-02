@@ -1,96 +1,52 @@
 # ============================================================================
-# SyncRH - Unified Requirements.txt (Consolidated)
+# SyncRH - Unified Requirements (PRODUCTION READY)
 # ============================================================================
-# This single file contains all dependencies needed for development and
-# production. Python 3.11+
+# Versões testadas e compatíveis - Python 3.10+
 
 # CORE DJANGO
-# ============================================================================
 Django==4.2.8
 djangorestframework==3.14.0
-django-tenants==3.4.8
 django-cors-headers==4.3.1
 django-filter==23.5
 drf-spectacular==0.27.0
-django-environ==0.12.0
-python-decouple==3.8
 
 # DATABASE
-# ============================================================================
-psycopg2-binary==2.9.9
-pgvector==0.2.4
+psycopg2-binary==2.9.11
 
 # ASYNC & BACKGROUND TASKS
-# ============================================================================
 celery==5.3.4
 redis==5.0.1
 channels==4.0.0
 daphne==4.0.0
 
-# AUTHENTICATION & AUTHORIZATION
-# ============================================================================
+# AUTHENTICATION
 djangorestframework-simplejwt==5.5.1
 PyJWT==2.10.1
 cryptography==41.0.7
 
-# AI & RAG (Retrieval-Augmented Generation)
-# ============================================================================
-langchain==0.0.350
-langchain-core==0.1.2
-langchain-community==0.0.11
-openai==0.28.0
-ollama==0.1.0
-
-# ENVIRONMENT & CONFIGURATION
-# ============================================================================
+# ENVIRONMENT
 python-dotenv==1.0.0
+python-decouple==3.8
 
-# UTILITIES & SERIALIZATION
-# ============================================================================
+# UTILITIES
 requests==2.31.0
 python-dateutil==2.8.2
 pytz==2023.3.post1
-Pillow==10.1.0
 
-# TESTING & CODE QUALITY
-# ============================================================================
+# MONITORING & LOGGING
+sentry-sdk==1.38.0
+
+# DATA VALIDATION
+marshmallow==3.20.1
+
+# TESTING
 pytest==8.3.4
 pytest-django==4.11.1
 pytest-cov==7.0.0
 coverage==7.12.0
-factory-boy==3.3.0
-faker==21.0.0
 
-# DEVELOPMENT TOOLS
-# ============================================================================
+# DEVELOPMENT (Optional)
 ipython==8.18.1
 django-extensions==3.2.3
-django-debug-toolbar==4.2.0
 black==23.12.0
 flake8==6.1.0
-isort==5.13.2
-
-# MONITORING & LOGGING
-# ============================================================================
-sentry-sdk==1.38.0
-
-# DATA VALIDATION
-# ============================================================================
-marshmallow==3.20.1
-pydantic==2.5.2
-
-# DOCUMENTATION
-# ============================================================================
-Sphinx==7.2.6
-sphinx-rtd-theme==2.0.0
-
-# GPU SUPPORT (Optional)
-# ============================================================================
-# nvidia-ml-py==12.535.108  # Uncomment if using NVIDIA GPU
-
-# EXTRA FEATURES (Optional)
-# ============================================================================
-# django-storages==1.14.2  # For cloud storage
-# boto3==1.34.0  # For AWS S3
-# stripe==7.8.0  # For payment processing
-# django-anymail==10.1  # For email management
