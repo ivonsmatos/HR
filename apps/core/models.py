@@ -8,7 +8,7 @@ All models that need to be isolated by tenant should inherit from TenantAwareMod
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
-from django_tenants.models import TenantMixin, DomainMixin
+# from django_tenants.models import TenantMixin, DomainMixin  # Disabled for Django 5.1 compatibility
 import uuid
 
 
@@ -57,12 +57,20 @@ class TenantAwareModel(BaseModel):
         super().save(*args, **kwargs)
 
 
-class Company(TenantMixin, BaseModel):
+# Commented out - django_tenants not compatible with Django 5.1
+# class Company(TenantMixin, BaseModel):
+#     """
+#     Tenant (Company) model for multi-tenant SaaS application.
+#     
+#     Represents each organization using the platform.
+#     Each company has isolated data via schema isolation (django-tenants).
+#     """
+
+class Company(BaseModel):
     """
-    Tenant (Company) model for multi-tenant SaaS application.
+    Company (Organization) model for SaaS application.
     
     Represents each organization using the platform.
-    Each company has isolated data via schema isolation (django-tenants).
     """
 
     name = models.CharField(
