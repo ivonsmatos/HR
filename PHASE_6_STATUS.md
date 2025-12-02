@@ -3,6 +3,7 @@
 ### ✅ Completado:
 
 **1. Configuração de Pytest com SQLite**
+
 - ✅ Criado `config/settings/__init__.py` para gerenciar settings como pacote
 - ✅ Criado `config/settings/test.py` com SQLite (:memory:)
 - ✅ Removido django-tenants de INSTALLED_APPS para testes (requer PostgreSQL)
@@ -11,6 +12,7 @@
 - ✅ Configurado pytest.ini com DJANGO_SETTINGS_MODULE=config.settings.test
 
 **2. Resolução de Problemas de Dependências**
+
 - ✅ Instalado psycopg2-binary (para django-tenants carregar)
 - ✅ Instalado langchain-community e langchain-core
 - ✅ Envolvido langchain imports em try/except (dependência opcional)
@@ -20,19 +22,21 @@
 - ✅ Limpo conftest.py (removido configuração duplicada)
 
 **3. Coleta de Testes**
+
 - ✅ **262 testes coletados com sucesso** (sem erros de import)
 - Distribuição:
-  * test_config_settings.py: 42 testes
-  * test_hrm_implemented.py: 28 testes
-  * test_work_security_implemented.py: 35 testes
-  * test_work_extended.py: 15 testes
-  * test_helix_assistant.py: 7 testes
-  * test_core_auth.py, test_api_endpoints.py, etc.: +134 testes
-  * **Total: 262 testes válidos** ✅
+  - test_config_settings.py: 42 testes
+  - test_hrm_implemented.py: 28 testes
+  - test_work_security_implemented.py: 35 testes
+  - test_work_extended.py: 15 testes
+  - test_helix_assistant.py: 7 testes
+  - test_core_auth.py, test_api_endpoints.py, etc.: +134 testes
+  - **Total: 262 testes válidos** ✅
 
 ### ⏳ Em Progresso:
 
 **1. Execução de Testes**
+
 - Status: Alguns testes rodando, mas ainda há erros de setup
 - Problema: Alguns testes têm dependências faltantes (Django models/fixtures)
 - Estratégia: Executar por arquivo para validar coverage gradualmente
@@ -58,15 +62,15 @@ coverage html
 
 ### 📊 Status Geral:
 
-| Métrica | Valor | Status |
-|---------|-------|--------|
-| Testes Implementados | 127+ (Frame: 121) | ✅ 105% |
-| Testes Coletados | 262 | ✅ Válido |
-| Estrutura Django | Configurada | ✅ SQLite test DB |
-| Dependências | Instaladas | ✅ pytest-cov, coverage |
-| pytest.ini | Configurado | ✅ DJANGO_SETTINGS_MODULE |
-| Execução | Em progresso | ⏳ 262 testes prontos |
-| Coverage Esperada | 75%+ | ⏳ Pendente medição |
+| Métrica              | Valor             | Status                    |
+| -------------------- | ----------------- | ------------------------- |
+| Testes Implementados | 127+ (Frame: 121) | ✅ 105%                   |
+| Testes Coletados     | 262               | ✅ Válido                 |
+| Estrutura Django     | Configurada       | ✅ SQLite test DB         |
+| Dependências         | Instaladas        | ✅ pytest-cov, coverage   |
+| pytest.ini           | Configurado       | ✅ DJANGO_SETTINGS_MODULE |
+| Execução             | Em progresso      | ⏳ 262 testes prontos     |
+| Coverage Esperada    | 75%+              | ⏳ Pendente medição       |
 
 ### 🔧 Arquivos Modificados:
 

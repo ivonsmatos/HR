@@ -1,6 +1,7 @@
 # 📊 Guia de Cobertura de Testes - Melhorias
 
 **Status Atual:**
+
 - apps/core/ - 75% ✅
 - apps/security/ - 68% ⚠️
 - apps/hrm/ - 55% ❌
@@ -17,6 +18,7 @@
 **O que testar:**
 
 #### 1. Employee Management (Employee Model)
+
 ```python
 # CRUD Tests
 - test_employee_creation()          # Criar funcionário
@@ -37,6 +39,7 @@
 ```
 
 #### 2. Leave Management (Leave Model)
+
 ```python
 # Leave Request Flow
 - test_leave_request_creation()     # Solicitar licença
@@ -56,6 +59,7 @@
 ```
 
 #### 3. Attendance (Attendance Model)
+
 ```python
 # Check-in/Check-out
 - test_attendance_checkin()         # Entry de presença
@@ -74,6 +78,7 @@
 ```
 
 #### 4. Payroll (Payroll Model)
+
 ```python
 # Salary Calculation
 - test_gross_salary_calculation()   # Salário bruto
@@ -93,6 +98,7 @@
 ```
 
 #### 5. Performance (PerformanceReview Model)
+
 ```python
 # Review Cycle
 - test_review_creation()            # Criar avaliação
@@ -118,6 +124,7 @@
 **O que testar:**
 
 #### 1. Project Management (Project Model)
+
 ```python
 # CRUD & Lifecycle
 - test_project_creation()           # Criar projeto
@@ -137,6 +144,7 @@
 ```
 
 #### 2. Task Management (Task Model)
+
 ```python
 # Task Lifecycle
 - test_task_creation()              # Criar tarefa
@@ -161,6 +169,7 @@
 ```
 
 #### 3. Time Tracking (TimeEntry Model)
+
 ```python
 # Entry Management
 - test_time_entry_creation()        # Criar entrada
@@ -181,6 +190,7 @@
 ```
 
 #### 4. Contract Management (Contract Model)
+
 ```python
 # Contract Lifecycle
 - test_contract_creation()          # Criar contrato
@@ -200,6 +210,7 @@
 ```
 
 #### 5. Milestone Tracking (Milestone Model)
+
 ```python
 # Milestone Lifecycle
 - test_milestone_creation()         # Criar marco
@@ -254,12 +265,12 @@
 
 ## 📈 Impacto Esperado
 
-| Módulo | Atual | Target | Novos Testes | Impacto |
-|--------|-------|--------|--------------|---------|
-| hrm/ | 55% | 80% | 45 | +25% |
-| work/ | 48% | 80% | 50 | +32% |
-| security/ | 68% | 85% | 14 | +17% |
-| **TOTAL** | **60%** | **75%** | **109** | **+15%** |
+| Módulo    | Atual   | Target  | Novos Testes | Impacto  |
+| --------- | ------- | ------- | ------------ | -------- |
+| hrm/      | 55%     | 80%     | 45           | +25%     |
+| work/     | 48%     | 80%     | 50           | +32%     |
+| security/ | 68%     | 85%     | 14           | +17%     |
+| **TOTAL** | **60%** | **75%** | **109**      | **+15%** |
 
 ---
 
@@ -276,12 +287,12 @@ class EmployeeTestCase(TestCase):
         # Setup uma vez por classe
         cls.company = Company.objects.create(...)
         cls.user = User.objects.create_user(...)
-    
+
     def setUp(self):
         # Setup antes de cada teste
         self.client = Client()
         self.client.force_login(self.user)
-    
+
     def test_something(self):
         # Teste individual
         response = self.client.post('/api/employees/', {...})
