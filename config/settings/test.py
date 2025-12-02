@@ -17,6 +17,12 @@ INSTALLED_APPS = [app for app in INSTALLED_APPS if 'django_tenants' not in app]
 # Remove all tenant-related middleware
 MIDDLEWARE = [m for m in MIDDLEWARE if 'Tenant' not in m and 'Audit' not in m and 'Performance' not in m]
 
+# Ensure SessionMiddleware and AuthenticationMiddleware are in MIDDLEWARE for admin
+if 'django.contrib.sessions.middleware.SessionMiddleware' not in MIDDLEWARE:
+    MIDDLEWARE.insert(0, 'django.contrib.sessions.middleware.SessionMiddleware')
+if 'django.contrib.auth.middleware.AuthenticationMiddleware' not in MIDDLEWARE:
+    MIDDLEWARE.insert(1, 'django.contrib.auth.middleware.AuthenticationMiddleware')
+
 # Remove DATABASE_ROUTERS for tests
 DATABASE_ROUTERS = []
 

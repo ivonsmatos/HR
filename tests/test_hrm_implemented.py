@@ -8,12 +8,14 @@ from django.contrib.auth import get_user_model
 from django.utils.timezone import now
 from datetime import timedelta, date
 from django.db import models
+import pytest
 
 from apps.core.models import Company
 
 User = get_user_model()
 
 
+@pytest.mark.django_db
 class HRMCoreModelTests(TestCase):
     """Testes de modelos HRM - Cobertura básica"""
     
@@ -22,9 +24,7 @@ class HRMCoreModelTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Test HRM Company",
-            slug="test-hrm",
-            domain="test-hrm.local"
-        )
+            slug="test-hrm")
     
     def setUp(self):
         """Setup antes de cada teste"""
@@ -91,9 +91,7 @@ class HRMCoreModelTests(TestCase):
         """Teste isolamento de tenants"""
         company2 = Company.objects.create(
             name="Test Company 2",
-            slug="test-2",
-            domain="test2.local"
-        )
+            slug="test-2")
         
         user2 = User.objects.create_user(
             username="user2",
@@ -111,9 +109,7 @@ class HRMCoreModelTests(TestCase):
         """Teste criação de empresa"""
         company = Company.objects.create(
             name="New Company",
-            slug="new-company",
-            domain="new.local"
-        )
+            slug="new-company")
         self.assertIsNotNone(company.id)
         self.assertEqual(company.slug, "new-company")
     
@@ -121,18 +117,15 @@ class HRMCoreModelTests(TestCase):
         """Teste que slug é único"""
         company1 = Company.objects.create(
             name="Company 1",
-            slug="unique-slug",
-            domain="comp1.local"
-        )
+            slug="unique-slug")
         
         with self.assertRaises(Exception):
             Company.objects.create(
                 name="Company 2",
-                slug="unique-slug",
-                domain="comp2.local"
-            )
+                slug="unique-slug")
 
 
+@pytest.mark.django_db
 class HRMViewTests(TestCase):
     """Testes de views HRM"""
     
@@ -141,9 +134,7 @@ class HRMViewTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Test Company",
-            slug="test",
-            domain="test.local"
-        )
+            slug="test")
     
     def setUp(self):
         self.client = Client()
@@ -183,6 +174,7 @@ class HRMViewTests(TestCase):
         self.assertIn(response.status_code, [200, 302, 404])
 
 
+@pytest.mark.django_db
 class HRMDataValidationTests(TestCase):
     """Testes de validação de dados HRM"""
     
@@ -191,9 +183,7 @@ class HRMDataValidationTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Test Company",
-            slug="test",
-            domain="test.local"
-        )
+            slug="test")
     
     def test_user_str_representation(self):
         """Teste representação string do usuário"""
@@ -210,9 +200,7 @@ class HRMDataValidationTests(TestCase):
         """Teste representação string da empresa"""
         company = Company.objects.create(
             name="String Test Co",
-            slug="string-test",
-            domain="string.local"
-        )
+            slug="string-test")
         company_str = str(company)
         self.assertIn("String Test Co", company_str)
     
@@ -247,6 +235,7 @@ class HRMDataValidationTests(TestCase):
             pass  # Esperado
 
 
+@pytest.mark.django_db
 class HRMBulkOperationTests(TestCase):
     """Testes de operações em bulk (lista, filtro, etc)"""
     
@@ -255,9 +244,7 @@ class HRMBulkOperationTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Bulk Test Co",
-            slug="bulk-test",
-            domain="bulk.local"
-        )
+            slug="bulk-test")
     
     def setUp(self):
         """Criar múltiplos usuários para testes"""
@@ -332,6 +319,7 @@ class HRMBulkOperationTests(TestCase):
         self.assertGreaterEqual(count, 1)
 
 
+@pytest.mark.django_db
 class HRMPermissionTests(TestCase):
     """Testes de permissões e controle de acesso"""
     
@@ -340,9 +328,7 @@ class HRMPermissionTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Permission Test",
-            slug="perm-test",
-            domain="perm.local"
-        )
+            slug="perm-test")
     
     def test_user_has_perms_method(self):
         """Teste método has_perms"""
@@ -383,6 +369,7 @@ class HRMPermissionTests(TestCase):
         self.assertTrue(staff.is_staff)
 
 
+@pytest.mark.django_db
 class HRMDateTimeTests(TestCase):
     """Testes de datas e tempos em HRM"""
     
@@ -391,9 +378,7 @@ class HRMDateTimeTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="DateTime Test",
-            slug="datetime-test",
-            domain="datetime.local"
-        )
+            slug="datetime-test")
     
     def test_user_timestamp_created(self):
         """Teste que data_joined é setada automaticamente"""

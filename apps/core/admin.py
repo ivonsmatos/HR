@@ -23,9 +23,14 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(CompanyDomain)
 class CompanyDomainAdmin(admin.ModelAdmin):
-    list_display = ["domain", "company", "is_primary"]
-    list_filter = ["is_primary", "created_at"]
+    list_display = ["domain", "company", "is_primary", "created_at"]
+    list_filter = ["is_primary", "created_at", "company"]
     search_fields = ["domain", "company__name"]
+    fieldsets = (
+        ("Domain Info", {"fields": ("domain", "company", "is_primary")}),
+        ("Metadata", {"fields": ("created_at", "updated_at"), "classes": ("collapse",)}),
+    )
+    readonly_fields = ["created_at", "updated_at"]
 
 
 @admin.register(User)

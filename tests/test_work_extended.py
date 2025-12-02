@@ -4,6 +4,7 @@ Implementa 16 testes adicionais para atingir 50 testes totais
 Foco: Task Management, Contract Management, Milestone Tracking
 """
 
+import pytest
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -12,6 +13,7 @@ from datetime import timedelta
 User = get_user_model()
 
 
+@pytest.mark.django_db
 class WorkTaskManagementExtendedTests(TestCase):
     """Testes adicionais para Task Management - 7 testes"""
     
@@ -112,6 +114,7 @@ class WorkTaskManagementExtendedTests(TestCase):
         self.assertAlmostEqual(utilization, 75.0, places=1)
 
 
+@pytest.mark.django_db
 class WorkContractManagementTests(TestCase):
     """Testes para Contract Management - 5 testes"""
     
@@ -199,6 +202,7 @@ class WorkContractManagementTests(TestCase):
         self.assertLess(metrics['cost_variance'], 5)
 
 
+@pytest.mark.django_db
 class WorkMilestoneTrackingTests(TestCase):
     """Testes para Milestone Tracking - 4 testes"""
     

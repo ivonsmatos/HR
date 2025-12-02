@@ -13,13 +13,15 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 
-from apps.core.models import Company, User, UserProfile, CompanyDomain
-from apps.core.serializers import UserSerializer, CompanySerializer
+from apps.core.models import Company, CompanyDomain
+from rest_framework.test import APITestCase, APIClient
+from rest_framework import status
 
 
 User = get_user_model()
 
 
+@pytest.mark.django_db
 class UserModelIntegrationTests(TestCase):
     """Integration tests for User model"""
 
@@ -96,6 +98,7 @@ class UserModelIntegrationTests(TestCase):
         assert self.user.login_count == 5
 
 
+@pytest.mark.django_db
 class CompanyModelIntegrationTests(TestCase):
     """Integration tests for Company model"""
 
@@ -179,6 +182,7 @@ class CompanyModelIntegrationTests(TestCase):
         assert str(self.company) == "ACME Corp (acme-corp)"
 
 
+@pytest.mark.django_db
 class TransactionModelTests(TransactionTestCase):
     """Transaction-level tests for data integrity"""
 
@@ -231,6 +235,7 @@ class TransactionModelTests(TransactionTestCase):
         assert not User.objects.filter(id=user_id).exists()
 
 
+@pytest.mark.django_db
 class UserProfileIntegrationTests(TestCase):
     """Integration tests for User Profile"""
 
@@ -313,6 +318,7 @@ class UserProfileIntegrationTests(TestCase):
         assert self.profile.get_subordinates_count() == 3
 
 
+@pytest.mark.django_db
 class CacheIntegrationTests(TestCase):
     """Tests for caching behavior"""
 
@@ -353,6 +359,7 @@ class CacheIntegrationTests(TestCase):
         assert cache.get(cache_key) is None
 
 
+@pytest.mark.django_db
 class MultiTenancyTests(TestCase):
     """Tests for multi-tenancy data isolation"""
 
@@ -422,6 +429,7 @@ class MultiTenancyTests(TestCase):
         assert self.user2 not in company1_users
 
 
+@pytest.mark.django_db
 class ErrorHandlingTests(APITestCase):
     """Tests for error handling and edge cases"""
 

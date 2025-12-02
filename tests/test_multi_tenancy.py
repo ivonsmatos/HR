@@ -16,6 +16,7 @@ from django_tenants.test.cases import TenantTestCase
 # from apps.core.models import Company, Tenant
 
 
+@pytest.mark.django_db
 class TestTenantIsolation(TenantTestCase):
     """Tests para isolamento de tenants"""
 
@@ -53,7 +54,6 @@ class TestCompanyModel:
         return Company.objects.create(
             name="Test Company",
             slug="test-company",
-            domain="test.local",
         )
 
     def test_company_creation(self, company):
@@ -68,8 +68,7 @@ class TestCompanyModel:
         with pytest.raises(Exception):  # IntegrityError
             Company.objects.create(
                 name="Duplicate",
-                slug="test-company",  # Slug duplicado
-                domain="duplicate.local",
+                slug="test-company",  # Slug duplicado,
             )
 
 

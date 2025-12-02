@@ -23,9 +23,7 @@ class HRMCoverageTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Test HRM Company",
-            slug="test-hrm",
-            domain="test-hrm.local"
-        )
+            slug="test-hrm")
         
         cls.user = User.objects.create_user(
             username="hrm_user",
@@ -131,9 +129,7 @@ class WorkCoverageTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Test Work Company",
-            slug="test-work",
-            domain="test-work.local"
-        )
+            slug="test-work")
         
         cls.user = User.objects.create_user(
             username="work_user",
@@ -248,9 +244,7 @@ class SecurityAndCoreCoverageTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Test Security Company",
-            slug="test-security",
-            domain="test-security.local"
-        )
+            slug="test-security")
         
         cls.user = User.objects.create_user(
             username="security_user",
@@ -312,9 +306,7 @@ class IntegrationCoverageTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Test Integration Company",
-            slug="test-integration",
-            domain="test-integration.local"
-        )
+            slug="test-integration")
         
         cls.user = User.objects.create_user(
             username="integration_user",
@@ -355,9 +347,7 @@ class HelixAssistantCoverageTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Test Helix Company",
-            slug="test-helix",
-            domain="test-helix.local"
-        )
+            slug="test-helix")
         
         cls.user = User.objects.create_user(
             username="helix_user",

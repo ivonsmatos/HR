@@ -60,14 +60,3 @@ def liveness_check(request):
     except Exception as e:
         logger.error(f"Liveness check failed: {e}")
         return JsonResponse({'status': 'dead'}, status=503)
-
-
-# URLs: config/urls.py
-from apps.core.views import health_check, readiness_check, liveness_check
-
-urlpatterns = [
-    # Health checks
-    path('health/', health_check, name='health_check'),
-    path('health/ready/', readiness_check, name='readiness_check'),
-    path('health/live/', liveness_check, name='liveness_check'),
-]

@@ -167,26 +167,42 @@ class Company(TenantMixin, BaseModel):
         return f"{self.name} ({self.slug})"
 
 
-class CompanyDomain(DomainMixin):
+class CompanyDomain(models.Model):
     """
-    Domain model for routing requests to correct tenant.
+    Domain model for routing requests to correct tenant (Company).
     
-    Used by django-tenants to determine which company's database
-    schema should be used based on the request domain.
+    Associates domain names with companies for multi-tenant routing.
+    Each company can have one or more domains.
     """
 
-    company = models.OneToOneField(
+    company = models.ForeignKey(
         Company,
         on_delete=models.CASCADE,
-        related_name="domain",
+        related_name="domains",
+        help_text="The company this domain belongs to"
     )
+    
+    domain = models.CharField(
+        max_length=253,
+        unique=True,
+        help_text="Domain name (e.g., tenant.example.com)"
+    )
+    
+    is_primary = models.BooleanField(
+        default=False,
+        help_text="Is this the primary domain for the company?"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("Company Domain")
         verbose_name_plural = _("Company Domains")
+        unique_together = [['company', 'is_primary']]
 
     def __str__(self):
-        return f"{self.domain} -> {self.company.name}"
+        return f"{self.domain} ({self.company.name})"
 
 
 class User(AbstractUser):

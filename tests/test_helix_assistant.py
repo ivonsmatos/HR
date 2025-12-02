@@ -3,6 +3,7 @@ Testes para Helix Assistant Module - Fase 5
 Implementa 7 testes para funcionalidades de IA/Assistant
 """
 
+import pytest
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -10,6 +11,7 @@ from django.utils import timezone
 User = get_user_model()
 
 
+@pytest.mark.django_db
 class HelixAssistantConversationTests(TestCase):
     """Testes para Multi-turn Conversation - 3 testes"""
     
@@ -85,6 +87,7 @@ class HelixAssistantConversationTests(TestCase):
         self.assertIsNotNone(response['citations'][0]['source'])
 
 
+@pytest.mark.django_db
 class HelixAssistantPerformanceTests(TestCase):
     """Testes para Performance e Accuracy - 2 testes"""
     
@@ -144,6 +147,7 @@ class HelixAssistantPerformanceTests(TestCase):
         self.assertLess(conversation['error_count'], conversation['max_errors'])
 
 
+@pytest.mark.django_db
 class HelixAssistantKnowledgeTests(TestCase):
     """Testes para Knowledge Base e Personality - 2 testes"""
     

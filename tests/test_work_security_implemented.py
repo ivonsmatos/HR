@@ -7,12 +7,14 @@ from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
 from datetime import timedelta, date
+import pytest
 
 from apps.core.models import Company
 
 User = get_user_model()
 
 
+@pytest.mark.django_db
 class WorkProjectModelTests(TestCase):
     """Testes de modelos de Project - Work Module"""
     
@@ -21,9 +23,7 @@ class WorkProjectModelTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Work Test Company",
-            slug="work-test",
-            domain="work.local"
-        )
+            slug="work-test")
         
         cls.user = User.objects.create_user(
             username="projectuser",
@@ -68,6 +68,7 @@ class WorkProjectModelTests(TestCase):
         self.assertGreater(budget, spent)
 
 
+@pytest.mark.django_db
 class WorkTaskModelTests(TestCase):
     """Testes de Task Model - Work Module"""
     
@@ -76,9 +77,7 @@ class WorkTaskModelTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Task Test Company",
-            slug="task-test",
-            domain="task.local"
-        )
+            slug="task-test")
         
         cls.user = User.objects.create_user(
             username="taskuser",
@@ -140,6 +139,7 @@ class WorkTaskModelTests(TestCase):
         # Isso seria inválido em um sistema real
 
 
+@pytest.mark.django_db
 class WorkTimeEntryTests(TestCase):
     """Testes de Time Entry - Work Module"""
     
@@ -148,9 +148,7 @@ class WorkTimeEntryTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Time Test Company",
-            slug="time-test",
-            domain="time.local"
-        )
+            slug="time-test")
         
         cls.user = User.objects.create_user(
             username="timeuser",
@@ -205,6 +203,7 @@ class WorkTimeEntryTests(TestCase):
         self.assertEqual(overtime * 1.5, 7.5)  # Valor com multiplicador
 
 
+@pytest.mark.django_db
 class SecurityAuditTests(TestCase):
     """Testes de Audit Logging - Security Module"""
     
@@ -213,9 +212,7 @@ class SecurityAuditTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Security Test Co",
-            slug="security-test",
-            domain="security.local"
-        )
+            slug="security-test")
         
         cls.user = User.objects.create_user(
             username="audituser",
@@ -266,6 +263,7 @@ class SecurityAuditTests(TestCase):
         self.assertTrue(changed)
 
 
+@pytest.mark.django_db
 class SecurityIPBlockingTests(TestCase):
     """Testes de IP Blocking - Security Module"""
     
@@ -274,9 +272,7 @@ class SecurityIPBlockingTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="IP Test Co",
-            slug="ip-test",
-            domain="ip.local"
-        )
+            slug="ip-test")
     
     def test_ip_format_validation(self):
         """Teste validação de formato de IP"""
@@ -315,6 +311,7 @@ class SecurityIPBlockingTests(TestCase):
         self.assertGreaterEqual(len(blocked_ips), 1)
 
 
+@pytest.mark.django_db
 class Security2FATests(TestCase):
     """Testes de Two-Factor Authentication"""
     
@@ -323,9 +320,7 @@ class Security2FATests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="2FA Test Co",
-            slug="2fa-test",
-            domain="2fa.local"
-        )
+            slug="2fa-test")
     
     def test_2fa_token_generation(self):
         """Teste geração de token 2FA"""
@@ -371,6 +366,7 @@ class Security2FATests(TestCase):
         self.assertEqual(len(backup_codes), 3)
 
 
+@pytest.mark.django_db
 class SecuritySessionManagementTests(TestCase):
     """Testes de Session Management"""
     
@@ -379,9 +375,7 @@ class SecuritySessionManagementTests(TestCase):
         super().setUpClass()
         cls.company = Company.objects.create(
             name="Session Test Co",
-            slug="session-test",
-            domain="session.local"
-        )
+            slug="session-test")
         
         cls.user = User.objects.create_user(
             username="sessionuser",

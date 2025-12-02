@@ -138,6 +138,7 @@ class TestE2ECriticalFlows:
 
 
 # Sync wrapper tests for pytest compatibility
+@pytest.mark.django_db
 class TestE2ECriticalFlowsSync(TestCase):
     """Sync wrapper for E2E tests"""
     

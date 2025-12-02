@@ -4,9 +4,8 @@ Stores conversation history and document metadata
 """
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
-from apps.core.models import Company, TenantAwareModel
+from apps.core.models import Company, TenantAwareModel, User
 import uuid
 
 

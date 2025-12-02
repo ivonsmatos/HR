@@ -7,8 +7,10 @@ from django.test import TestCase, override_settings
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 import os
+import pytest
 
 
+@pytest.mark.django_db
 class DjangoSettingsTests(TestCase):
     """Testes de configurações Django"""
     
@@ -58,6 +60,7 @@ class DjangoSettingsTests(TestCase):
         self.assertTrue(hasattr(settings.ALLOWED_HOSTS, '__iter__'))
 
 
+@pytest.mark.django_db
 class MiddlewareTests(TestCase):
     """Testes de Middleware"""
     
@@ -82,6 +85,7 @@ class MiddlewareTests(TestCase):
         self.assertIn(auth_middleware, settings.MIDDLEWARE)
 
 
+@pytest.mark.django_db
 class TemplateTests(TestCase):
     """Testes de Template Configuration"""
     
@@ -105,6 +109,7 @@ class TemplateTests(TestCase):
             self.assertGreater(len(context_processors), 0)
 
 
+@pytest.mark.django_db
 class StaticFilesTests(TestCase):
     """Testes de Static Files Configuration"""
     
@@ -126,6 +131,7 @@ class StaticFilesTests(TestCase):
         self.assertIsNotNone(settings.MEDIA_ROOT)
 
 
+@pytest.mark.django_db
 class AuthenticationTests(TestCase):
     """Testes de Authentication Configuration"""
     
@@ -144,6 +150,7 @@ class AuthenticationTests(TestCase):
         self.assertGreater(len(settings.AUTH_PASSWORD_VALIDATORS), 0)
 
 
+@pytest.mark.django_db
 class EmailConfigurationTests(TestCase):
     """Testes de Email Configuration"""
     
@@ -162,6 +169,7 @@ class EmailConfigurationTests(TestCase):
         self.assertTrue(settings.EMAIL_PORT is None or isinstance(settings.EMAIL_PORT, int))
 
 
+@pytest.mark.django_db
 class CORSConfigurationTests(TestCase):
     """Testes de CORS Configuration"""
     
@@ -177,6 +185,7 @@ class CORSConfigurationTests(TestCase):
             self.assertIsInstance(settings.CORS_ALLOW_ALL_ORIGINS, bool)
 
 
+@pytest.mark.django_db
 class LoggingConfigurationTests(TestCase):
     """Testes de Logging Configuration"""
     
@@ -195,6 +204,7 @@ class LoggingConfigurationTests(TestCase):
         self.assertIsInstance(settings.LOGGING['disable_existing_loggers'], bool)
 
 
+@pytest.mark.django_db
 class CacheConfigurationTests(TestCase):
     """Testes de Cache Configuration"""
     
@@ -205,6 +215,7 @@ class CacheConfigurationTests(TestCase):
             self.assertIsNotNone(settings.CACHES)
 
 
+@pytest.mark.django_db
 class SessionConfigurationTests(TestCase):
     """Testes de Session Configuration"""
     
@@ -226,6 +237,7 @@ class SessionConfigurationTests(TestCase):
         self.assertIsInstance(settings.SESSION_COOKIE_HTTPONLY, bool)
 
 
+@pytest.mark.django_db
 class SecurityHeadersTests(TestCase):
     """Testes de Security Headers"""
     
@@ -246,6 +258,7 @@ class SecurityHeadersTests(TestCase):
             self.assertIsNotNone(settings.X_FRAME_OPTIONS)
 
 
+@pytest.mark.django_db
 class DjangoTenantTests(TestCase):
     """Testes de Django Tenants Configuration"""
     
@@ -261,6 +274,7 @@ class DjangoTenantTests(TestCase):
             pass
 
 
+@pytest.mark.django_db
 class EnvironmentVariableTests(TestCase):
     """Testes de Environment Variables"""
     
@@ -276,6 +290,7 @@ class EnvironmentVariableTests(TestCase):
         self.assertIsInstance(settings.DEBUG, bool)
 
 
+@pytest.mark.django_db
 class RequiredSettingsTests(TestCase):
     """Testes de configurações obrigatórias"""
     

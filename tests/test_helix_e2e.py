@@ -35,11 +35,13 @@ from apps.assistant.services import (
     get_helix_status,
 )
 from apps.core.models import Company
+import pytest
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
+@pytest.mark.django_db
 class OllamaConnectionTest(TestCase):
     """Test Ollama service availability and configuration"""
     
@@ -73,6 +75,7 @@ class OllamaConnectionTest(TestCase):
         self.assertTrue(status['ollama_running'])
 
 
+@pytest.mark.django_db
 class DocumentIngestionTest(TestCase):
     """Test document ingestion pipeline"""
     
@@ -173,6 +176,7 @@ O sistema está funcionando corretamente.""")
             self.assertIsInstance(chunk.embedding[0], (float, int))
 
 
+@pytest.mark.django_db
 class RAGRetrievalTest(TestCase):
     """Test RAG retrieval with pgvector similarity search"""
     
@@ -271,6 +275,7 @@ Máximo de 1000 requisições por hora.""")
             self.assertIn("[1]", prompt)
 
 
+@pytest.mark.django_db
 class ChatFlowTest(TestCase):
     """Test complete chat flow with Ollama LLM"""
     
@@ -385,6 +390,7 @@ todas as funções de negócio em uma plataforma única.
         self.assertEqual(history[1]['role'], 'assistant')
 
 
+@pytest.mark.django_db
 class ViewsHTMXTest(TestCase):
     """Test HTMX views and template rendering"""
     
@@ -453,6 +459,7 @@ class ViewsHTMXTest(TestCase):
         self.assertIn('models_available', data)
 
 
+@pytest.mark.django_db
 class ContextProcessorTest(TestCase):
     """Test Helix context processor"""
     
@@ -508,6 +515,7 @@ class ContextProcessorTest(TestCase):
         self.assertIsNotNone(helix_ctx['current_conversation'])
 
 
+@pytest.mark.django_db
 class IntegrationTest(TestCase):
     """Full end-to-end integration test"""
     
