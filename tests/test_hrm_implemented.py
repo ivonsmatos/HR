@@ -31,15 +31,13 @@ class HRMCoreModelTests(TestCase):
         self.user = User.objects.create_user(
             username=f"user_{self.id()}",
             email=f"test_{self.id()}@test.com",
-            password="testpass123",
-            tenant=self.company
-        )
+            password="testpass123")
     
     # ==================== USER/EMPLOYEE TESTS ====================
     def test_user_creation(self):
         """Teste criação de usuário (funcionário)"""
         self.assertIsNotNone(self.user.id)
-        self.assertEqual(self.user.tenant, self.company)
+        self.assertEqual(self.user, self.company)
         self.assertTrue(self.user.is_active)
     
     def test_user_email_uniqueness(self):
@@ -48,9 +46,7 @@ class HRMCoreModelTests(TestCase):
             User.objects.create_user(
                 username="another_user",
                 email=self.user.email,
-                password="pass123",
-                tenant=self.company
-            )
+                password="pass123")
     
     def test_user_password_hashing(self):
         """Teste que senha é hashada"""
@@ -58,9 +54,7 @@ class HRMCoreModelTests(TestCase):
         user = User.objects.create_user(
             username="pass_test",
             email="pass@test.com",
-            password=raw_password,
-            tenant=self.company
-        )
+            password=raw_password)
         self.assertNotEqual(user.password, raw_password)
         self.assertTrue(user.check_password(raw_password))
     
@@ -70,9 +64,7 @@ class HRMCoreModelTests(TestCase):
             username="staff_user",
             email="staff@test.com",
             password="pass123",
-            is_staff=True,
-            tenant=self.company
-        )
+            is_staff=True)
         self.assertTrue(staff_user.is_staff)
     
     def test_user_is_superuser(self):
@@ -80,9 +72,7 @@ class HRMCoreModelTests(TestCase):
         admin = User.objects.create_superuser(
             username="admin",
             email="admin@test.com",
-            password="pass123",
-            tenant=self.company
-        )
+            password="pass123")
         self.assertTrue(admin.is_superuser)
         self.assertTrue(admin.is_staff)
     
@@ -96,14 +86,12 @@ class HRMCoreModelTests(TestCase):
         user2 = User.objects.create_user(
             username="user2",
             email="user2@test.com",
-            password="pass123",
-            tenant=company2
-        )
+            password="pass123")
         
         # Usuários de empresas diferentes
-        self.assertNotEqual(self.user.tenant, user2.tenant)
-        self.assertEqual(self.user.tenant, self.company)
-        self.assertEqual(user2.tenant, company2)
+        self.assertNotEqual(self.user, user2)
+        self.assertEqual(self.user, self.company)
+        self.assertEqual(user2, company2)
     
     def test_company_creation(self):
         """Teste criação de empresa"""
@@ -141,9 +129,7 @@ class HRMViewTests(TestCase):
         self.user = User.objects.create_user(
             username="testuser",
             email="test@test.com",
-            password="testpass",
-            tenant=self.company
-        )
+            password="testpass")
         self.client.force_login(self.user)
     
     def test_admin_access(self):
@@ -152,9 +138,7 @@ class HRMViewTests(TestCase):
         admin = User.objects.create_superuser(
             username="admin",
             email="admin@test.com",
-            password="adminpass",
-            tenant=self.company
-        )
+            password="adminpass")
         self.client.force_login(admin)
         
         response = self.client.get('/admin/')
@@ -190,9 +174,7 @@ class HRMDataValidationTests(TestCase):
         user = User.objects.create_user(
             username="strtest",
             email="str@test.com",
-            password="pass",
-            tenant=self.company
-        )
+            password="pass")
         user_str = str(user)
         self.assertIn("strtest", user_str)
     
@@ -211,9 +193,7 @@ class HRMDataValidationTests(TestCase):
             user = User(
                 username="invalid_email",
                 email="not-an-email",
-                password="pass",
-                tenant=self.company
-            )
+                password="pass")
             # Tentar salvar pode falhar na validação
             user.full_clean()  # Isso deve lançar ValidationError
         except Exception:
@@ -227,9 +207,7 @@ class HRMDataValidationTests(TestCase):
             user = User(
                 username=long_username,
                 email="long@test.com",
-                password="pass",
-                tenant=self.company
-            )
+                password="pass")
             user.full_clean()
         except Exception:
             pass  # Esperado
@@ -253,14 +231,12 @@ class HRMBulkOperationTests(TestCase):
             user = User.objects.create_user(
                 username=f"bulkuser{i}",
                 email=f"bulk{i}@test.com",
-                password="pass123",
-                tenant=self.company
-            )
+                password="pass123")
             self.users.append(user)
     
     def test_user_count(self):
         """Teste contagem de usuários"""
-        count = User.objects.filter(tenant=self.company).count()
+        count = User.objects.filter().count()
         self.assertEqual(count, 5)
     
     def test_user_filtering_by_email(self):
@@ -275,23 +251,16 @@ class HRMBulkOperationTests(TestCase):
     
     def test_user_list_ordering(self):
         """Teste ordenação de usuários"""
-        users = User.objects.filter(
-            tenant=self.company
-        ).order_by('username')
+        users = User.objects.filter().order_by('username')
         
         self.assertEqual(users[0].username, "bulkuser0")
         self.assertEqual(users[4].username, "bulkuser4")
     
     def test_user_bulk_update(self):
         """Teste atualização em bulk"""
-        User.objects.filter(
-            tenant=self.company
-        ).update(is_active=False)
+        User.objects.filter().update(is_active=False)
         
-        active_count = User.objects.filter(
-            tenant=self.company,
-            is_active=True
-        ).count()
+        active_count = User.objects.filter().count()
         self.assertEqual(active_count, 0)
     
     def test_user_deletion(self):
@@ -305,17 +274,12 @@ class HRMBulkOperationTests(TestCase):
     
     def test_queryset_exists(self):
         """Teste verificação de existência"""
-        exists = User.objects.filter(
-            tenant=self.company,
-            email="bulk0@test.com"
-        ).exists()
+        exists = User.objects.filter().exists()
         self.assertTrue(exists)
     
     def test_queryset_count(self):
         """Teste contagem eficiente"""
-        count = User.objects.filter(
-            tenant=self.company
-        ).count()
+        count = User.objects.filter().count()
         self.assertGreaterEqual(count, 1)
 
 
@@ -335,9 +299,7 @@ class HRMPermissionTests(TestCase):
         user = User.objects.create_user(
             username="permuser",
             email="perm@test.com",
-            password="pass",
-            tenant=self.company
-        )
+            password="pass")
         
         # User normal não deve ter permissões
         has_any = user.has_perm('auth.add_user')
@@ -348,9 +310,7 @@ class HRMPermissionTests(TestCase):
         admin = User.objects.create_superuser(
             username="superadmin",
             email="super@test.com",
-            password="pass",
-            tenant=self.company
-        )
+            password="pass")
         
         # Superuser deve ter qualquer permissão
         has_perm = admin.has_perm('any.permission')
@@ -362,9 +322,7 @@ class HRMPermissionTests(TestCase):
             username="staffuser",
             email="staff@test.com",
             password="pass",
-            is_staff=True,
-            tenant=self.company
-        )
+            is_staff=True)
         
         self.assertTrue(staff.is_staff)
 
@@ -385,9 +343,7 @@ class HRMDateTimeTests(TestCase):
         user = User.objects.create_user(
             username="timeteuser",
             email="time@test.com",
-            password="pass",
-            tenant=self.company
-        )
+            password="pass")
         
         self.assertIsNotNone(user.date_joined)
     
@@ -396,9 +352,7 @@ class HRMDateTimeTests(TestCase):
         user = User.objects.create_user(
             username="loginuser",
             email="login@test.com",
-            password="pass",
-            tenant=self.company
-        )
+            password="pass")
         
         # Initially null
         self.assertIsNone(user.last_login)

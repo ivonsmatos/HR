@@ -28,9 +28,7 @@ class HRMCoverageTests(TestCase):
         cls.user = User.objects.create_user(
             username="hrm_user",
             email="hrm@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def setUp(self):
         self.client = Client()
@@ -134,9 +132,7 @@ class WorkCoverageTests(TestCase):
         cls.user = User.objects.create_user(
             username="work_user",
             email="work@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def setUp(self):
         self.client = Client()
@@ -249,9 +245,7 @@ class SecurityAndCoreCoverageTests(TestCase):
         cls.user = User.objects.create_user(
             username="security_user",
             email="security@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     # ==================== AUDIT LOGGING ====================
     def test_audit_log_creation(self):
@@ -311,9 +305,7 @@ class IntegrationCoverageTests(TestCase):
         cls.user = User.objects.create_user(
             username="integration_user",
             email="integration@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def test_hrm_work_integration(self):
         """Teste integração HRM ↔ Work"""
@@ -352,9 +344,7 @@ class HelixAssistantCoverageTests(TestCase):
         cls.user = User.objects.create_user(
             username="helix_user",
             email="helix@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def test_chat_context_preservation(self):
         """Teste preservação de contexto no chat"""

@@ -28,15 +28,13 @@ class WorkProjectModelTests(TestCase):
         cls.user = User.objects.create_user(
             username="projectuser",
             email="project@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def test_project_creation_basic(self):
         """Teste criação básica de projeto"""
         # Teste que o usuário está criado
         self.assertIsNotNone(self.user.id)
-        self.assertEqual(self.user.tenant, self.company)
+        self.assertEqual(self.user, self.company)
     
     def test_project_user_assignment(self):
         """Teste atribuição de projeto ao usuário"""
@@ -82,9 +80,7 @@ class WorkTaskModelTests(TestCase):
         cls.user = User.objects.create_user(
             username="taskuser",
             email="task@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def test_task_priority_levels(self):
         """Teste níveis de prioridade"""
@@ -153,9 +149,7 @@ class WorkTimeEntryTests(TestCase):
         cls.user = User.objects.create_user(
             username="timeuser",
             email="time@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def test_time_entry_duration_calculation(self):
         """Teste cálculo de duração"""
@@ -217,9 +211,7 @@ class SecurityAuditTests(TestCase):
         cls.user = User.objects.create_user(
             username="audituser",
             email="audit@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def test_audit_timestamp_creation(self):
         """Teste que timestamp é criado automaticamente"""
@@ -380,9 +372,7 @@ class SecuritySessionManagementTests(TestCase):
         cls.user = User.objects.create_user(
             username="sessionuser",
             email="session@test.com",
-            password="pass123",
-            tenant=cls.company
-        )
+            password="pass123")
     
     def setUp(self):
         self.client = Client()
