@@ -23,13 +23,23 @@ from typing import List, Dict, Optional, Tuple
 from pathlib import Path
 import json
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import OllamaEmbeddings
-from langchain_community.llms import Ollama
-from langchain.chains import RetrievalQA
-from langchain_postgres import PGVector
-from langchain_core.documents import Document as LangChainDocument
-from langchain.prompts import PromptTemplate
+try:
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+    from langchain_community.embeddings import OllamaEmbeddings
+    from langchain_community.llms import Ollama
+    from langchain.chains import RetrievalQA
+    from langchain_postgres import PGVector
+    from langchain_core.documents import Document as LangChainDocument
+    from langchain.prompts import PromptTemplate
+except ImportError as e:
+    # Langchain optional dependency
+    RecursiveCharacterTextSplitter = None
+    OllamaEmbeddings = None
+    Ollama = None
+    RetrievalQA = None
+    PGVector = None
+    LangChainDocument = None
+    PromptTemplate = None
 
 from .models import Document, DocumentChunk, Conversation, Message, HelixConfig
 

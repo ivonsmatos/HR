@@ -4,6 +4,16 @@ Pytest configuration and fixtures for Worksuite HR tests
 Define fixtures here for use across all tests
 """
 
+import os
+import sys
+import django
+
+# Ensure we're using test settings
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.test')
+
+# Setup Django
+django.setup()
+
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient

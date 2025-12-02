@@ -171,12 +171,6 @@ class DocumentChunkAdmin(admin.ModelAdmin):
             return f"Vector dimension: {embedding_size}"
         return "No embedding"
     embedding_info.short_description = 'Embedding Info'
-            'fields': ('token_count', 'embedding_model')
-        }),
-        ('Timestamps', {
-            'fields': ('created_at', 'updated_at')
-        }),
-    )
 
 
 @admin.register(Conversation)

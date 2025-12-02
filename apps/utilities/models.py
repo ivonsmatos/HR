@@ -259,7 +259,7 @@ class Message(TenantAwareModel):
     subject = models.CharField(max_length=255, blank=True)
     body = models.TextField()
     is_read = models.BooleanField(default=False)
-    is_archived = models.BooleanField(default=False, related_name="archived_messages")
+    is_archived = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Message"
