@@ -24,7 +24,7 @@ python test_summary.py
 
 # Esperado:
 # ✅ test_hrm_implemented.py - 28 testes
-# ✅ test_work_security_implemented.py - 35 testes  
+# ✅ test_work_security_implemented.py - 35 testes
 # ✅ test_config_settings.py - 42 testes
 # TOTAL: 105 testes implementados
 ```
@@ -73,23 +73,27 @@ coverage report tests/test_hrm_implemented.py
 ### 5️⃣ Troubleshooting
 
 #### Erro: `ModuleNotFoundError: No module named 'django'`
+
 ```bash
 pip install django==4.2.8 djangorestframework==3.14.0
 ```
 
 #### Erro: `ModuleNotFoundError: No module named 'psycopg2'`
+
 ```bash
 # Use SQLite em vez de PostgreSQL para testes
 # Ou instale: pip install psycopg2-binary==2.9.9
 ```
 
 #### Erro: `ImproperlyConfigured: Requested setting DATABASES`
+
 ```bash
 # Usar conftest.py automático
 # Ou: pytest --ds=config.settings.test
 ```
 
 #### Testes rodam lento?
+
 ```bash
 # Usar -n para paralelização (instalar pytest-xdist)
 pip install pytest-xdist
@@ -100,36 +104,40 @@ pytest tests/ -n auto
 
 ## 📊 Matriz de Cobertura Esperada
 
-| Módulo | Testes | Linhas | Cobertura Esperada |
-|--------|--------|--------|-------------------|
-| HRM | 28 | 432 | 65-70% |
-| Work | 16 | 250 | 55-60% |
-| Security | 20 | 200 | 75-85% |
-| Config | 42 | 305 | 90%+ |
-| **TOTAL** | **105** | **1181** | **65-70%** |
+| Módulo    | Testes  | Linhas   | Cobertura Esperada |
+| --------- | ------- | -------- | ------------------ |
+| HRM       | 28      | 432      | 65-70%             |
+| Work      | 16      | 250      | 55-60%             |
+| Security  | 20      | 200      | 75-85%             |
+| Config    | 42      | 305      | 90%+               |
+| **TOTAL** | **105** | **1181** | **65-70%**         |
 
 ---
 
 ## 🎯 Próximos Passos
 
 ### Passo 1: Rodar testes básicos
+
 ```bash
 pytest tests/test_config_settings.py::DjangoSettingsTests -v
 ```
 
 ### Passo 2: Ver cobertura inicial
+
 ```bash
 coverage run -m pytest tests/test_config_settings.py
 coverage report
 ```
 
 ### Passo 3: Expandir para outros módulos
+
 ```bash
 pytest tests/test_hrm_implemented.py -v
 pytest tests/test_work_security_implemented.py -v
 ```
 
 ### Passo 4: Medir cobertura total
+
 ```bash
 coverage run -m pytest tests/ -v
 coverage report --skip-covered
@@ -176,6 +184,7 @@ root/
 ## 🚀 Executar Agora (Cópia/Cola)
 
 ### Para usuários Linux/macOS:
+
 ```bash
 pip install pytest pytest-django coverage faker && \
 python test_summary.py && \
@@ -183,6 +192,7 @@ pytest tests/ -v
 ```
 
 ### Para usuários Windows (PowerShell):
+
 ```powershell
 pip install pytest pytest-django coverage faker; `
 python test_summary.py; `

@@ -3,6 +3,7 @@
 ## Status Atual: ✅ 87% Implementado (105/121 testes)
 
 Você completou:
+
 - ✅ **105 testes implementados** em 1,181 linhas de código
 - ✅ **4 commits** realizados com histórico claro
 - ✅ **5 arquivos de documentação** criados
@@ -13,6 +14,7 @@ Você completou:
 ## 🚀 Fase 4: VALIDAÇÃO (Próxima - 2-3 horas)
 
 ### 4.1 Setup Inicial (2 minutos)
+
 ```bash
 pip install pytest pytest-django coverage faker
 python test_summary.py
@@ -21,6 +23,7 @@ python test_summary.py
 **Resultado esperado**: 105 testes listados ✅
 
 ### 4.2 Executar Testes (10-15 segundos)
+
 ```bash
 # Opção A: Config apenas (rápido para validar setup)
 pytest tests/test_config_settings.py -v
@@ -33,11 +36,13 @@ pytest tests/ -q
 ```
 
 **Resultado esperado**:
+
 - 105 testes executados
 - Alguns podem falhar (por falta de models)
 - Config tests devem passar
 
 ### 4.3 Medir Cobertura (5-10 segundos)
+
 ```bash
 coverage run -m pytest tests/ -v
 coverage report
@@ -45,10 +50,12 @@ coverage html  # Gera relatório em htmlcov/index.html
 ```
 
 **Resultado esperado**:
+
 - Cobertura atual: 60-65%
 - Target: 75%+
 
 ### 4.4 Analisar Falhas (30 minutos)
+
 ```bash
 pytest tests/ -v --tb=short
 # Ver quais testes falharam
@@ -66,6 +73,7 @@ pytest tests/ -v --tb=short
 **Testes a Implementar**:
 
 #### Task Management (7 testes)
+
 ```python
 def test_task_subtask_creation()
 def test_task_subtask_completion()
@@ -77,6 +85,7 @@ def test_task_skill_requirement_matching()
 ```
 
 #### Contract Management (5 testes)
+
 ```python
 def test_contract_creation_and_validation()
 def test_contract_status_workflow()
@@ -86,6 +95,7 @@ def test_contract_performance_metrics()
 ```
 
 #### Milestone Tracking (4 testes)
+
 ```python
 def test_milestone_creation_and_assignment()
 def test_milestone_deadline_enforcement()
@@ -130,6 +140,7 @@ def test_concurrent_request_handling()
 ## ✅ Fase 6: VALIDAÇÃO FINAL (Próxima - 1-2 horas)
 
 ### 6.1 Medir Cobertura Final
+
 ```bash
 coverage run -m pytest tests/ -v
 coverage report --fail-under=75
@@ -138,6 +149,7 @@ coverage report --fail-under=75
 **Meta**: ✅ 75%+ de cobertura total
 
 ### 6.2 Verificar por Módulo
+
 ```bash
 coverage report --include=apps/hrm/*
 coverage report --include=apps/work/*
@@ -145,6 +157,7 @@ coverage report --include=apps/security/*
 ```
 
 ### 6.3 Identificar Gaps Restantes
+
 ```bash
 coverage report --skip-covered
 ```
@@ -153,15 +166,15 @@ coverage report --skip-covered
 
 ## 📊 CRONOGRAMA ESTIMADO
 
-| Fase | Tarefas | Tempo | Status |
-|------|---------|-------|--------|
-| **1** | Consolidação | ✅ Completo | ✅ |
-| **2** | Framework | ✅ Completo | ✅ |
-| **3** | Implementação | ✅ Completo | ✅ |
-| **4** | Validação | ⏳ Próxima | 2-3h |
-| **5** | Expansão | ⏳ Próxima | 3-4h |
-| **6** | Final | ⏳ Próxima | 1-2h |
-| | **TOTAL** | | **6-9h** |
+| Fase  | Tarefas       | Tempo       | Status   |
+| ----- | ------------- | ----------- | -------- |
+| **1** | Consolidação  | ✅ Completo | ✅       |
+| **2** | Framework     | ✅ Completo | ✅       |
+| **3** | Implementação | ✅ Completo | ✅       |
+| **4** | Validação     | ⏳ Próxima  | 2-3h     |
+| **5** | Expansão      | ⏳ Próxima  | 3-4h     |
+| **6** | Final         | ⏳ Próxima  | 1-2h     |
+|       | **TOTAL**     |             | **6-9h** |
 
 ---
 
@@ -191,7 +204,7 @@ Após 6: ██████████████████████░�
 ```python
 # tests/test_work_extended.py (500+ linhas)
 # - 7 testes Task Management
-# - 5 testes Contract Management  
+# - 5 testes Contract Management
 # - 4 testes Milestone Tracking
 
 # tests/test_helix_assistant.py (300+ linhas)
@@ -205,11 +218,13 @@ Após 6: ██████████████████████░�
 
 ```markdown
 # FINAL_COVERAGE_REPORT.md
+
 - Cobertura final por módulo
 - Gaps identificados
 - Recomendações para melhorias
 
 # TESTING_GUIDE.md
+
 - Como adicionar novos testes
 - Padrões e convenções
 - Troubleshooting
@@ -244,11 +259,13 @@ coverage report
 ## 📝 Checklist Próximos Passos
 
 ### Antes de Fase 4:
+
 - [ ] Leia QUICK_TEST_SETUP.md
 - [ ] Leia TEST_PROGRESS_VISUAL.txt
 - [ ] Entenda a estrutura de testes
 
 ### Durante Fase 4:
+
 - [ ] Execute: pip install dependências
 - [ ] Execute: python test_summary.py
 - [ ] Execute: pytest tests/ -v
@@ -257,6 +274,7 @@ coverage report
 - [ ] Documente gaps
 
 ### Antes de Fase 5:
+
 - [ ] Crie tests/test_work_extended.py
 - [ ] Crie tests/test_helix_assistant.py
 - [ ] Crie tests/test_integration.py
@@ -265,6 +283,7 @@ coverage report
 - [ ] Implemente 5 testes Integration
 
 ### Depois de Fase 5:
+
 - [ ] Execute: coverage report
 - [ ] Valide 75%+ de cobertura
 - [ ] Documente FINAL_COVERAGE_REPORT.md
