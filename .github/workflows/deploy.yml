@@ -1,0 +1,25 @@
+name: Deploy SyncRH
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /opt/syncrh
+          git pull origin main
+          # Reconstrói apenas o Django e Nginx se houver mudanças
+          docker compose up -d --build web nginx
+          # Roda as migrações do banco (seguro)
+          docker compose exec -T web python manage.py migrate
+          # Coleta os estáticos atualizados
+          docker compose exec -T web python manage.py collectstatic --noinput
