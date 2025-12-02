@@ -1,5 +1,5 @@
 # ============================================================================
-# SyncRH - Unified Requirements (PRODUCTION READY)
+# SyncRH - Production Requirements (STABLE)
 # ============================================================================
 # Django 5.1 + Python 3.10+
 
@@ -33,20 +33,16 @@ requests==2.32.3
 python-dateutil==2.9.0
 pytz==2024.1
 
-# MONITORING & LOGGING
+# MONITORING
 sentry-sdk==2.14.0
 
 # DATA VALIDATION
 marshmallow==3.21.3
 
-# TESTING
+# TESTING (CORE ONLY)
 pytest==8.3.4
 pytest-django==4.11.1
-pytest-cov==7.0.0
-coverage==7.10.6
 
-# DEVELOPMENT (Optional)
+# DEVELOPMENT
 ipython==8.18.1
 django-extensions==3.2.3
-black==24.10.0
-flake8==7.1.1

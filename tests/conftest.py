@@ -17,9 +17,7 @@ django.setup()
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
-from faker import Faker
 
-fake = Faker()
 User = get_user_model()
 
 
@@ -40,11 +38,11 @@ def authenticated_client(api_client, user):
 def user():
     """Creates a test user"""
     return User.objects.create_user(
-        username=fake.user_name(),
-        email=fake.email(),
+        username="testuser",
+        email="testuser@test.com",
         password="testpass123456",
-        first_name=fake.first_name(),
-        last_name=fake.last_name(),
+        first_name="Test",
+        last_name="User",
     )
 
 
@@ -69,9 +67,9 @@ def authenticated_admin_client(api_client, admin_user):
 def test_data():
     """Returns test data dictionary"""
     return {
-        "username": fake.user_name(),
-        "email": fake.email(),
+        "username": "testuser",
+        "email": "testuser@test.com",
         "password": "testpass123456",
-        "first_name": fake.first_name(),
-        "last_name": fake.last_name(),
+        "first_name": "Test",
+        "last_name": "User",
     }
