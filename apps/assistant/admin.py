@@ -94,7 +94,7 @@ class DocumentoAdmin(admin.ModelAdmin):
     readonly_fields = ['ingested_at', 'updated_at', 'created_at', 'chunk_count_display']
     
     fieldsets = (
-        ('Informaçãormações Básicas', {
+        ('Informações Básicas', {
             'fields': ('title', 'source_path', 'company')
         }),
         ('Conteúdo', {
@@ -115,7 +115,7 @@ class DocumentoAdmin(admin.ModelAdmin):
     
     def chunk_count_display(self, obj):
         return obj.documentchunk_set.count()
-    chunk_count_display.short_description = 'Total Chunks'
+    chunk_count_display.short_description = 'Total de Chunks'
     
     def status_badge(self, obj):
         color = 'green' if obj.is_active else 'red'
@@ -140,7 +140,7 @@ class DocumentoChunkAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'embedding_info']
     
     fieldsets = (
-        ('Referência do Documentoo', {
+        ('Referência do Documento', {
             'fields': ('document', 'chunk_index')
         }),
         ('Conteúdo', {
@@ -158,7 +158,7 @@ class DocumentoChunkAdmin(admin.ModelAdmin):
     
     def document_title(self, obj):
         return obj.document.title if obj.document else '-'
-    document_title.short_description = 'Documentoo'
+    document_title.short_description = 'Documento'
     
     def content_preview(self, obj):
         preview = obj.content[:50] if obj.content else '-'
@@ -170,7 +170,7 @@ class DocumentoChunkAdmin(admin.ModelAdmin):
             embedding_size = len(obj.embedding)
             return f"Dimensão do vetor: {embedding_size}"
         return "Sem incorporação"
-    embedding_info.short_description = 'Informaçãormações de Incorporação'
+    embedding_info.short_description = 'Informações de Incorporação'
 
 
 @admin.register(Conversa)
@@ -183,17 +183,17 @@ class ConversaAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
     
     fieldsets = (
-        ('Informaçãormações da Conversa', {
+        ('Informações da Conversa', {
             'fields': ('user', 'company', 'title')
         }),
         ('Status', {
             'fields': ('is_active',)
         }),
-        ('Auditoriaoria', {
+        ('Auditoria', {
             'fields': ('created_at', 'updated_at', 'created_by', 'updated_by')
         }),
     )
-    
+
     def message_count(self, obj):
         """Exibir contagem de mensagens"""
         return obj.messages.count()
@@ -211,7 +211,7 @@ class MensagemAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'context_sources']
     
     fieldsets = (
-        ('Informaçãormações da Mensagem', {
+        ('Informações da Mensagem', {
             'fields': ('conversation', 'role')
         }),
         ('Conteúdo', {
@@ -251,7 +251,7 @@ class HelixConfigAdmin(admin.ModelAdmin):
         ('Recursos', {
             'fields': ('enable_citation',)
         }),
-        ('Auditoriaoria', {
+        ('Auditoria', {
             'fields': ('created_at', 'updated_at', 'created_by', 'updated_by')
         }),
     )
