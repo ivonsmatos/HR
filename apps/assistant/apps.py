@@ -11,7 +11,7 @@ class AssistantConfig(AppConfig):
     
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'apps.assistant'
-    verbose_name = 'Helix Secretary (RAG Assistant)'
+    verbose_name = 'Assistente Helix (RAG Assistant)'
     
     def ready(self):
         """Initialize app signals and setup"""
