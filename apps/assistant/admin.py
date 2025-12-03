@@ -94,24 +94,24 @@ class DocumentAdmin(admin.ModelAdmin):
     readonly_fields = ['ingested_at', 'updated_at', 'created_at', 'chunk_count_display']
     
     fieldsets = (
-        ('Basic Information', {
+        ('Informações Básicas', {
             'fields': ('title', 'source_path', 'company')
         }),
-        ('Content', {
+        ('Conteúdo', {
             'fields': ('content', 'content_type')
         }),
-        ('Metadata', {
+        ('Metadados', {
             'fields': ('version', 'is_active', 'ingested_at', 'updated_at', 'chunk_count_display')
         }),
     )
     
     def company_name(self, obj):
         return obj.company.name if obj.company else '-'
-    company_name.short_description = 'Company'
+    company_name.short_description = 'Empresa'
     
     def chunk_count(self, obj):
         return obj.documentchunk_set.count()
-    chunk_count.short_description = 'Chunks'
+    chunk_count.short_description = 'Fragmentos'
     
     def chunk_count_display(self, obj):
         return obj.documentchunk_set.count()
@@ -140,17 +140,17 @@ class DocumentChunkAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'embedding_info']
     
     fieldsets = (
-        ('Document Reference', {
+        ('Referência do Documento', {
             'fields': ('document', 'chunk_index')
         }),
-        ('Content', {
+        ('Conteúdo', {
             'fields': ('content',)
         }),
-        ('Embedding', {
+        ('Incorporação', {
             'fields': ('embedding_info',),
             'classes': ('collapse',)
         }),
-        ('Metadata', {
+        ('Metadados', {
             'fields': ('created_at',),
             'classes': ('collapse',)
         }),
@@ -158,19 +158,19 @@ class DocumentChunkAdmin(admin.ModelAdmin):
     
     def document_title(self, obj):
         return obj.document.title if obj.document else '-'
-    document_title.short_description = 'Document'
+    document_title.short_description = 'Documento'
     
     def content_preview(self, obj):
         preview = obj.content[:50] if obj.content else '-'
         return f"{preview}..." if len(obj.content or '') > 50 else preview
-    content_preview.short_description = 'Content Preview'
+    content_preview.short_description = 'Prévia do Conteúdo'
     
     def embedding_info(self, obj):
         if obj.embedding:
             embedding_size = len(obj.embedding)
-            return f"Vector dimension: {embedding_size}"
-        return "No embedding"
-    embedding_info.short_description = 'Embedding Info'
+            return f"Dimensão do vetor: {embedding_size}"
+        return "Sem incorporação"
+    embedding_info.short_description = 'Informações de Incorporação'
 
 
 @admin.register(Conversation)
@@ -183,13 +183,13 @@ class ConversationAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
     
     fieldsets = (
-        ('Conversation Info', {
+        ('Informações da Conversa', {
             'fields': ('user', 'company', 'title')
         }),
         ('Status', {
             'fields': ('is_active',)
         }),
-        ('Audit', {
+        ('Auditoria', {
             'fields': ('created_at', 'updated_at', 'created_by', 'updated_by')
         }),
     )
@@ -198,7 +198,7 @@ class ConversationAdmin(admin.ModelAdmin):
         """Display message count"""
         return obj.messages.count()
     
-    message_count.short_description = "Messages"
+    message_count.short_description = "Mensagens"
 
 
 @admin.register(Message)
@@ -211,13 +211,13 @@ class MessageAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'context_sources']
     
     fieldsets = (
-        ('Message Info', {
+        ('Informações da Mensagem', {
             'fields': ('conversation', 'role')
         }),
-        ('Content', {
+        ('Conteúdo', {
             'fields': ('content', 'context_sources')
         }),
-        ('Metadata', {
+        ('Metadados', {
             'fields': ('tokens_used', 'created_at', 'updated_at')
         }),
     )
@@ -226,7 +226,7 @@ class MessageAdmin(admin.ModelAdmin):
         """Show content preview"""
         return obj.content[:100] + '...' if len(obj.content) > 100 else obj.content
     
-    content_preview.short_description = "Content"
+    content_preview.short_description = "Conteúdo"
 
 
 @admin.register(HelixConfig)
@@ -238,20 +238,20 @@ class HelixConfigAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
     
     fieldsets = (
-        ('Configuration', {
+        ('Configuração', {
             'fields': ('company', 'is_enabled')
         }),
-        ('System Prompt', {
+        ('Prompt do Sistema', {
             'fields': ('system_prompt',),
             'classes': ('collapse',)
         }),
-        ('Response Settings', {
+        ('Configurações de Resposta', {
             'fields': ('temperature', 'max_context_chunks', 'similarity_threshold')
         }),
-        ('Features', {
+        ('Recursos', {
             'fields': ('enable_citation',)
         }),
-        ('Audit', {
+        ('Auditoria', {
             'fields': ('created_at', 'updated_at', 'created_by', 'updated_by')
         }),
     )
