@@ -7,6 +7,7 @@
 Foram removidos e consolidados **22 arquivos** desnecessários:
 
 #### ❌ Scripts de Tradução Removidos (8):
+
 - `translate_to_pt_br.py` - Tradução inicial de models
 - `translate_remaining.py` - Tradução de help_text
 - `translate_admin_complete.py` - Tradução de admin labels
@@ -19,6 +20,7 @@ Foram removidos e consolidados **22 arquivos** desnecessários:
 **Consolidado em:** `scripts/maintenance.py`
 
 #### ❌ Scripts de Teste/Validação Removidos (6):
+
 - `validate_tests.py` - Validação de testes
 - `validate_helix.py` - Validação Helix
 - `test_summary.py` - Resumo de testes
@@ -29,6 +31,7 @@ Foram removidos e consolidados **22 arquivos** desnecessários:
 **Consolidado em:** `scripts/test_validation.py`
 
 #### ❌ Scripts de Limpeza Antigos Removidos (3):
+
 - `remove_domain_params.py` - Remoção de domain params
 - `remove_tenant_params.py` - Remoção de tenant params
 - `remove_domain_refs.py` - Remoção de domain refs
@@ -36,6 +39,7 @@ Foram removidos e consolidados **22 arquivos** desnecessários:
 **Status:** Obsoletos, funcionalidade já integrada
 
 #### ❌ Scripts de Configuração Removidos (1):
+
 - `HELIX_SETTINGS_PHASE_E.py` - Configuração de fase antiga
 
 **Status:** Obsoleto, settings.py atual é mais completo
@@ -43,6 +47,7 @@ Foram removidos e consolidados **22 arquivos** desnecessários:
 ### ✅ Novos Scripts Consolidados
 
 #### 1. **`scripts/maintenance.py`** (267 linhas)
+
 Script master para todas as operações de manutenção:
 
 ```bash
@@ -63,6 +68,7 @@ python scripts/maintenance.py cleanup all
 ```
 
 #### 2. **`scripts/test_validation.py`** (175 linhas)
+
 Script master para validação e execução de testes:
 
 ```bash
@@ -82,11 +88,13 @@ python scripts/test_validation.py run
 ### 📈 Impacto de Consolidação
 
 **Antes:**
+
 - 22 arquivos Python únicos para manutenção (script utilities)
 - Código duplicado em múltiplos arquivos
 - Difícil manutenção e atualização
 
 **Depois:**
+
 - 2 arquivos Python consolidados
 - Código centralizado e reutilizável
 - Fácil manutenção, todas funcionalidades organizadas
@@ -97,6 +105,7 @@ python scripts/test_validation.py run
 ### 📋 Documentação Também Consolidada
 
 Documentação de referência mantida em:
+
 - `README.md` - Documentação principal
 - `START_HERE.md` - Guia de início rápido
 - `scripts/` - Scripts utilitários
