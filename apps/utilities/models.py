@@ -78,8 +78,8 @@ class Ticket(TenantAwareModel):
     attachment = models.FileField(upload_to="ticket_attachments/", null=True, blank=True)
 
     class Meta:
-        verbose_name = "Ticket"
-        verbose_name_plural = "Tickets"
+        verbose_name = "Ticket/Chamado"
+        verbose_name_plural = "Tickets/Chamados"
         unique_together = ["company", "ticket_number"]
 
     def __str__(self):
@@ -101,11 +101,11 @@ class TicketReply(TenantAwareModel):
     )
     content = models.TextField()
     attachment = models.FileField(upload_to="ticket_attachments/", null=True, blank=True)
-    is_internal = models.BooleanField(default=False, help_text="Internal note, not visible to customer")
+    is_internal = models.BooleanField(default=False, help_text="Nota interna, não visível para o cliente")
 
     class Meta:
-        verbose_name = "Ticket Reply"
-        verbose_name_plural = "Ticket Replies"
+        verbose_name = "Resposta do Ticket"
+        verbose_name_plural = "Respostas do Ticket"
 
     def __str__(self):
         return f"Reply to Ticket {self.ticket.ticket_number}"
@@ -164,8 +164,8 @@ class Asset(TenantAwareModel):
     assignment_date = models.DateField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Asset"
-        verbose_name_plural = "Assets"
+        verbose_name = "Ativo/Bem"
+        verbose_name_plural = "Ativos/Bens"
         unique_together = ["company", "serial_number"]
 
     def __str__(self):
@@ -202,7 +202,7 @@ class Event(TenantAwareModel):
     # Location
     location = models.CharField(max_length=255, blank=True)
     is_virtual = models.BooleanField(default=False)
-    meeting_link = models.URLField(blank=True, help_text="Zoom/Google Meet link")
+    meeting_link = models.URLField(blank=True, help_text="Link do Zoom/Google Meet")
     
     # Organizer
     organizer = models.ForeignKey(
@@ -231,8 +231,8 @@ class Event(TenantAwareModel):
     )
 
     class Meta:
-        verbose_name = "Event"
-        verbose_name_plural = "Events"
+        verbose_name = "Evento"
+        verbose_name_plural = "Eventos"
         ordering = ["-start_date"]
 
     def __str__(self):
@@ -262,8 +262,8 @@ class Message(TenantAwareModel):
     is_archived = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = "Message"
-        verbose_name_plural = "Messages"
+        verbose_name = "Mensagem"
+        verbose_name_plural = "Mensagens"
         ordering = ["-created_at"]
 
     def __str__(self):
@@ -288,7 +288,7 @@ class Notice(TenantAwareModel):
             ("hr", "HR"),
             ("technical", "Technical"),
             ("important", "Important"),
-            ("event", "Event"),
+            ("event", "Evento"),
         ],
     )
     
@@ -303,12 +303,12 @@ class Notice(TenantAwareModel):
     is_active = models.BooleanField(default=True)
     
     # Priority
-    is_pinned = models.BooleanField(default=False, help_text="Pin to top of notice board")
+    is_pinned = models.BooleanField(default=False, help_text="Fixar no topo do quadro de avisos")
     priority = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name = "Notice"
-        verbose_name_plural = "Notices"
+        verbose_name = "Aviso"
+        verbose_name_plural = "Avisos"
         ordering = ["-is_pinned", "-publish_date"]
 
     def __str__(self):

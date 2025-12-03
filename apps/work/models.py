@@ -66,8 +66,8 @@ class Project(TenantAwareModel):
     completion_percentage = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name = "Project"
-        verbose_name_plural = "Projects"
+        verbose_name = "Projeto"
+        verbose_name_plural = "Projetos"
         unique_together = ["company", "slug"]
 
     def __str__(self):
@@ -102,8 +102,8 @@ class ProjectMember(TenantAwareModel):
     joined_date = models.DateField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Project Member"
-        verbose_name_plural = "Project Members"
+        verbose_name = "Membro do Projeto"
+        verbose_name_plural = "Membros do Projeto"
         unique_together = ["company", "project", "user"]
 
     def __str__(self):
@@ -171,8 +171,8 @@ class Task(TenantAwareModel):
     kanban_order = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name = "Task"
-        verbose_name_plural = "Tasks"
+        verbose_name = "Tarefa"
+        verbose_name_plural = "Tarefas"
         ordering = ["kanban_order", "-created_at"]
 
     def __str__(self):
@@ -195,8 +195,8 @@ class TaskComment(TenantAwareModel):
     content = models.TextField()
 
     class Meta:
-        verbose_name = "Task Comment"
-        verbose_name_plural = "Task Comments"
+        verbose_name = "Comentário na Tarefa"
+        verbose_name_plural = "Comentários nas Tarefas"
 
     def __str__(self):
         return f"Comment on {self.task.title}"
@@ -228,8 +228,8 @@ class TimeLog(TenantAwareModel):
     billable_rate = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 
     class Meta:
-        verbose_name = "Time Log"
-        verbose_name_plural = "Time Logs"
+        verbose_name = "Registro de Tempo"
+        verbose_name_plural = "Registros de Tempo"
         unique_together = ["company", "task", "employee", "date"]
 
     def __str__(self):
@@ -286,8 +286,8 @@ class Contract(TenantAwareModel):
     signed_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Contract"
-        verbose_name_plural = "Contracts"
+        verbose_name = "Contrato"
+        verbose_name_plural = "Contratos"
 
     def __str__(self):
         return f"{self.title} - {self.project.name}"

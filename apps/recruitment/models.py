@@ -47,7 +47,7 @@ class Job(TenantAwareModel):
     )
     
     # Position Details
-    experience_required = models.IntegerField(default=0, help_text="Years of experience")
+    experience_required = models.IntegerField(default=0, help_text="Anos de experiência")
     salary_range_min = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     salary_range_max = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     currency = models.CharField(max_length=3, default="BRL")
@@ -75,7 +75,7 @@ class Job(TenantAwareModel):
         choices=[
             ("full_time", "Full Time"),
             ("part_time", "Part Time"),
-            ("contract", "Contract"),
+            ("contract", "Contrato"),
             ("internship", "Internship"),
         ],
     )
@@ -85,8 +85,8 @@ class Job(TenantAwareModel):
     is_remote = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = "Job"
-        verbose_name_plural = "Jobs"
+        verbose_name = "Vaga/Emprego"
+        verbose_name_plural = "Vagas/Empregos"
 
     def __str__(self):
         return self.title
@@ -130,12 +130,12 @@ class JobApplication(TenantAwareModel):
     )
     
     # Rating
-    rating = models.IntegerField(null=True, blank=True, help_text="1-5 star rating")
+    rating = models.IntegerField(null=True, blank=True, help_text="Classificação de 1-5 estrelas")
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Job Application"
-        verbose_name_plural = "Job Applications"
+        verbose_name = "Candidatura/Solicitação de Emprego"
+        verbose_name_plural = "Candidaturas/Solicitações de Emprego"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.job.title}"
@@ -186,7 +186,7 @@ class InterviewSchedule(TenantAwareModel):
     )
     
     # Meeting Details
-    meeting_link = models.URLField(blank=True, help_text="Zoom/Google Meet link")
+    meeting_link = models.URLField(blank=True, help_text="Link do Zoom/Google Meet")
     location = models.CharField(max_length=255, blank=True)
     
     # Feedback
@@ -203,8 +203,8 @@ class InterviewSchedule(TenantAwareModel):
     )
 
     class Meta:
-        verbose_name = "Interview Schedule"
-        verbose_name_plural = "Interview Schedules"
+        verbose_name = "Agendamento de Entrevista"
+        verbose_name_plural = "Agendamentos de Entrevista"
 
     def __str__(self):
         return f"Interview: {self.application.first_name} - {self.scheduled_date}"
@@ -254,8 +254,8 @@ class OfferLetter(TenantAwareModel):
     acceptance_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Offer Letter"
-        verbose_name_plural = "Offer Letters"
+        verbose_name = "Carta de Oferta"
+        verbose_name_plural = "Cartas de Oferta"
         unique_together = ["company", "offer_number"]
 
     def __str__(self):
@@ -280,7 +280,7 @@ class Candidate(TenantAwareModel):
     experience_years = models.IntegerField(default=0)
     
     # Skills
-    skills = models.TextField(blank=True, help_text="Comma-separated skills")
+    skills = models.TextField(blank=True, help_text="Habilidades separadas por vírgulas")
     
     # Location
     city = models.CharField(max_length=100, blank=True)
@@ -304,8 +304,8 @@ class Candidate(TenantAwareModel):
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Candidate"
-        verbose_name_plural = "Candidates"
+        verbose_name = "Candidato"
+        verbose_name_plural = "Candidatos"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

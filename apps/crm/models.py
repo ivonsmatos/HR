@@ -64,8 +64,8 @@ class Client(TenantAwareModel):
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Client"
-        verbose_name_plural = "Clients"
+        verbose_name = "Cliente"
+        verbose_name_plural = "Clientes"
         unique_together = ["company", "email"]
 
     def __str__(self):
@@ -93,7 +93,7 @@ class Lead(TenantAwareModel):
             ("cold_call", "Cold Call"),
             ("email", "Email"),
             ("social_media", "Social Media"),
-            ("event", "Event"),
+            ("event", "Evento"),
             ("other", "Other"),
         ],
     )
@@ -124,15 +124,15 @@ class Lead(TenantAwareModel):
     
     # Value
     estimated_value = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    probability = models.IntegerField(default=50, help_text="Closing probability %")
+    probability = models.IntegerField(default=50, help_text="Probabilidade de fechamento %")
     
     # Dates
     follow_up_date = models.DateField(null=True, blank=True)
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Lead"
-        verbose_name_plural = "Leads"
+        verbose_name = "Lead/Oportunidade"
+        verbose_name_plural = "Leads/Oportunidades"
 
     def __str__(self):
         return f"{self.name} ({self.company_name})"
@@ -159,8 +159,8 @@ class Product(TenantAwareModel):
         max_length=100,
         choices=[
             ("service", "Service"),
-            ("product", "Product"),
-            ("subscription", "Subscription"),
+            ("product", "Produto"),
+            ("subscription", "Assinatura"),
             ("license", "License"),
         ],
     )
@@ -183,8 +183,8 @@ class Product(TenantAwareModel):
     )
 
     class Meta:
-        verbose_name = "Product"
-        verbose_name_plural = "Products"
+        verbose_name = "Produto"
+        verbose_name_plural = "Produtos"
         unique_together = ["company", "sku"]
 
     def __str__(self):
@@ -233,8 +233,8 @@ class Order(TenantAwareModel):
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Order"
-        verbose_name_plural = "Orders"
+        verbose_name = "Pedido"
+        verbose_name_plural = "Pedidos"
         unique_together = ["company", "order_number"]
 
     def __str__(self):
@@ -260,8 +260,8 @@ class OrderItem(TenantAwareModel):
     amount = models.DecimalField(max_digits=12, decimal_places=2)
 
     class Meta:
-        verbose_name = "Order Item"
-        verbose_name_plural = "Order Items"
+        verbose_name = "Item do Pedido"
+        verbose_name_plural = "Itens do Pedido"
 
     def __str__(self):
         return f"{self.product.name} (Order {self.order.order_number})"

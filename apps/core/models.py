@@ -76,17 +76,17 @@ class Company(BaseModel):
     name = models.CharField(
         max_length=255,
         unique=True,
-        help_text="Company name",
+        help_text="Nome da Empresa",
     )
     slug = models.SlugField(
         max_length=50,
         unique=True,
-        help_text="Unique identifier for URL (e.g., acme-corp)",
+        help_text="Identificador único para URL (ex: acme-corp)",
     )
-    description = models.TextField(blank=True, help_text="Company description")
+    description = models.TextField(blank=True, help_text="Descrição da Empresa")
     
     # Contact Information
-    email = models.EmailField(help_text="Company primary email")
+    email = models.EmailField(help_text="E-mail principal da empresa")
     phone = models.CharField(max_length=20, blank=True)
     website = models.URLField(blank=True)
     
@@ -101,7 +101,7 @@ class Company(BaseModel):
     industry = models.CharField(
         max_length=100,
         blank=True,
-        help_text="Industry vertical (e.g., Technology, Healthcare, Finance)",
+        help_text="Vertical da indústria (ex: Tecnologia, Saúde, Finanças)",
     )
     company_size = models.CharField(
         max_length=50,
@@ -119,12 +119,12 @@ class Company(BaseModel):
     currency = models.CharField(
         max_length=3,
         default="BRL",
-        help_text="Default currency code (ISO 4217)",
+        help_text="Código de moeda padrão (ISO 4217)",
     )
     timezone = models.CharField(
         max_length=50,
         default="America/Sao_Paulo",
-        help_text="Company timezone",
+        help_text="Fuso horário da empresa",
     )
     
     # Logo & Branding
@@ -132,7 +132,7 @@ class Company(BaseModel):
         upload_to="company_logos/",
         null=True,
         blank=True,
-        help_text="Company logo",
+        help_text="Logo da empresa",
     )
     
     # Subscription Plan (reference to SaaS plan)
@@ -167,8 +167,8 @@ class Company(BaseModel):
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = _("Company")
-        verbose_name_plural = _("Companies")
+        verbose_name = _("Empresa")
+        verbose_name_plural = _("Empresas")
         ordering = ["-created_at"]
 
     def __str__(self):
@@ -187,13 +187,13 @@ class CompanyDomain(models.Model):
         Company,
         on_delete=models.CASCADE,
         related_name="domains",
-        help_text="The company this domain belongs to"
+        help_text="A empresa a qual este domínio pertence"
     )
     
     domain = models.CharField(
         max_length=253,
         unique=True,
-        help_text="Domain name (e.g., tenant.example.com)"
+        help_text="Nome de domínio (ex: tenant.example.com)"
     )
     
     is_primary = models.BooleanField(
@@ -312,19 +312,19 @@ class UserPermission(TenantAwareModel):
     module = models.CharField(
         max_length=50,
         choices=[
-            ("employees", "Employees"),
-            ("leaves", "Leaves"),
-            ("attendance", "Attendance"),
+            ("employees", "Funcionários"),
+            ("leaves", "Licenças/Férias"),
+            ("attendance", "Frequência"),
             ("payroll", "Payroll"),
             ("performance", "Performance"),
-            ("projects", "Projects"),
-            ("tasks", "Tasks"),
-            ("timelogs", "Time Logs"),
+            ("projects", "Projetos"),
+            ("tasks", "Tarefas"),
+            ("timelogs", "Registros de Tempo"),
             ("finance", "Finance"),
             ("crm", "CRM"),
             ("recruitment", "Recruitment"),
-            ("assets", "Assets"),
-            ("tickets", "Tickets"),
+            ("assets", "Ativos/Bens"),
+            ("tickets", "Tickets/Chamados"),
         ],
     )
     permission_level = models.CharField(max_length=20, choices=PERMISSION_LEVELS)

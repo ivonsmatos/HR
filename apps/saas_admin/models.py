@@ -32,8 +32,8 @@ class SubscriptionPlan(BaseModel):
     )
     
     # Features
-    max_users = models.IntegerField(null=True, blank=True, help_text="Max users per company, null=unlimited")
-    max_storage_gb = models.IntegerField(null=True, blank=True, help_text="Max storage in GB, null=unlimited")
+    max_users = models.IntegerField(null=True, blank=True, help_text="Máximo de usuários por empresa, nulo=ilimitado")
+    max_storage_gb = models.IntegerField(null=True, blank=True, help_text="Armazenamento máximo em GB, nulo=ilimitado")
     
     # Modules/Features Included
     includes_hrm = models.BooleanField(default=False)
@@ -59,8 +59,8 @@ class SubscriptionPlan(BaseModel):
     display_order = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name = "Subscription Plan"
-        verbose_name_plural = "Subscription Plans"
+        verbose_name = "Plano de Assinatura"
+        verbose_name_plural = "Planos de Assinatura"
         ordering = ["display_order"]
 
     def __str__(self):
@@ -119,8 +119,8 @@ class Subscription(TenantAwareModel):
     gateway_subscription_id = models.CharField(max_length=255, blank=True)
 
     class Meta:
-        verbose_name = "Subscription"
-        verbose_name_plural = "Subscriptions"
+        verbose_name = "Assinatura"
+        verbose_name_plural = "Assinaturas"
 
     def __str__(self):
         return f"{self.company.name} - {self.plan.name}"
@@ -165,8 +165,8 @@ class BillingInvoice(TenantAwareModel):
     transaction_id = models.CharField(max_length=255, blank=True)
 
     class Meta:
-        verbose_name = "Billing Invoice"
-        verbose_name_plural = "Billing Invoices"
+        verbose_name = "Fatura de Cobrança"
+        verbose_name_plural = "Faturas de Cobrança"
         unique_together = ["company", "invoice_number"]
 
     def __str__(self):
@@ -196,7 +196,7 @@ class Coupon(BaseModel):
     # Validity
     valid_from = models.DateField()
     valid_until = models.DateField()
-    max_usage = models.IntegerField(null=True, blank=True, help_text="Maximum number of times coupon can be used")
+    max_usage = models.IntegerField(null=True, blank=True, help_text="Número máximo de vezes que o cupom pode ser usado")
     times_used = models.IntegerField(default=0)
     
     # Applicable Plans
@@ -209,8 +209,8 @@ class Coupon(BaseModel):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Coupon"
-        verbose_name_plural = "Coupons"
+        verbose_name = "Cupom"
+        verbose_name_plural = "Cupons"
 
     def __str__(self):
         return f"{self.code} ({self.discount_value})"

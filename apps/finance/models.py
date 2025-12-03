@@ -75,8 +75,8 @@ class Invoice(TenantAwareModel):
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Invoice"
-        verbose_name_plural = "Invoices"
+        verbose_name = "Fatura"
+        verbose_name_plural = "Faturas"
         unique_together = ["company", "invoice_number"]
 
     def __str__(self):
@@ -98,8 +98,8 @@ class InvoiceItem(TenantAwareModel):
     amount = models.DecimalField(max_digits=12, decimal_places=2)
 
     class Meta:
-        verbose_name = "Invoice Item"
-        verbose_name_plural = "Invoice Items"
+        verbose_name = "Item da Fatura"
+        verbose_name_plural = "Itens da Fatura"
 
     def __str__(self):
         return f"{self.description} (Invoice {self.invoice.invoice_number})"
@@ -144,8 +144,8 @@ class Estimate(TenantAwareModel):
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Estimate"
-        verbose_name_plural = "Estimates"
+        verbose_name = "Orçamento"
+        verbose_name_plural = "Orçamentos"
         unique_together = ["company", "estimate_number"]
 
     def __str__(self):
@@ -186,8 +186,8 @@ class Proposal(TenantAwareModel):
     proposed_value = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
 
     class Meta:
-        verbose_name = "Proposal"
-        verbose_name_plural = "Proposals"
+        verbose_name = "Proposta"
+        verbose_name_plural = "Propostas"
         unique_together = ["company", "proposal_number"]
 
     def __str__(self):
@@ -250,8 +250,8 @@ class Expense(TenantAwareModel):
     receipt = models.FileField(upload_to="expense_receipts/", null=True, blank=True)
 
     class Meta:
-        verbose_name = "Expense"
-        verbose_name_plural = "Expenses"
+        verbose_name = "Despesa"
+        verbose_name_plural = "Despesas"
 
     def __str__(self):
         return f"Expense {self.description} - ${self.amount}"
@@ -280,8 +280,8 @@ class PaymentGateway(TenantAwareModel):
     webhook_url = models.URLField(blank=True)
 
     class Meta:
-        verbose_name = "Payment Gateway"
-        verbose_name_plural = "Payment Gateways"
+        verbose_name = "Gateway de Pagamento"
+        verbose_name_plural = "Gateways de Pagamento"
         unique_together = ["company", "name"]
 
     def __str__(self):
@@ -335,8 +335,8 @@ class Payment(TenantAwareModel):
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Payment"
-        verbose_name_plural = "Payments"
+        verbose_name = "Pagamento"
+        verbose_name_plural = "Pagamentos"
 
     def __str__(self):
         return f"Payment {self.transaction_id} - ${self.amount}"

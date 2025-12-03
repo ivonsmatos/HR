@@ -31,8 +31,8 @@ class Department(TenantAwareModel):
     )
 
     class Meta:
-        verbose_name = "Department"
-        verbose_name_plural = "Departments"
+        verbose_name = "Departamento"
+        verbose_name_plural = "Departamentos"
         unique_together = ["company", "name"]
 
     def __str__(self):
@@ -50,7 +50,7 @@ class Designation(TenantAwareModel):
             ("entry", "Entry Level"),
             ("mid", "Mid Level"),
             ("senior", "Senior"),
-            ("lead", "Lead"),
+            ("lead", "Lead/Oportunidade"),
             ("manager", "Manager"),
             ("director", "Director"),
             ("executive", "Executive"),
@@ -58,8 +58,8 @@ class Designation(TenantAwareModel):
     )
 
     class Meta:
-        verbose_name = "Designation"
-        verbose_name_plural = "Designations"
+        verbose_name = "Cargo/Designação"
+        verbose_name_plural = "Cargos/Designações"
         unique_together = ["company", "name"]
 
     def __str__(self):
@@ -73,7 +73,7 @@ class Employee(TenantAwareModel):
     employee_id = models.CharField(
         max_length=50,
         unique=True,
-        help_text="Employee ID code",
+        help_text="Código de ID do Funcionário",
     )
     department = models.ForeignKey(
         Department,
@@ -110,7 +110,7 @@ class Employee(TenantAwareModel):
         max_length=50,
         choices=[
             ("permanent", "Permanent"),
-            ("contract", "Contract"),
+            ("contract", "Contrato"),
             ("temporary", "Temporary"),
             ("internship", "Internship"),
             ("freelance", "Freelance"),
@@ -128,8 +128,8 @@ class Employee(TenantAwareModel):
     )
 
     class Meta:
-        verbose_name = "Employee"
-        verbose_name_plural = "Employees"
+        verbose_name = "Funcionário"
+        verbose_name_plural = "Funcionários"
 
     def __str__(self):
         return f"{self.user.get_full_name()} ({self.employee_id})"
@@ -147,13 +147,13 @@ class LeaveType(TenantAwareModel):
     description = models.TextField(blank=True)
     annual_entitlement = models.IntegerField(
         default=20,
-        help_text="Annual leave days entitlement",
+        help_text="Dias de licença anual permitidos",
     )
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Leave Type"
-        verbose_name_plural = "Leave Types"
+        verbose_name = "Tipo de Licença"
+        verbose_name_plural = "Tipos de Licença"
         unique_together = ["company", "code"]
 
     def __str__(self):
@@ -200,8 +200,8 @@ class Leave(TenantAwareModel):
     approval_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Leave"
-        verbose_name_plural = "Leaves"
+        verbose_name = "Licença/Férias"
+        verbose_name_plural = "Licenças/Férias"
 
     def __str__(self):
         return f"{self.employee} - {self.leave_type} ({self.start_date} to {self.end_date})"
@@ -220,8 +220,8 @@ class Shift(TenantAwareModel):
     description = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Shift"
-        verbose_name_plural = "Shifts"
+        verbose_name = "Turno"
+        verbose_name_plural = "Turnos"
         unique_together = ["company", "name"]
 
     def __str__(self):
@@ -260,11 +260,11 @@ class Attendance(TenantAwareModel):
         max_digits=5,
         decimal_places=2,
         default=0,
-        help_text="Hours worked beyond shift hours",
+        help_text="Horas trabalhadas além do horário de turno",
     )
 
     class Meta:
-        verbose_name = "Attendance"
+        verbose_name = "Frequência"
         verbose_name_plural = "Attendance Records"
         unique_together = ["company", "employee", "date"]
 
@@ -284,12 +284,12 @@ class SalaryStructure(TenantAwareModel):
     base_salary = models.DecimalField(max_digits=12, decimal_places=2)
     is_template = models.BooleanField(
         default=True,
-        help_text="If True, can be used as template for multiple employees",
+        help_text="Se Verdadeiro, pode ser usado como modelo para vários funcionários",
     )
 
     class Meta:
-        verbose_name = "Salary Structure"
-        verbose_name_plural = "Salary Structures"
+        verbose_name = "Estrutura Salarial"
+        verbose_name_plural = "Estruturas Salariais"
         unique_together = ["company", "name"]
 
     def __str__(self):
@@ -314,8 +314,8 @@ class EmployeeSalary(TenantAwareModel):
     end_date = models.DateField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Employee Salary"
-        verbose_name_plural = "Employee Salaries"
+        verbose_name = "Salário do Funcionário"
+        verbose_name_plural = "Salários dos Funcionários"
 
     def __str__(self):
         return f"{self.employee} - ${self.base_salary}"
@@ -329,7 +329,7 @@ class Payslip(TenantAwareModel):
         on_delete=models.CASCADE,
         related_name="payslips",
     )
-    month = models.DateField(help_text="Month of payslip (first day)")
+    month = models.DateField(help_text="Mês do contracheque (primeiro dia)")
     salary_amount = models.DecimalField(max_digits=12, decimal_places=2)
     deductions = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     net_amount = models.DecimalField(max_digits=12, decimal_places=2)
@@ -345,8 +345,8 @@ class Payslip(TenantAwareModel):
     paid_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "Payslip"
-        verbose_name_plural = "Payslips"
+        verbose_name = "Contracheque"
+        verbose_name_plural = "Contracheques"
         unique_together = ["company", "employee", "month"]
 
     def __str__(self):
@@ -385,8 +385,8 @@ class PerformanceGoal(TenantAwareModel):
     progress_percentage = models.IntegerField(default=0)
 
     class Meta:
-        verbose_name = "Performance Goal"
-        verbose_name_plural = "Performance Goals"
+        verbose_name = "Meta de Desempenho"
+        verbose_name_plural = "Metas de Desempenho"
 
     def __str__(self):
         return f"{self.employee} - {self.title}"
@@ -432,8 +432,8 @@ class PerformanceReview(TenantAwareModel):
     )
 
     class Meta:
-        verbose_name = "Performance Review"
-        verbose_name_plural = "Performance Reviews"
+        verbose_name = "Avaliação de Desempenho"
+        verbose_name_plural = "Avaliações de Desempenho"
 
     def __str__(self):
         return f"{self.employee} - Review {self.review_period_start.year}"

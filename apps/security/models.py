@@ -35,8 +35,8 @@ class IpBlocklist(TenantAwareModel):
     notes = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "IP Blocklist"
-        verbose_name_plural = "IP Blocklists"
+        verbose_name = "Lista Bloqueada de IP"
+        verbose_name_plural = "Listas Bloqueadas de IP"
 
     def __str__(self):
         return f"Blocked: {self.ip_address}"
@@ -66,8 +66,8 @@ class TwoFactorAuth(TenantAwareModel):
     secret_key = models.CharField(max_length=255, blank=True)
 
     class Meta:
-        verbose_name = "Two Factor Auth"
-        verbose_name_plural = "Two Factor Auths"
+        verbose_name = "Autenticação de Dois Fatores"
+        verbose_name_plural = "Autenticações de Dois Fatores"
 
     def __str__(self):
         return f"2FA - {self.user.username}"
@@ -104,8 +104,8 @@ class UserSession(TenantAwareModel):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "User Session"
-        verbose_name_plural = "User Sessions"
+        verbose_name = "Sessão do Usuário"
+        verbose_name_plural = "Sessões do Usuário"
 
     def __str__(self):
         return f"{self.user.username} - {self.ip_address}"
@@ -155,8 +155,8 @@ class SecurityEvent(TenantAwareModel):
     is_resolved = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = "Security Event"
-        verbose_name_plural = "Security Events"
+        verbose_name = "Evento de Segurança"
+        verbose_name_plural = "Eventos de Segurança"
         ordering = ["-created_at"]
 
     def __str__(self):
@@ -180,8 +180,8 @@ class AuditConfig(TenantAwareModel):
     lockout_duration_minutes = models.IntegerField(default=15)
 
     class Meta:
-        verbose_name = "Audit Config"
-        verbose_name_plural = "Audit Configs"
+        verbose_name = "Configuração de Auditoria"
+        verbose_name_plural = "Configurações de Auditoria"
 
     def __str__(self):
         return f"Audit Config - {self.company.name}"

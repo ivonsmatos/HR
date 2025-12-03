@@ -200,8 +200,8 @@ class Message(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name = "Message"
-        verbose_name_plural = "Messages"
+        verbose_name = "Mensagem"
+        verbose_name_plural = "Mensagens"
         ordering = ['created_at']
         indexes = [
             models.Index(fields=['conversation', 'created_at']),
