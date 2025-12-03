@@ -22,7 +22,7 @@ from .gpu_manager import GPUManager
 
 class HelixAdminSite(AdminSite):
     """Custom admin site for Helix"""
-    site_header = "Assistente Helix - Admin"
+    site_header = "Assistente SyncRH - Admin"
     site_title = "Helix Admin"
     index_title = "Dashboard"
     

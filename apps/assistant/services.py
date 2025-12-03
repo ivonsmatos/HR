@@ -1,5 +1,5 @@
 """
-RAG Services for Helix Secretary - FASE B (Ollama Stack)
+RAG Services for SyncRH - FASE B (Ollama Stack)
 
 Core RAG pipeline implementation using:
 - LangChain for orchestration
@@ -85,7 +85,7 @@ except Exception as e:
     llm = None
 
 # System Prompt for Helix
-HELIX_SYSTEM_PROMPT = """Você é o Helix, o secretário executivo do sistema Onyx. 
+HELIX_SYSTEM_PROMPT = """Você é o assistente virtual do sistema SyncRH. 
 Você é profissional, direto e prestativo. 
 Use estritamente o contexto fornecido para responder. 
 Se a resposta não estiver no contexto, diga que não sabe. 

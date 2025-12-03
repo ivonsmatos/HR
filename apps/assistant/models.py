@@ -1,5 +1,5 @@
 """
-Models for Assistant (Helix Secretary)
+Models for Assistant (SyncRH)
 Stores conversation history and document metadata
 """
 
@@ -124,7 +124,7 @@ class DocumentChunk(models.Model):
 
 class Conversation(TenantAwareModel):
     """
-    Stores conversation history with Helix Secretary
+    Stores conversation history with SyncRH
     """
     
     user = models.ForeignKey(
@@ -163,7 +163,7 @@ class Message(models.Model):
     
     ROLE_CHOICES = [
         ('user', 'User'),
-        ('assistant', 'Assistant (Helix)'),
+        ('assistant', 'Assistant (SyncRH)'),
         ('system', 'System'),
     ]
     
@@ -214,18 +214,18 @@ class Message(models.Model):
 
 class HelixConfig(TenantAwareModel):
     """
-    Configuration per tenant for Helix Secretary
+    Configuration per tenant for SyncRH
     """
     
     # Enable/Disable per company
     is_enabled = models.BooleanField(
         default=True,
-        help_text="Ativar Helix para esta empresa"
+        help_text="Ativar SyncRH para esta empresa"
     )
     
     # System prompt customization
     system_prompt = models.TextField(
-        default="Você é o Secretário Virtual do sistema Onyx Helix. Responda de forma concisa, profissional e sempre baseando-se estritamente no contexto fornecido. Se não souber a resposta, diga que precisa de ajuda de um humano.",
+        default="Você é o assistente virtual do sistema SyncRH. Responda de forma concisa, profissional e sempre baseando-se estritamente no contexto fornecido. Se não souber a resposta, diga que precisa de ajuda de um humano.",
         help_text="Prompt de sistema para LLM (Português)"
     )
     
@@ -251,9 +251,9 @@ class HelixConfig(TenantAwareModel):
     )
     
     class Meta:
-        verbose_name = "Helix Configuration"
-        verbose_name_plural = "Helix Configurations"
+        verbose_name = "Configuração do SyncRH"
+        verbose_name_plural = "Configurações do SyncRH"
         unique_together = ['company']
     
     def __str__(self):
-        return f"Helix Config - {self.company.name}"
+        return f"Configuração do SyncRH - {self.company.name}"

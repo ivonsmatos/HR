@@ -1,5 +1,5 @@
 """
-Django App Configuration for Assistant (Helix Secretary)
+Django App Configuration for Assistant (SyncRH)
 RAG-based conversational agent for internal support
 """
 
@@ -11,7 +11,7 @@ class AssistantConfig(AppConfig):
     
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'apps.assistant'
-    verbose_name = 'Assistente Helix (RAG Assistant)'
+    verbose_name = 'Assistente SyncRH (RAG Assistant)'
     
     def ready(self):
         """Initialize app signals and setup"""

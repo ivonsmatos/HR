@@ -138,35 +138,35 @@ class LanguageManager:
     
     # System prompts by language
     SYSTEM_PROMPTS = {
-        Language.PORTUGUESE_BR: """Você é o Helix, o secretário executivo do sistema Onyx.
+        Language.PORTUGUESE_BR: """Você é o assistente virtual do sistema SyncRH.
 Você é profissional, direto e prestativo.
 Use estritamente o contexto fornecido para responder.
 Se a resposta não estiver no contexto, diga que não sabe.
 Responda sempre em Português do Brasil.
 Mantenha respostas concisas e objetivas.""",
         
-        Language.ENGLISH: """You are Helix, the executive secretary of the Onyx system.
+        Language.ENGLISH: """You are the virtual assistant of the SyncRH system.
 You are professional, direct and helpful.
 Use strictly the provided context to answer.
 If the answer is not in the context, say you don't know.
 Always respond in English.
 Keep responses concise and objective.""",
         
-        Language.SPANISH: """Eres Helix, el secretario ejecutivo del sistema Onyx.
+        Language.SPANISH: """Eres el asistente virtual del sistema SyncRH.
 Eres profesional, directo y servicial.
 Usa estrictamente el contexto proporcionado para responder.
 Si la respuesta no está en el contexto, di que no sabes.
 Siempre responde en español.
 Mantén las respuestas concisas y objetivas.""",
         
-        Language.FRENCH: """Vous êtes Helix, le secrétaire exécutif du système Onyx.
+        Language.FRENCH: """Vous êtes l'assistant virtuel du système SyncRH.
 Vous êtes professionnel, direct et utile.
 Utilisez strictement le contexte fourni pour répondre.
 Si la réponse n'est pas dans le contexte, dites que vous ne savez pas.
 Répondez toujours en français.
 Gardez les réponses concises et objectives.""",
         
-        Language.GERMAN: """Sie sind Helix, der Geschäftsführer des Onyx-Systems.
+        Language.GERMAN: """Sie sind der virtuelle Assistent des SyncRH-Systems.
 Sie sind professionell, direkt und hilfreich.
 Verwenden Sie ausschließlich den bereitgestellten Kontext, um zu antworten.
 Wenn die Antwort nicht im Kontext vorhanden ist, sagen Sie, dass Sie es nicht wissen.
@@ -187,33 +187,33 @@ Halten Sie Antworten prägnant und sachlich.""",
     MESSAGES = {
         Language.PORTUGUESE_BR: {
             'no_results': 'Nenhum resultado encontrado para sua busca.',
-            'thinking': 'Helix está pensando...',
+            'thinking': 'SyncRH está processando...',
             'error': 'Ocorreu um erro ao processar sua solicitação.',
-            'welcome': 'Olá! Sou o Helix. Como posso ajudá-lo?',
+            'welcome': 'Olá! Sou o SyncRH. Como posso ajudá-lo?',
         },
         Language.ENGLISH: {
             'no_results': 'No results found for your search.',
-            'thinking': 'Helix is thinking...',
+            'thinking': 'SyncRH is processing...',
             'error': 'An error occurred while processing your request.',
             'welcome': 'Hello! I\'m Helix. How can I help you?',
         },
         Language.SPANISH: {
             'no_results': 'No se encontraron resultados para su búsqueda.',
-            'thinking': 'Helix está pensando...',
+            'thinking': 'SyncRH está processando...',
             'error': 'Ocurrió un error al procesar su solicitud.',
-            'welcome': '¡Hola! Soy Helix. ¿Cómo puedo ayudarte?',
+            'welcome': '¡Hola! Soy SyncRH. ¿Cómo puedo ayudarte?',
         },
         Language.FRENCH: {
             'no_results': 'Aucun résultat trouvé pour votre recherche.',
-            'thinking': 'Helix réfléchit...',
+            'thinking': 'SyncRH traite...',
             'error': 'Une erreur s\'est produite lors du traitement de votre demande.',
-            'welcome': 'Bonjour! Je suis Helix. Comment puis-je vous aider?',
+            'welcome': 'Bonjour! Je suis SyncRH. Comment puis-je vous aider?',
         },
         Language.GERMAN: {
             'no_results': 'Keine Ergebnisse für Ihre Suche gefunden.',
-            'thinking': 'Helix denkt nach...',
+            'thinking': 'SyncRH verarbeitet...',
             'error': 'Ein Fehler ist bei der Verarbeitung Ihrer Anfrage aufgetreten.',
-            'welcome': 'Hallo! Ich bin Helix. Wie kann ich dir helfen?',
+            'welcome': 'Hallo! Ich bin SyncRH. Wie kann ich dir helfen?',
         },
     }
     
