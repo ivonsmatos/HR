@@ -1,0 +1,41 @@
+== DEPRECATED SCRIPTS - CONSOLIDATION LOG ==
+
+These scripts have been consolidated and are kept for reference only.
+All functionality has been moved to:
+1. scripts/maintenance.py - Translation utilities
+2. scripts/test_validation.py - Test utilities
+
+DEPRECATED TRANSLATION SCRIPTS (functionality moved to scripts/maintenance.py):
+- translate_to_pt_br.py (ORIGINAL - Obsolete)
+- translate_remaining.py (DUPLICATE)
+- translate_admin_complete.py (DUPLICATE)
+- translate_admin_labels.py (DUPLICATE)
+- translate_choices.py (DUPLICATE)
+- translate_comprehensive.py (DUPLICATE)
+- translate_to_syncrh.py (DUPLICATE)
+- translate_massive.py (FINAL VERSION - Obsolete)
+
+DEPRECATED TEST/VALIDATION SCRIPTS (functionality moved to scripts/test_validation.py):
+- validate_tests.py
+- validate_helix.py
+- test_summary.py
+- test_helix_quick.py
+- run_basic_tests.py
+- fix_pytest_decorators.py
+- HELIX_SETTINGS_PHASE_E.py
+
+DEPRECATED CLEANUP SCRIPTS (old migration cleanup):
+- remove_domain_params.py
+- remove_tenant_params.py
+- remove_domain_refs.py
+
+DEPRECATED DOCUMENTATION (reference only):
+- CONSOLIDATION_FINAL_STATUS.md
+- CONSOLIDATION_REPORT.html
+- HELIX_DOCUMENTATION.md
+- HELIX_ARCHITECTURE_DIAGRAMS.md
+- DESIGN_SYSTEM.md
+- DESIGN_SYSTEM_SHOWCASE.html
+
+Date: 2025-12-03
+Action: Consolidation complete - 26 files archived/consolidated into 2 master scripts
