@@ -44,7 +44,7 @@ class TenantAwareModel(BaseModel):
         "core.Company",
         on_delete=models.CASCADE,
         related_name="%(class)s_company",
-        help_text="Company (Tenant) this record belongs to",
+        help_text="Empresa (Tenant) a qual este registro pertence",
     )
 
     class Meta:
@@ -198,7 +198,7 @@ class CompanyDomain(models.Model):
     
     is_primary = models.BooleanField(
         default=False,
-        help_text="Is this the primary domain for the company?"
+        help_text="Este é o domínio primário da empresa?"
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -227,7 +227,7 @@ class User(AbstractUser):
         related_name="users",
         null=True,
         blank=True,
-        help_text="Company this user belongs to",
+        help_text="Empresa a qual este usuário pertence",
     )
 
     # Profile Information

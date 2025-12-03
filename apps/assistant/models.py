@@ -17,14 +17,14 @@ class Document(TenantAwareModel):
     
     title = models.CharField(
         max_length=255,
-        help_text="Document title (e.g., 'Installation Guide')"
+        help_text="Título do documento (ex: 'Guia de Instalação')"
     )
     source_path = models.CharField(
         max_length=500,
-        help_text="Original file path (e.g., 'docs/setup.md')"
+        help_text="Caminho original do arquivo (ex: 'docs/setup.md')"
     )
     content = models.TextField(
-        help_text="Full document content"
+        help_text="Conteúdo completo do documento"
     )
     content_type = models.CharField(
         max_length=50,
@@ -40,11 +40,11 @@ class Document(TenantAwareModel):
     version = models.CharField(
         max_length=20,
         default='1.0',
-        help_text="Document version"
+        help_text="Versão do documento"
     )
     is_active = models.BooleanField(
         default=True,
-        help_text="Include in RAG knowledge base"
+        help_text="Incluir na base de conhecimento RAG"
     )
     ingested_at = models.DateTimeField(
         auto_now_add=True
@@ -79,10 +79,10 @@ class DocumentChunk(models.Model):
     )
     
     chunk_index = models.IntegerField(
-        help_text="Sequential chunk number within document"
+        help_text="Número sequencial do chunk dentro do documento"
     )
     content = models.TextField(
-        help_text="Text content of this chunk"
+        help_text="Conteúdo de texto deste chunk"
     )
     
     # Vector embedding (pgvector - 1536 dimensions for text-embedding-3-small)
@@ -91,18 +91,18 @@ class DocumentChunk(models.Model):
         size=1536,
         null=True,
         blank=True,
-        help_text="OpenAI embedding vector (1536 dimensions for text-embedding-3-small)"
+        help_text="Vetor de embedding da OpenAI (1536 dimensões para text-embedding-3-small)"
     )
     
     # Embedding metadata
     token_count = models.IntegerField(
         default=0,
-        help_text="Token count for this chunk"
+        help_text="Contagem de tokens para este chunk"
     )
     embedding_model = models.CharField(
         max_length=100,
         default='text-embedding-3-small',
-        help_text="OpenAI model used for embedding"
+        help_text="Modelo OpenAI usado para embedding"
     )
     
     # Timestamps
@@ -136,12 +136,12 @@ class Conversation(TenantAwareModel):
     title = models.CharField(
         max_length=255,
         blank=True,
-        help_text="Auto-generated conversation title"
+        help_text="Título da conversa gerado automaticamente"
     )
     
     is_active = models.BooleanField(
         default=True,
-        help_text="Mark as archived"
+        help_text="Marcar como arquivado"
     )
     
     class Meta:
@@ -176,24 +176,24 @@ class Message(models.Model):
     role = models.CharField(
         max_length=20,
         choices=ROLE_CHOICES,
-        help_text="Who sent the message"
+        help_text="Quem enviou a mensagem"
     )
     
     content = models.TextField(
-        help_text="Message content"
+        help_text="Conteúdo da mensagem"
     )
     
     # Context for assistant responses
     context_sources = models.JSONField(
         default=list,
         blank=True,
-        help_text="Documents/chunks used for response (RAG context)"
+        help_text="Documentos/chunks usados para resposta (contexto RAG)"
     )
     
     # Metadata
     tokens_used = models.IntegerField(
         default=0,
-        help_text="OpenAI tokens consumed by this message"
+        help_text="Tokens OpenAI consumidos por esta mensagem"
     )
     
     created_at = models.DateTimeField(auto_now_add=True)
@@ -220,34 +220,34 @@ class HelixConfig(TenantAwareModel):
     # Enable/Disable per company
     is_enabled = models.BooleanField(
         default=True,
-        help_text="Enable Helix for this company"
+        help_text="Ativar Helix para esta empresa"
     )
     
     # System prompt customization
     system_prompt = models.TextField(
         default="Você é o Secretário Virtual do sistema Onyx Helix. Responda de forma concisa, profissional e sempre baseando-se estritamente no contexto fornecido. Se não souber a resposta, diga que precisa de ajuda de um humano.",
-        help_text="System prompt for LLM (Portuguese)"
+        help_text="Prompt de sistema para LLM (Português)"
     )
     
     # Response parameters
     max_context_chunks = models.IntegerField(
         default=5,
-        help_text="Maximum number of document chunks to use as context"
+        help_text="Número máximo de chunks de documento para usar como contexto"
     )
     temperature = models.FloatField(
         default=0.3,
-        help_text="LLM temperature (0.0 to 1.0)"
+        help_text="Temperatura do LLM (0,0 a 1,0)"
     )
     
     # Advanced settings
     enable_citation = models.BooleanField(
         default=True,
-        help_text="Include source citations in responses"
+        help_text="Incluir citações de fonte nas respostas"
     )
     
     similarity_threshold = models.FloatField(
         default=0.7,
-        help_text="Minimum similarity score for relevant chunks (0.0 to 1.0)"
+        help_text="Escore mínimo de similaridade para chunks relevantes (0,0 a 1,0)"
     )
     
     class Meta:
