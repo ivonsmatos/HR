@@ -1,10 +1,10 @@
 """
-API URL Configuration for Helix
+API URL Configuração for Helix
 
 REST endpoints:
-- /api/helix/documents/ - Document management
-- /api/helix/conversations/ - Conversation management
-- /api/helix/messages/ - Message management
+- /api/helix/documents/ - Documento management
+- /api/helix/conversations/ - Conversa management
+- /api/helix/messages/ - Mensagem management
 
 GraphQL:
 - /graphql/ - GraphQL endpoint
@@ -13,18 +13,18 @@ GraphQL:
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .api import (
-    DocumentViewSet,
-    DocumentChunkViewSet,
-    ConversationViewSet,
-    MessageViewSet,
+    DocumentoViewSet,
+    DocumentoChunkViewSet,
+    ConversaViewSet,
+    MensagemViewSet,
 )
 
 # Create router for viewsets
 router = DefaultRouter()
-router.register(r'documents', DocumentViewSet, basename='document')
-router.register(r'chunks', DocumentChunkViewSet, basename='chunk')
-router.register(r'conversations', ConversationViewSet, basename='conversation')
-router.register(r'messages', MessageViewSet, basename='message')
+router.register(r'documents', DocumentoViewSet, basename='document')
+router.register(r'chunks', DocumentoChunkViewSet, basename='chunk')
+router.register(r'conversations', ConversaViewSet, basename='conversation')
+router.register(r'messages', MensagemViewSet, basename='message')
 
 app_name = 'api_helix'
 

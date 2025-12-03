@@ -15,7 +15,7 @@ from django.utils.html import format_html
 from django.utils import timezone
 from datetime import timedelta
 
-from .models import Document, DocumentChunk, Conversation, Message, HelixConfig
+from .models import Documento, DocumentoChunk, Conversa, Mensagem, HelixConfig
 from .services import get_helix_status
 from .gpu_manager import GPUManager
 
@@ -31,14 +31,14 @@ class HelixAdminSite(AdminSite):
         from django.template.response import TemplateResponse
         
         # Obter análises
-        total_conversations = Conversation.objects.count()
-        total_messages = Message.objects.count()
-        total_documents = Document.objects.count()
-        total_chunks = DocumentChunk.objects.count()
+        total_conversations = Conversa.objects.count()
+        total_messages = Mensagem.objects.count()
+        total_documents = Documento.objects.count()
+        total_chunks = DocumentoChunk.objects.count()
         
         # Obter estatísticas de usuário
-        from apps.core.models import Company
-        total_users = Company.objects.count()
+        from apps.core.models import Empresa
+        total_users = Empresa.objects.count()
         
         # Obter status do sistema
         try:
@@ -49,15 +49,15 @@ class HelixAdminSite(AdminSite):
             gpu_info = {}
         
         # Obter atividade recente
-        recent_conversations = Conversation.objects.select_related('user', 'company').order_by('-created_at')[:5]
-        recent_messages = Message.objects.select_related('conversation').order_by('-created_at')[:10]
+        recent_conversations = Conversa.objects.select_related('user', 'company').order_by('-created_at')[:5]
+        recent_messages = Mensagem.objects.select_related('conversation').order_by('-created_at')[:10]
         
         # Obter análises
-        messages_7d = Message.objects.filter(
+        messages_7d = Mensagem.objects.filter(
             created_at__gte=timezone.now() - timedelta(days=7)
         ).count()
         
-        conversations_7d = Conversation.objects.filter(
+        conversations_7d = Conversa.objects.filter(
             created_at__gte=timezone.now() - timedelta(days=7)
         ).count()
         
@@ -84,9 +84,9 @@ class HelixAdminSite(AdminSite):
 helix_admin = HelixAdminSite(name='helix_admin')
 
 
-@admin.register(Document)
-class DocumentAdmin(admin.ModelAdmin):
-    """Interface de administração para o modelo Document - APRIMORADO"""
+@admin.register(Documento)
+class DocumentoAdmin(admin.ModelAdmin):
+    """Interface de administração para o modelo Documento - APRIMORADO"""
     
     list_display = ['title', 'company_name', 'content_type', 'chunk_count', 'ingested_at', 'status_badge']
     list_filter = ['company', 'is_active', 'content_type', 'ingested_at']
@@ -94,7 +94,7 @@ class DocumentAdmin(admin.ModelAdmin):
     readonly_fields = ['ingested_at', 'updated_at', 'created_at', 'chunk_count_display']
     
     fieldsets = (
-        ('Informações Básicas', {
+        ('Informaçãormações Básicas', {
             'fields': ('title', 'source_path', 'company')
         }),
         ('Conteúdo', {
@@ -130,9 +130,9 @@ class DocumentAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(DocumentChunk)
-class DocumentChunkAdmin(admin.ModelAdmin):
-    """Interface de administração para o modelo DocumentChunk"""
+@admin.register(DocumentoChunk)
+class DocumentoChunkAdmin(admin.ModelAdmin):
+    """Interface de administração para o modelo DocumentoChunk"""
     
     list_display = ['document_title', 'chunk_index', 'content_preview', 'created_at']
     list_filter = ['document__company', 'created_at', 'document']
@@ -140,7 +140,7 @@ class DocumentChunkAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'embedding_info']
     
     fieldsets = (
-        ('Referência do Documento', {
+        ('Referência do Documentoo', {
             'fields': ('document', 'chunk_index')
         }),
         ('Conteúdo', {
@@ -158,7 +158,7 @@ class DocumentChunkAdmin(admin.ModelAdmin):
     
     def document_title(self, obj):
         return obj.document.title if obj.document else '-'
-    document_title.short_description = 'Documento'
+    document_title.short_description = 'Documentoo'
     
     def content_preview(self, obj):
         preview = obj.content[:50] if obj.content else '-'
@@ -170,12 +170,12 @@ class DocumentChunkAdmin(admin.ModelAdmin):
             embedding_size = len(obj.embedding)
             return f"Dimensão do vetor: {embedding_size}"
         return "Sem incorporação"
-    embedding_info.short_description = 'Informações de Incorporação'
+    embedding_info.short_description = 'Informaçãormações de Incorporação'
 
 
-@admin.register(Conversation)
-class ConversationAdmin(admin.ModelAdmin):
-    """Interface de administração para o modelo Conversation"""
+@admin.register(Conversa)
+class ConversaAdmin(admin.ModelAdmin):
+    """Interface de administração para o modelo Conversa"""
     
     list_display = ['user', 'title', 'company', 'is_active', 'created_at', 'message_count']
     list_filter = ['company', 'is_active', 'created_at']
@@ -183,13 +183,13 @@ class ConversationAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
     
     fieldsets = (
-        ('Informações da Conversa', {
+        ('Informaçãormações da Conversa', {
             'fields': ('user', 'company', 'title')
         }),
         ('Status', {
             'fields': ('is_active',)
         }),
-        ('Auditoria', {
+        ('Auditoriaoria', {
             'fields': ('created_at', 'updated_at', 'created_by', 'updated_by')
         }),
     )
@@ -201,9 +201,9 @@ class ConversationAdmin(admin.ModelAdmin):
     message_count.short_description = "Mensagens"
 
 
-@admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
-    """Interface de administração para o modelo Message"""
+@admin.register(Mensagem)
+class MensagemAdmin(admin.ModelAdmin):
+    """Interface de administração para o modelo Mensagem"""
     
     list_display = ['conversation', 'role', 'content_preview', 'tokens_used', 'created_at']
     list_filter = ['conversation__company', 'role', 'created_at']
@@ -211,7 +211,7 @@ class MessageAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at', 'context_sources']
     
     fieldsets = (
-        ('Informações da Mensagem', {
+        ('Informaçãormações da Mensagem', {
             'fields': ('conversation', 'role')
         }),
         ('Conteúdo', {
@@ -251,7 +251,7 @@ class HelixConfigAdmin(admin.ModelAdmin):
         ('Recursos', {
             'fields': ('enable_citation',)
         }),
-        ('Auditoria', {
+        ('Auditoriaoria', {
             'fields': ('created_at', 'updated_at', 'created_by', 'updated_by')
         }),
     )

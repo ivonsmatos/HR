@@ -1,7 +1,7 @@
 """
 Model Quantization & Multi-Language Support (FASE E+)
 
-Features:
+Recursos:
 - Model quantization (Q4, Q5, Q8) for memory efficiency
 - Multi-language support (PT-BR, EN, ES, FR, DE)
 - Automatic language detection
@@ -183,7 +183,7 @@ Halten Sie Antworten prägnant und sachlich.""",
         Language.GERMAN: "Quelle: {title} (Abschnitt {index})",
     }
     
-    # Messages by language
+    # Mensagens by language
     MESSAGES = {
         Language.PORTUGUESE_BR: {
             'no_results': 'Nenhum resultado encontrado para sua busca.',
@@ -192,13 +192,13 @@ Halten Sie Antworten prägnant und sachlich.""",
             'welcome': 'Olá! Sou o SyncRH. Como posso ajudá-lo?',
         },
         Language.ENGLISH: {
-            'no_results': 'No results found for your search.',
+            'no_results': 'Nenhum resultado encontrado for your search.',
             'thinking': 'SyncRH is processing...',
-            'error': 'An error occurred while processing your request.',
+            'error': 'Ocorreu um erro while processing your request.',
             'welcome': 'Hello! I\'m Helix. How can I help you?',
         },
         Language.SPANISH: {
-            'no_results': 'No se encontraron resultados para su búsqueda.',
+            'no_results': 'Não se encontraron resultados para su búsqueda.',
             'thinking': 'SyncRH está processando...',
             'error': 'Ocurrió un error al procesar su solicitud.',
             'welcome': '¡Hola! Soy SyncRH. ¿Cómo puedo ayudarte?',
@@ -289,7 +289,7 @@ def get_quantized_model_config(quantization: QuantizationType) -> Dict[str, str]
     """Get Ollama model configuration for quantization level"""
     return {
         'LLM_MODEL': ModelQuantizer.get_model_tag(quantization),
-        'EMBEDDING_MODEL': 'nomic-embed-text',  # Embeddings don't change
+        'EMBEDDING_MODEL': 'nomic-embed-text',  # Incorporaçãos don't change
     }
 
 

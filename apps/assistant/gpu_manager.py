@@ -1,5 +1,5 @@
 """
-GPU Support Configuration for Helix Assistant
+GPU Support Configuração for Helix Assistant
 
 Enables CUDA/ROCm acceleration for Ollama models:
 - Automatic GPU detection
@@ -77,7 +77,7 @@ class GPUManager:
                     'gpu_type': 'cpu',
                     'device_count': 0,
                     'device_memory': [],
-                    'driver_version': None,
+                    'driver_version': Nãone,
                     'available': False,
                 }
         
@@ -87,7 +87,7 @@ class GPUManager:
                 'gpu_type': 'cpu',
                 'device_count': 0,
                 'device_memory': [],
-                'driver_version': None,
+                'driver_version': Nãone,
                 'available': False,
                 'error': str(e)
             }
@@ -160,11 +160,11 @@ class GPUManager:
                 timeout=5
             )
             for line in result.stdout.split('\n'):
-                if 'CUDA Version' in line:
-                    return line.split('CUDA Version')[1].strip().split('|')[0].strip()
+                if 'CUDA Versão' in line:
+                    return line.split('CUDA Versão')[1].strip().split('|')[0].strip()
         except Exception:
             pass
-        return None
+        return Nãone
     
     @staticmethod
     def _get_rocm_device_count() -> int:
@@ -200,7 +200,7 @@ class GPUManager:
                         try:
                             memory_mb = int(parts[-2])
                             memory_list.append(memory_mb // 1024)
-                        except ValueError:
+                        except ValueErro:
                             pass
             return memory_list
         except Exception:
@@ -219,7 +219,7 @@ class GPUManager:
             return result.stdout.strip()
         except Exception:
             pass
-        return None
+        return Nãone
     
     @staticmethod
     def configure_environment(gpu_type: str = 'auto') -> Dict[str, str]:
@@ -239,7 +239,7 @@ class GPUManager:
             gpu_type = detection['gpu_type']
         
         if gpu_type == 'cuda':
-            # NVIDIA CUDA Configuration
+            # NVIDIA CUDA Configuração
             env_vars = {
                 'CUDA_VISIBLE_DEVICES': os.getenv('CUDA_VISIBLE_DEVICES', '0'),
                 'OLLAMA_NUM_GPU': os.getenv('OLLAMA_NUM_GPU', '1'),
@@ -248,7 +248,7 @@ class GPUManager:
             }
         
         elif gpu_type == 'rocm':
-            # AMD ROCm Configuration
+            # AMD ROCm Configuração
             env_vars = {
                 'ROCM_HOME': '/opt/rocm',
                 'LD_LIBRARY_PATH': '/opt/rocm/lib:${LD_LIBRARY_PATH}',

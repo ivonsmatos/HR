@@ -9,7 +9,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, User
+from apps.core.models import TenantAwareModel, Usuário
 
 
 # ============================================================================
@@ -29,7 +29,7 @@ class Client(TenantAwareModel):
     contact_person_email = models.EmailField(blank=True)
     contact_person_phone = models.CharField(max_length=20, blank=True)
     
-    # Address
+    # Adicionarress
     address = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
@@ -42,7 +42,7 @@ class Client(TenantAwareModel):
     
     # Assignment
     account_manager = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -102,20 +102,20 @@ class Lead(TenantAwareModel):
     stage = models.CharField(
         max_length=50,
         choices=[
-            ("new", "Novo"),
+            ("new", "Nãovo"),
             ("contacted", "Contacted"),
             ("qualified", "Qualificado"),
             ("proposal", "Proposal Sent"),
             ("negotiation", "Negociação"),
-            ("closed_won", "Closed Won"),
-            ("closed_lost", "Closed Lost"),
+            ("closed_won", "Fechard Won"),
+            ("closed_lost", "Fechard Lost"),
         ],
         default="new",
     )
     
     # Assignment
     assigned_to = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -218,7 +218,7 @@ class Order(TenantAwareModel):
             ("processing", "Processing"),
             ("shipped", "Shipped"),
             ("delivered", "Delivered"),
-            ("cancelled", "Cancelado"),
+            ("cancelled", "Cancelarado"),
         ],
         default="draft",
     )

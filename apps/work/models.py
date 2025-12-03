@@ -9,7 +9,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, User
+from apps.core.models import TenantAwareModel, Usuário
 from apps.hrm.models import Employee
 
 
@@ -35,7 +35,7 @@ class Project(TenantAwareModel):
     
     # Team
     project_lead = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         related_name="projects_lead",
@@ -53,7 +53,7 @@ class Project(TenantAwareModel):
             ("active", "Ativo"),
             ("paused", "Pausado"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelado"),
+            ("cancelled", "Cancelarado"),
         ],
         default="planning",
     )
@@ -83,7 +83,7 @@ class ProjectMember(TenantAwareModel):
         related_name="members",
     )
     user = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="project_memberships",
     )
@@ -127,7 +127,7 @@ class Task(TenantAwareModel):
     
     # Assignment
     assigned_to = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -138,7 +138,7 @@ class Task(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("backlog", "Backlog"),
+            ("backlog", "Voltarlog"),
             ("todo", "To Do"),
             ("in_progress", "Em Progresso"),
             ("review", "Review"),
@@ -188,7 +188,7 @@ class TaskComment(TenantAwareModel):
         related_name="comments",
     )
     author = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="task_comments",
     )
@@ -276,12 +276,12 @@ class Contract(TenantAwareModel):
             ("signed", "Assinado"),
             ("active", "Ativo"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelado"),
+            ("cancelled", "Cancelarado"),
         ],
         default="draft",
     )
     
-    # Documents
+    # Documentoos
     contract_document = models.FileField(upload_to="contracts/", null=True, blank=True)
     signed_date = models.DateTimeField(null=True, blank=True)
 

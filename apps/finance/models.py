@@ -2,7 +2,7 @@
 FINANCE (Finance & Accounting) App Models
 
 Sub-modules:
-- Invoices: Invoice management and billing
+- Faturas: Invoice management and billing
 - Estimates: Quotations and estimates
 - Proposals: Business proposals
 - Expenses: Expense tracking
@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, User
+from apps.core.models import TenantAwareModel, Usuário
 
 
 # ============================================================================
@@ -55,7 +55,7 @@ class Invoice(TenantAwareModel):
             ("partially_paid", "Partially Paid"),
             ("paid", "Pago"),
             ("overdue", "Vencido"),
-            ("cancelled", "Cancelado"),
+            ("cancelled", "Cancelarado"),
         ],
         default="draft",
     )
@@ -202,7 +202,7 @@ class Expense(TenantAwareModel):
     """Employee expenses."""
 
     employee = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="expenses",
     )
@@ -241,7 +241,7 @@ class Expense(TenantAwareModel):
         default="draft",
     )
     approved_by = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -327,7 +327,7 @@ class Payment(TenantAwareModel):
             ("processing", "Processing"),
             ("completed", "Concluído"),
             ("failed", "Failed"),
-            ("cancelled", "Cancelado"),
+            ("cancelled", "Cancelarado"),
         ],
         default="pending",
     )

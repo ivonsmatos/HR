@@ -1,18 +1,18 @@
 """
 Models for Assistant (SyncRH)
-Stores conversation history and document metadata
+Armazena histórico de conversa and document metadata
 """
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from apps.core.models import Company, TenantAwareModel, User
+from apps.core.models import Empresa, TenantAwareModel, Usuário
 import uuid
 
 
-class Document(TenantAwareModel):
+class Documento(TenantAwareModel):
     """
-    Represents a document ingested for RAG
-    Stores metadata about source files and chunks
+    Representa um documento ingerido para RAG
+    Armazena metadados sobre arquivos de origem e chunks
     """
     
     title = models.CharField(
@@ -36,7 +36,7 @@ class Document(TenantAwareModel):
         default='markdown'
     )
     
-    # Metadata
+    # Metadados
     version = models.CharField(
         max_length=20,
         default='1.0',
@@ -54,8 +54,8 @@ class Document(TenantAwareModel):
     )
     
     class Meta:
-        verbose_name = "Document"
-        verbose_name_plural = "Documents"
+        verbose_name = "Documento"
+        verbose_name_plural = "Documentoos"
         ordering = ['-ingested_at']
         indexes = [
             models.Index(fields=['company', 'is_active']),
@@ -66,14 +66,14 @@ class Document(TenantAwareModel):
         return f"{self.title} ({self.company.slug})"
 
 
-class DocumentChunk(models.Model):
+class DocumentoChunk(models.Model):
     """
     Vector chunk of a document
     Stores embeddings in pgvector column
     """
     
     document = models.ForeignKey(
-        Document,
+        Documento,
         on_delete=models.CASCADE,
         related_name='chunks'
     )
@@ -94,7 +94,7 @@ class DocumentChunk(models.Model):
         help_text="Vetor de embedding da OpenAI (1536 dimensões para text-embedding-3-small)"
     )
     
-    # Embedding metadata
+    # Incorporação metadata
     token_count = models.IntegerField(
         default=0,
         help_text="Contagem de tokens para este chunk"
@@ -110,8 +110,8 @@ class DocumentChunk(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name = "Document Chunk"
-        verbose_name_plural = "Document Chunks"
+        verbose_name = "Fragmento de Documentoo"
+        verbose_name_plural = "Fragmentos de Documentoos"
         ordering = ['document', 'chunk_index']
         indexes = [
             models.Index(fields=['document', 'chunk_index']),
@@ -122,13 +122,13 @@ class DocumentChunk(models.Model):
         return f"{self.document.title} - Chunk {self.chunk_index}"
 
 
-class Conversation(TenantAwareModel):
+class Conversa(TenantAwareModel):
     """
-    Stores conversation history with SyncRH
+    Armazena histórico de conversa with SyncRH
     """
     
     user = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name='assistant_conversations'
     )
@@ -145,8 +145,8 @@ class Conversation(TenantAwareModel):
     )
     
     class Meta:
-        verbose_name = "Conversation"
-        verbose_name_plural = "Conversations"
+        verbose_name = "Conversa"
+        verbose_name_plural = "Conversas"
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['user', 'company', '-created_at']),
@@ -156,19 +156,19 @@ class Conversation(TenantAwareModel):
         return f"Chat with {self.user.username} ({self.company.slug})"
 
 
-class Message(models.Model):
+class Mensagem(models.Model):
     """
-    Individual message in a conversation
+    Mensagem individual em uma conversa
     """
     
     ROLE_CHOICES = [
-        ('user', 'User'),
+        ('user', 'Usuário'),
         ('assistant', 'Assistant (SyncRH)'),
         ('system', 'System'),
     ]
     
     conversation = models.ForeignKey(
-        Conversation,
+        Conversa,
         on_delete=models.CASCADE,
         related_name='messages'
     )
@@ -187,10 +187,10 @@ class Message(models.Model):
     context_sources = models.JSONField(
         default=list,
         blank=True,
-        help_text="Documentos/chunks usados para resposta (contexto RAG)"
+        help_text="Documentoos/chunks usados para resposta (contexto RAG)"
     )
     
-    # Metadata
+    # Metadados
     tokens_used = models.IntegerField(
         default=0,
         help_text="Tokens OpenAI consumidos por esta mensagem"
@@ -214,7 +214,7 @@ class Message(models.Model):
 
 class HelixConfig(TenantAwareModel):
     """
-    Configuration per tenant for SyncRH
+    Configuração por tenant para SyncRH
     """
     
     # Enable/Disable per company

@@ -16,7 +16,7 @@ urlpatterns = [
     path('api/chat/history/<int:conversation_id>/', views.chat_history, name='chat_history'),
     path('api/chat/new/', views.create_conversation, name='create_conversation'),
     
-    # Document management
+    # Documento management
     path('api/documents/', views.list_documents, name='list_documents'),
     path('api/documents/ingest/', views.ingest_documents, name='ingest_documents'),
     

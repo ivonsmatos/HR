@@ -1,6 +1,6 @@
 """Security app admin configuration."""
 from django.contrib import admin
-from .models import IpBlocklist, TwoFactorAuth, UserSession, SecurityEvent, AuditConfig
+from .models import IpBlocklist, TwoFactorAuth, UsuárioSession, SecurityEvent, AuditoriaConfig
 
 
 @admin.register(IpBlocklist)
@@ -17,8 +17,8 @@ class TwoFactorAuthAdmin(admin.ModelAdmin):
     search_fields = ["user__username"]
 
 
-@admin.register(UserSession)
-class UserSessionAdmin(admin.ModelAdmin):
+@admin.register(UsuárioSession)
+class UsuárioSessionAdmin(admin.ModelAdmin):
     list_display = ["user", "ip_address", "device_type", "login_time", "is_active"]
     list_filter = ["company", "device_type", "is_active", "login_time"]
     search_fields = ["user__username", "ip_address"]
@@ -33,7 +33,7 @@ class SecurityEventAdmin(admin.ModelAdmin):
     date_hierarchy = "created_at"
 
 
-@admin.register(AuditConfig)
-class AuditConfigAdmin(admin.ModelAdmin):
+@admin.register(AuditoriaConfig)
+class AuditoriaConfigAdmin(admin.ModelAdmin):
     list_display = ["company", "require_2fa", "max_failed_login_attempts"]
     list_filter = ["company"]

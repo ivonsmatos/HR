@@ -5,12 +5,12 @@ Sub-modules:
 - Tickets: Helpdesk and support tickets
 - Assets: Asset management (hardware/software)
 - Events: Calendar events and conferences
-- Messages: Internal messaging
-- NoticeBboard: Notice board for announcements
+- Mensagens: Internal messaging
+- NãoticeBboard: Nãotice board for announcements
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, User
+from apps.core.models import TenantAwareModel, Usuário
 from apps.hrm.models import Employee
 
 
@@ -42,13 +42,13 @@ class Ticket(TenantAwareModel):
     
     # Assignment
     created_by = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         related_name="tickets_created",
     )
     assigned_to = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -95,13 +95,13 @@ class TicketReply(TenantAwareModel):
         related_name="replies",
     )
     author = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="ticket_replies",
     )
     content = models.TextField()
     attachment = models.FileField(upload_to="ticket_attachments/", null=True, blank=True)
-    is_internal = models.BooleanField(default=False, help_text="Nota interna, não visível para o cliente")
+    is_internal = models.BooleanField(default=False, help_text="Nãota interna, não visível para o cliente")
 
     class Meta:
         verbose_name = "Resposta do Ticket"
@@ -116,7 +116,7 @@ class TicketReply(TenantAwareModel):
 # ============================================================================
 
 class Asset(TenantAwareModel):
-    """Company assets (hardware/software)."""
+    """Empresa assets (hardware/software)."""
 
     ASSET_TYPE_CHOICES = [
         ("hardware", "Hardware"),
@@ -177,7 +177,7 @@ class Asset(TenantAwareModel):
 # ============================================================================
 
 class Event(TenantAwareModel):
-    """Company events and meetings."""
+    """Empresa events and meetings."""
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -206,14 +206,14 @@ class Event(TenantAwareModel):
     
     # Organizer
     organizer = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="events_organized",
     )
     
     # Attendees
     attendees = models.ManyToManyField(
-        User,
+        Usuário,
         related_name="events_attending",
         blank=True,
     )
@@ -225,7 +225,7 @@ class Event(TenantAwareModel):
             ("scheduled", "Scheduled"),
             ("in_progress", "Em Progresso"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelado"),
+            ("cancelled", "Cancelarado"),
         ],
         default="scheduled",
     )
@@ -243,16 +243,16 @@ class Event(TenantAwareModel):
 # 4. MESSAGES SUB-MODULE
 # ============================================================================
 
-class Message(TenantAwareModel):
+class Mensagem(TenantAwareModel):
     """Internal messaging system."""
 
     sender = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="messages_sent",
     )
     recipient = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="messages_received",
     )
@@ -267,15 +267,15 @@ class Message(TenantAwareModel):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Message from {self.sender.username} to {self.recipient.username}"
+        return f"Mensagem from {self.sender.username} to {self.recipient.username}"
 
 
 # ============================================================================
 # 5. NOTICE BOARD SUB-MODULE
 # ============================================================================
 
-class Notice(TenantAwareModel):
-    """Notice board announcements."""
+class Nãotice(TenantAwareModel):
+    """Nãotice board announcements."""
 
     title = models.CharField(max_length=255)
     content = models.TextField()
@@ -287,14 +287,14 @@ class Notice(TenantAwareModel):
             ("general", "General"),
             ("hr", "HR"),
             ("technical", "Technical"),
-            ("important", "Importante"),
+            ("important", "Importarante"),
             ("event", "Evento"),
         ],
     )
     
     # Publication
     author = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="notices_created",
     )

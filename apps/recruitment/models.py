@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, User
+from apps.core.models import TenantAwareModel, Usuário
 
 
 # ============================================================================
@@ -40,7 +40,7 @@ class Job(TenantAwareModel):
     
     # Hiring Manager
     hiring_manager = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         related_name="jobs_managing",
@@ -170,7 +170,7 @@ class InterviewSchedule(TenantAwareModel):
     
     # Interviewer(s)
     interviewers = models.ManyToManyField(
-        User,
+        Usuário,
         related_name="interview_schedules",
     )
     
@@ -180,7 +180,7 @@ class InterviewSchedule(TenantAwareModel):
         choices=[
             ("scheduled", "Scheduled"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelado"),
+            ("cancelled", "Cancelarado"),
         ],
         default="scheduled",
     )
@@ -249,7 +249,7 @@ class OfferLetter(TenantAwareModel):
         default="draft",
     )
     
-    # Document
+    # Documento
     offer_letter_file = models.FileField(upload_to="offer_letters/", null=True, blank=True)
     acceptance_date = models.DateTimeField(null=True, blank=True)
 
@@ -274,7 +274,7 @@ class Candidate(TenantAwareModel):
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True)
     
-    # Profile
+    # Perfil
     current_company = models.CharField(max_length=255, blank=True)
     current_designation = models.CharField(max_length=255, blank=True)
     experience_years = models.IntegerField(default=0)
@@ -293,14 +293,14 @@ class Candidate(TenantAwareModel):
         choices=[
             ("active", "Ativo"),
             ("interested", "Interested"),
-            ("not_interested", "Not Interested"),
+            ("not_interested", "Nãot Interested"),
             ("hired", "Contratado"),
             ("archived", "Arquivado"),
         ],
         default="active",
     )
     
-    # Notes
+    # Nãotes
     notes = models.TextField(blank=True)
 
     class Meta:

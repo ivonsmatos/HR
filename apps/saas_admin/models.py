@@ -2,14 +2,14 @@
 SAAS ADMIN (SaaS Administration) App Models
 
 Sub-modules:
-- SubscriptionPlans: Plan management
-- Subscriptions: Customer subscriptions
+- SubscriptionPlanos: Plan management
+- Assinaturas: Customer subscriptions
 - Billing: Billing and invoicing
 - Coupons: Promotional codes
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, BaseModel, User, Company
+from apps.core.models import TenantAwareModel, BaseModel, Usuário, Empresa
 
 
 # ============================================================================
@@ -31,11 +31,11 @@ class SubscriptionPlan(BaseModel):
         ],
     )
     
-    # Features
+    # Recursos
     max_users = models.IntegerField(null=True, blank=True, help_text="Máximo de usuários por empresa, nulo=ilimitado")
     max_storage_gb = models.IntegerField(null=True, blank=True, help_text="Armazenamento máximo em GB, nulo=ilimitado")
     
-    # Modules/Features Included
+    # Modules/Recursos Included
     includes_hrm = models.BooleanField(default=False)
     includes_finance = models.BooleanField(default=False)
     includes_crm = models.BooleanField(default=False)
@@ -96,7 +96,7 @@ class Subscription(TenantAwareModel):
             ("trial", "Teste"),
             ("active", "Ativo"),
             ("paused", "Pausado"),
-            ("cancelled", "Cancelado"),
+            ("cancelled", "Cancelarado"),
             ("expired", "Expirado"),
         ],
         default="trial",
@@ -199,7 +199,7 @@ class Coupon(BaseModel):
     max_usage = models.IntegerField(null=True, blank=True, help_text="Número máximo de vezes que o cupom pode ser usado")
     times_used = models.IntegerField(default=0)
     
-    # Applicable Plans
+    # Applicable Planos
     applicable_plans = models.ManyToManyField(
         SubscriptionPlan,
         blank=True,

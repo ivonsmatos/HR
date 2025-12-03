@@ -65,7 +65,7 @@ class SecurityHeadersMiddleware(MiddlewareMixin):
         response['X-Frame-Options'] = 'DENY'
         
         # Prevent MIME type sniffing
-        response['X-Content-Type-Options'] = 'nosniff'
+        response['X-Conteúdo-Type-Options'] = 'nosniff'
         
         # Enable XSS filter
         response['X-XSS-Protection'] = '1; mode=block'
@@ -81,9 +81,9 @@ class SecurityHeadersMiddleware(MiddlewareMixin):
             'payment=()'
         )
         
-        # Content Security Policy
+        # Conteúdo Security Policy
         if not settings.DEBUG:
-            response['Content-Security-Policy'] = (
+            response['Conteúdo-Security-Policy'] = (
                 "default-src 'self'; "
                 "script-src 'self' 'unsafe-inline'; "
                 "style-src 'self' 'unsafe-inline'; "
@@ -98,7 +98,7 @@ class SecurityHeadersMiddleware(MiddlewareMixin):
         return response
 
 
-class SecurityAuditLoggingMiddleware(MiddlewareMixin):
+class SecurityAuditoriaLoggingMiddleware(MiddlewareMixin):
     """Log de eventos de segurança"""
     
     SECURITY_EVENTS = {
@@ -113,13 +113,13 @@ class SecurityAuditLoggingMiddleware(MiddlewareMixin):
         # Log failed logins
         if response.status_code == 401 and request.path.endswith('/login/'):
             logger.warning(
-                f"Failed login attempt | IP: {client_ip} | User: {request.POST.get('username', 'unknown')}"
+                f"Failed login attempt | IP: {client_ip} | Usuário: {request.POST.get('username', 'unknown')}"
             )
         
         # Log permission denied
         elif response.status_code == 403:
             logger.warning(
-                f"Permission denied | IP: {client_ip} | Path: {request.path} | User: {request.user}"
+                f"Permission denied | IP: {client_ip} | Path: {request.path} | Usuário: {request.user}"
             )
         
         # Log rate limited
@@ -152,7 +152,7 @@ class IPBlockingMiddleware(MiddlewareMixin):
                 status=403
             )
         
-        return None
+        return Nãone
 
 
 class RequestIDMiddleware(MiddlewareMixin):
@@ -171,18 +171,18 @@ class SecurityValidationMiddleware(MiddlewareMixin):
     """Valida segurança de requests"""
     
     def process_request(self, request):
-        # Validar User-Agent
+        # Validar Usuário-Agent
         user_agent = request.META.get('HTTP_USER_AGENT', '')
         if not user_agent:
-            logger.warning(f"Request without User-Agent from {RateLimitMiddleware.get_client_ip(request)}")
+            logger.warning(f"Request without Usuário-Agent from {RateLimitMiddleware.get_client_ip(request)}")
         
-        # Validar Content-Type para POST
+        # Validar Conteúdo-Type para POST
         if request.method == 'POST':
             content_type = request.META.get('CONTENT_TYPE', '')
             if not content_type:
-                logger.warning(f"POST without Content-Type from {RateLimitMiddleware.get_client_ip(request)}")
+                logger.warning(f"POST without Conteúdo-Type from {RateLimitMiddleware.get_client_ip(request)}")
         
-        return None
+        return Nãone
 
 
 # Utility functions para admin

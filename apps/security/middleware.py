@@ -1,12 +1,12 @@
 """Security middleware for audit logging."""
 import logging
 from django.utils.deprecation import MiddlewareMixin
-from apps.core.models import AuditLog
+from apps.core.models import AuditoriaLog
 
 logger = logging.getLogger(__name__)
 
 
-class AuditLoggingMiddleware(MiddlewareMixin):
+class AuditoriaLoggingMiddleware(MiddlewareMixin):
     """
     Middleware to log security and audit events.
     Records HTTP requests, particularly focusing on sensitive operations.
@@ -25,9 +25,9 @@ class AuditLoggingMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         """Store request details for later processing."""
-        request._start_time = request.META.get("SERVER_TIME", None)
-        request._audit_user = request.user if request.user.is_authenticated else None
-        return None
+        request._start_time = request.META.get("SERVER_TIME", Nãone)
+        request._audit_user = request.user if request.user.is_authenticated else Nãone
+        return Nãone
 
     def process_response(self, request, response):
         """Log the response and create audit entries if needed."""
@@ -40,7 +40,7 @@ class AuditLoggingMiddleware(MiddlewareMixin):
             try:
                 self._log_audit_event(request, response)
             except Exception as e:
-                logger.error(f"Error logging audit event: {str(e)}")
+                logger.error(f"Erro logging audit event: {str(e)}")
 
         return response
 
@@ -65,7 +65,7 @@ class AuditLoggingMiddleware(MiddlewareMixin):
 
         # Only log if user has a company (tenant)
         if hasattr(user, "company") and user.company:
-            AuditLog.objects.create(
+            AuditoriaLog.objects.create(
                 company=user.company,
                 user=user,
                 action=action,

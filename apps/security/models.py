@@ -1,8 +1,8 @@
 """
-SECURITY (Security & Audit) App Models
+SECURITY (Security & Auditoria) App Models
 
 Sub-modules:
-- AuditLogs: Logging and audit trails
+- AuditoriaLogs: Logging and audit trails
 - IpBlocklist: IP blocking for security
 - 2FA: Two-factor authentication
 - SessionManagement: Active session tracking
@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, User
+from apps.core.models import TenantAwareModel, Usuário
 
 
 # ============================================================================
@@ -20,7 +20,7 @@ from apps.core.models import TenantAwareModel, User
 class IpBlocklist(TenantAwareModel):
     """Blocked IP addresses."""
 
-    ip_address = models.GenericIPAddressField(unique=True)
+    ip_address = models.GenericIPAdicionarressField(unique=True)
     reason = models.CharField(
         max_length=50,
         choices=[
@@ -56,7 +56,7 @@ class TwoFactorAuth(TenantAwareModel):
     ]
 
     user = models.OneToOneField(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="two_factor_auth",
     )
@@ -77,16 +77,16 @@ class TwoFactorAuth(TenantAwareModel):
 # 3. SESSION MANAGEMENT SUB-MODULE
 # ============================================================================
 
-class UserSession(TenantAwareModel):
+class UsuárioSession(TenantAwareModel):
     """Active user sessions."""
 
     user = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.CASCADE,
         related_name="sessions",
     )
     token = models.CharField(max_length=500)
-    ip_address = models.GenericIPAddressField()
+    ip_address = models.GenericIPAdicionarressField()
     user_agent = models.TextField()
     device_type = models.CharField(
         max_length=20,
@@ -119,13 +119,13 @@ class SecurityEvent(TenantAwareModel):
     """Security-related events."""
 
     EVENT_TYPES = [
-        ("login_success", "Successful Login"),
-        ("login_failed", "Failed Login"),
-        ("password_changed", "Password Changed"),
+        ("login_success", "Sucessoful Entrar"),
+        ("login_failed", "Failed Entrar"),
+        ("password_changed", "Senha Alterard"),
         ("permission_granted", "Permission Granted"),
         ("permission_revoked", "Permission Revoked"),
-        ("data_export", "Data Export"),
-        ("data_import", "Data Import"),
+        ("data_export", "Data Exportar"),
+        ("data_import", "Data Importar"),
         ("brute_force_attempt", "Brute Force Attempt"),
         ("suspicious_activity", "Suspicious Activity"),
         ("phishing_attempt", "Phishing Attempt"),
@@ -133,13 +133,13 @@ class SecurityEvent(TenantAwareModel):
     ]
 
     user = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         related_name="security_events",
     )
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
-    ip_address = models.GenericIPAddressField()
+    ip_address = models.GenericIPAdicionarressField()
     user_agent = models.TextField(blank=True)
     description = models.TextField()
     severity = models.CharField(
@@ -167,8 +167,8 @@ class SecurityEvent(TenantAwareModel):
 # 5. AUDIT CONFIGURATION SUB-MODULE
 # ============================================================================
 
-class AuditConfig(TenantAwareModel):
-    """Audit configuration and policies."""
+class AuditoriaConfig(TenantAwareModel):
+    """Auditoria configuration and policies."""
 
     retention_days = models.IntegerField(default=365)
     log_login_attempts = models.BooleanField(default=True)
@@ -180,8 +180,8 @@ class AuditConfig(TenantAwareModel):
     lockout_duration_minutes = models.IntegerField(default=15)
 
     class Meta:
-        verbose_name = "Configuração de Auditoria"
-        verbose_name_plural = "Configurações de Auditoria"
+        verbose_name = "Configuração de Auditoriaoria"
+        verbose_name_plural = "Configurações de Auditoriaoria"
 
     def __str__(self):
-        return f"Audit Config - {self.company.name}"
+        return f"Auditoria Config - {self.company.name}"

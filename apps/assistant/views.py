@@ -4,12 +4,12 @@ Views for Assistant (Helix Secretary) - FASE C (UI/HTMX + Ollama)
 Integration:
 - Chat endpoints with HTMX streaming responses
 - RAG query processing using Ollama + pgvector
-- Document management and ingestion
-- Error handling and user feedback
+- Documento management and ingestion
+- Erro handling and user feedback
 
 Stack:
 - Ollama (qwen2.5:14b LLM)
-- Nomic Embed (embeddings)
+- Nãomic Embed (embeddings)
 - pgvector (similarity search)
 - HTMX (frontend interactivity)
 - Django templates (server-side rendering)
@@ -26,10 +26,10 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.timezone import now
 from datetime import datetime
 
-from .models import Conversation, Message, Document, DocumentChunk
+from .models import Conversa, Mensagem, Documento, DocumentoChunk
 from .services import (
     HelixAssistant, 
-    DocumentIngestion, 
+    DocumentoIngestion, 
     RAGPipeline,
     check_ollama_connection,
     get_helix_status
@@ -47,7 +47,7 @@ def chat_interface(request):
     Main chat interface page
     
     Displays:
-    - Conversation list (sidebar)
+    - Conversa list (sidebar)
     - Chat window (main)
     - Chat history
     
@@ -55,13 +55,13 @@ def chat_interface(request):
     """
     try:
         # Get user's conversations
-        conversations = Conversation.objects.filter(
+        conversations = Conversa.objects.filter(
             user=request.user,
             company=request.user.tenant
         ).order_by('-created_at')
         
         # Get or create default conversation
-        default_conv, _ = Conversation.objects.get_or_create(
+        default_conv, _ = Conversa.objects.get_or_create(
             user=request.user,
             company=request.user.tenant,
             defaults={
@@ -81,7 +81,7 @@ def chat_interface(request):
         return render(request, 'assistant/chat_interface.html', context)
         
     except Exception as e:
-        logger.error(f"Error loading chat interface: {e}")
+        logger.error(f"Erro loading chat interface: {e}")
         return render(request, 'assistant/error.html', {'error': str(e)}, status=500)
 
 
@@ -111,7 +111,7 @@ def chat_message(request):
         
         # Get conversation
         conversation = get_object_or_404(
-            Conversation,
+            Conversa,
             id=conversation_id,
             user=request.user
         )
@@ -119,7 +119,7 @@ def chat_message(request):
         logger.info(f"Chat message from {request.user}: {user_message[:50]}...")
         
         # Create user message record
-        user_msg = Message.objects.create(
+        user_msg = Mensagem.objects.create(
             conversation=conversation,
             role='user',
             content=user_message,
@@ -176,7 +176,7 @@ def chat_history(request, conversation_id):
     """
     try:
         conversation = get_object_or_404(
-            Conversation,
+            Conversa,
             id=conversation_id,
             user=request.user
         )
@@ -200,7 +200,7 @@ def chat_history(request, conversation_id):
         return HttpResponse(html)
         
     except Exception as e:
-        logger.error(f"History error: {e}")
+        logger.error(f"Histórico error: {e}")
         return HttpResponse(f"Erro: {str(e)}", status=500)
 
 
@@ -217,7 +217,7 @@ def create_conversation(request):
     try:
         title = request.POST.get('title', f'Conversa de {now().strftime("%d/%m %H:%M")}')
         
-        conversation = Conversation.objects.create(
+        conversation = Conversa.objects.create(
             user=request.user,
             company=request.user.tenant,
             title=title,
@@ -234,7 +234,7 @@ def create_conversation(request):
         return HttpResponse(f"Erro: {str(e)}", status=500)
 
 
-# ===== Document Management =====
+# ===== Documento Management =====
 
 @login_required
 @require_http_methods(["GET"])
@@ -247,7 +247,7 @@ def list_documents(request):
     Returns: JSON list of documents
     """
     try:
-        documents = Document.objects.filter(
+        documents = Documento.objects.filter(
             company=request.user.tenant,
             is_active=True
         ).values(
@@ -258,7 +258,7 @@ def list_documents(request):
         # Count chunks per document
         docs_with_counts = []
         for doc in documents:
-            chunk_count = DocumentChunk.objects.filter(
+            chunk_count = DocumentoChunk.objects.filter(
                 document_id=doc['id']
             ).count()
             doc['chunk_count'] = chunk_count
@@ -301,7 +301,7 @@ def ingest_documents(request):
             }, status=503)
         
         # Ingest documents
-        result = DocumentIngestion.ingest_documents(
+        result = DocumentoIngestion.ingest_documents(
             company_id=request.user.tenant.id
         )
         
@@ -343,10 +343,10 @@ def health_check(request):
         }, status=500)
 
 
-# ===== Error Views =====
+# ===== Erro Views =====
 
-def assistant_error(request, exception=None):
-    """Error page for assistant app"""
+def assistant_error(request, exception=Nãone):
+    """Erro page for assistant app"""
     return render(request, 'assistant/error.html', {
         'error': str(exception) if exception else 'Unknown error'
     }, status=500)
@@ -357,7 +357,7 @@ def assistant_error(request, exception=None):
     
     if conversation_id:
         conversation = get_object_or_404(
-            Conversation,
+            Conversa,
             id=conversation_id,
             user=request.user
         )
@@ -366,7 +366,7 @@ def assistant_error(request, exception=None):
         messages = []
     
     context = {
-        'conversation': conversation if conversation_id else None,
+        'conversation': conversation if conversation_id else Nãone,
         'messages': messages,
     }
     return render(request, 'assistant/chat_window.html', context)
@@ -407,7 +407,7 @@ def get_conversation_history(request, conversation_id):
     Fase C: Return HTMX fragment or JSON
     """
     conversation = get_object_or_404(
-        Conversation,
+        Conversa,
         id=conversation_id,
         user=request.user
     )
@@ -437,9 +437,9 @@ def create_conversation(request):
     
     Fase C: Implement conversation creation
     """
-    title = request.data.get('title', 'New Conversation')
+    title = request.data.get('title', 'New Conversa')
     
-    conversation = Conversation.objects.create(
+    conversation = Conversa.objects.create(
         user=request.user,
         company=request.user.tenant,
         title=title,
@@ -451,7 +451,7 @@ def create_conversation(request):
     })
 
 
-# ===== Document Management Endpoints =====
+# ===== Documento Management Endpoints =====
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -461,9 +461,9 @@ def list_documents(request):
     
     GET /api/documents/
     
-    Fase B: Filter by company and active status
+    Fase B: Filtrar by company and active status
     """
-    documents = Document.objects.filter(
+    documents = Documento.objects.filter(
         company=request.user.tenant,
         is_active=True
     ).values('id', 'title', 'source_path', 'content_type')
@@ -488,9 +488,9 @@ def ingest_documents(request):
     # 2. Parse markdown/text/html
     # 3. Chunk text with overlap
     # 4. Generate embeddings via OpenAI
-    # 5. Store in pgvector with Document/DocumentChunk
+    # 5. Store in pgvector with Documento/DocumentoChunk
     
     return JsonResponse({
         'status': 'stub',
-        'message': 'Document ingestion - implement in Fase B'
+        'message': 'Documento ingestion - implement in Fase B'
     })

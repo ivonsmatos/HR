@@ -2,15 +2,15 @@
 HRM (Human Resource Management) App Models
 
 Sub-modules:
-- Employees: Employee profiles, departments, designations
-- Leaves: Leave/absence management with types and approvals
-- Attendance: Time tracking, shifts, biometric integration
+- Funcionários: Employee profiles, departments, designations
+- Licenças: Leave/absence management with types and approvals
+- Presença: Time tracking, shifts, biometric integration
 - Payroll: Salary structures, payslips, deductions
 - Performance: Appraisals, OKRs, performance metrics
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, User
+from apps.core.models import TenantAwareModel, Usuário
 
 
 # ============================================================================
@@ -18,12 +18,12 @@ from apps.core.models import TenantAwareModel, User
 # ============================================================================
 
 class Department(TenantAwareModel):
-    """Company departments."""
+    """Empresa departments."""
 
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     head = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -67,9 +67,9 @@ class Designation(TenantAwareModel):
 
 
 class Employee(TenantAwareModel):
-    """Employee records (extends User model)."""
+    """Employee records (extends Usuário model)."""
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="employee")
+    user = models.OneToOneField(Usuário, on_delete=models.CASCADE, related_name="employee")
     employee_id = models.CharField(
         max_length=50,
         unique=True,
@@ -168,7 +168,7 @@ class Leave(TenantAwareModel):
         ("submitted", "Submitted"),
         ("approved", "Aprovado"),
         ("rejected", "Rejeitado"),
-        ("cancelled", "Cancelado"),
+        ("cancelled", "Cancelarado"),
     ]
 
     employee = models.ForeignKey(
@@ -190,7 +190,7 @@ class Leave(TenantAwareModel):
         default="draft",
     )
     approved_by = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -228,7 +228,7 @@ class Shift(TenantAwareModel):
         return f"{self.name} ({self.start_time} - {self.end_time})"
 
 
-class Attendance(TenantAwareModel):
+class Presença(TenantAwareModel):
     """Daily attendance records."""
 
     employee = models.ForeignKey(
@@ -265,7 +265,7 @@ class Attendance(TenantAwareModel):
 
     class Meta:
         verbose_name = "Frequência"
-        verbose_name_plural = "Attendance Records"
+        verbose_name_plural = "Presença Records"
         unique_together = ["company", "employee", "date"]
 
     def __str__(self):
@@ -372,7 +372,7 @@ class PerformanceGoal(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("not_started", "Not Started"),
+            ("not_started", "Nãot Started"),
             ("in_progress", "Em Progresso"),
             ("completed", "Concluído"),
             ("on_track", "On Track"),
@@ -401,7 +401,7 @@ class PerformanceReview(TenantAwareModel):
         related_name="performance_reviews",
     )
     reviewer = models.ForeignKey(
-        User,
+        Usuário,
         on_delete=models.SET_NULL,
         null=True,
         related_name="performance_reviews_given",
