@@ -22,18 +22,18 @@ class Ticket(TenantAwareModel):
     """Support/helpdesk tickets."""
 
     PRIORITY_CHOICES = [
-        ("low", "Low"),
-        ("medium", "Medium"),
-        ("high", "High"),
-        ("urgent", "Urgent"),
+        ("low", "Baixo"),
+        ("medium", "Médio"),
+        ("high", "Alto"),
+        ("urgent", "Urgente"),
     ]
 
     STATUS_CHOICES = [
-        ("open", "Open"),
-        ("in_progress", "In Progress"),
+        ("open", "Aberto"),
+        ("in_progress", "Em Progresso"),
         ("waiting_for_customer", "Waiting for Customer"),
-        ("resolved", "Resolved"),
-        ("closed", "Closed"),
+        ("resolved", "Resolvido"),
+        ("closed", "Fechado"),
     ]
 
     ticket_number = models.CharField(max_length=50, unique=True)
@@ -65,8 +65,8 @@ class Ticket(TenantAwareModel):
         choices=[
             ("technical", "Technical"),
             ("billing", "Billing"),
-            ("feature_request", "Feature Request"),
-            ("bug_report", "Bug Report"),
+            ("feature_request", "Solicitação de Recurso"),
+            ("bug_report", "Relatório de Bug"),
             ("other", "Other"),
         ],
     )
@@ -127,11 +127,11 @@ class Asset(TenantAwareModel):
     ]
 
     STATUS_CHOICES = [
-        ("available", "Available"),
-        ("in_use", "In Use"),
-        ("maintenance", "Maintenance"),
+        ("available", "Disponível"),
+        ("in_use", "Em Uso"),
+        ("maintenance", "Manutenção"),
         ("disposed", "Disposed"),
-        ("lost", "Lost"),
+        ("lost", "Perdido"),
     ]
 
     name = models.CharField(max_length=255)
@@ -223,9 +223,9 @@ class Event(TenantAwareModel):
         max_length=20,
         choices=[
             ("scheduled", "Scheduled"),
-            ("in_progress", "In Progress"),
-            ("completed", "Completed"),
-            ("cancelled", "Cancelled"),
+            ("in_progress", "Em Progresso"),
+            ("completed", "Concluído"),
+            ("cancelled", "Cancelado"),
         ],
         default="scheduled",
     )
@@ -287,7 +287,7 @@ class Notice(TenantAwareModel):
             ("general", "General"),
             ("hr", "HR"),
             ("technical", "Technical"),
-            ("important", "Important"),
+            ("important", "Importante"),
             ("event", "Evento"),
         ],
     )

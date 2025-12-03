@@ -109,9 +109,9 @@ class Employee(TenantAwareModel):
     employment_type = models.CharField(
         max_length=50,
         choices=[
-            ("permanent", "Permanent"),
+            ("permanent", "Permanente"),
             ("contract", "Contrato"),
-            ("temporary", "Temporary"),
+            ("temporary", "Temporário"),
             ("internship", "Internship"),
             ("freelance", "Freelance"),
         ],
@@ -119,8 +119,8 @@ class Employee(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("active", "Active"),
-            ("on_leave", "On Leave"),
+            ("active", "Ativo"),
+            ("on_leave", "De Licença"),
             ("suspended", "Suspended"),
             ("terminated", "Terminated"),
         ],
@@ -164,11 +164,11 @@ class Leave(TenantAwareModel):
     """Leave/absence requests."""
 
     STATUS_CHOICES = [
-        ("draft", "Draft"),
+        ("draft", "Rascunho"),
         ("submitted", "Submitted"),
-        ("approved", "Approved"),
-        ("rejected", "Rejected"),
-        ("cancelled", "Cancelled"),
+        ("approved", "Aprovado"),
+        ("rejected", "Rejeitado"),
+        ("cancelled", "Cancelado"),
     ]
 
     employee = models.ForeignKey(
@@ -252,7 +252,7 @@ class Attendance(TenantAwareModel):
             ("absent", "Absent"),
             ("half_day", "Half Day"),
             ("late", "Late"),
-            ("on_leave", "On Leave"),
+            ("on_leave", "De Licença"),
         ],
     )
     notes = models.TextField(blank=True)
@@ -336,9 +336,9 @@ class Payslip(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
-            ("approved", "Approved"),
-            ("paid", "Paid"),
+            ("draft", "Rascunho"),
+            ("approved", "Aprovado"),
+            ("paid", "Pago"),
         ],
         default="draft",
     )
@@ -373,8 +373,8 @@ class PerformanceGoal(TenantAwareModel):
         max_length=20,
         choices=[
             ("not_started", "Not Started"),
-            ("in_progress", "In Progress"),
-            ("completed", "Completed"),
+            ("in_progress", "Em Progresso"),
+            ("completed", "Concluído"),
             ("on_track", "On Track"),
             ("at_risk", "At Risk"),
         ],
@@ -423,10 +423,10 @@ class PerformanceReview(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
+            ("draft", "Rascunho"),
             ("submitted", "Submitted"),
-            ("approved", "Approved"),
-            ("completed", "Completed"),
+            ("approved", "Aprovado"),
+            ("completed", "Concluído"),
         ],
         default="draft",
     )

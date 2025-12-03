@@ -49,11 +49,11 @@ class Project(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("planning", "Planning"),
-            ("active", "Active"),
-            ("paused", "Paused"),
-            ("completed", "Completed"),
-            ("cancelled", "Cancelled"),
+            ("planning", "Planejamento"),
+            ("active", "Ativo"),
+            ("paused", "Pausado"),
+            ("completed", "Concluído"),
+            ("cancelled", "Cancelado"),
         ],
         default="planning",
     )
@@ -140,19 +140,19 @@ class Task(TenantAwareModel):
         choices=[
             ("backlog", "Backlog"),
             ("todo", "To Do"),
-            ("in_progress", "In Progress"),
+            ("in_progress", "Em Progresso"),
             ("review", "Review"),
-            ("done", "Done"),
+            ("done", "Concluído"),
         ],
         default="backlog",
     )
     priority = models.CharField(
         max_length=20,
         choices=[
-            ("low", "Low"),
-            ("medium", "Medium"),
-            ("high", "High"),
-            ("urgent", "Urgent"),
+            ("low", "Baixo"),
+            ("medium", "Médio"),
+            ("high", "Alto"),
+            ("urgent", "Urgente"),
         ],
         default="medium",
     )
@@ -272,11 +272,11 @@ class Contract(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
-            ("signed", "Signed"),
-            ("active", "Active"),
-            ("completed", "Completed"),
-            ("cancelled", "Cancelled"),
+            ("draft", "Rascunho"),
+            ("signed", "Assinado"),
+            ("active", "Ativo"),
+            ("completed", "Concluído"),
+            ("cancelled", "Cancelado"),
         ],
         default="draft",
     )

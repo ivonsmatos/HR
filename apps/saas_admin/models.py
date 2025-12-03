@@ -25,9 +25,9 @@ class SubscriptionPlan(BaseModel):
     billing_cycle = models.CharField(
         max_length=20,
         choices=[
-            ("monthly", "Monthly"),
+            ("monthly", "Mensal"),
             ("quarterly", "Quarterly"),
-            ("annual", "Annual"),
+            ("annual", "Anual"),
         ],
     )
     
@@ -93,11 +93,11 @@ class Subscription(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("trial", "Trial"),
-            ("active", "Active"),
-            ("paused", "Paused"),
-            ("cancelled", "Cancelled"),
-            ("expired", "Expired"),
+            ("trial", "Teste"),
+            ("active", "Ativo"),
+            ("paused", "Pausado"),
+            ("cancelled", "Cancelado"),
+            ("expired", "Expirado"),
         ],
         default="trial",
     )
@@ -152,10 +152,10 @@ class BillingInvoice(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
-            ("sent", "Sent"),
-            ("paid", "Paid"),
-            ("overdue", "Overdue"),
+            ("draft", "Rascunho"),
+            ("sent", "Enviado"),
+            ("paid", "Pago"),
+            ("overdue", "Vencido"),
         ],
         default="draft",
     )

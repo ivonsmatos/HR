@@ -53,11 +53,11 @@ class Client(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("prospect", "Prospect"),
-            ("qualified", "Qualified"),
-            ("active", "Active"),
-            ("inactive", "Inactive"),
-            ("blocked", "Blocked"),
+            ("prospect", "Perspectiva"),
+            ("qualified", "Qualificado"),
+            ("active", "Ativo"),
+            ("inactive", "Inativo"),
+            ("blocked", "Bloqueado"),
         ],
         default="prospect",
     )
@@ -102,11 +102,11 @@ class Lead(TenantAwareModel):
     stage = models.CharField(
         max_length=50,
         choices=[
-            ("new", "New"),
+            ("new", "Novo"),
             ("contacted", "Contacted"),
-            ("qualified", "Qualified"),
+            ("qualified", "Qualificado"),
             ("proposal", "Proposal Sent"),
-            ("negotiation", "Negotiation"),
+            ("negotiation", "Negociação"),
             ("closed_won", "Closed Won"),
             ("closed_lost", "Closed Lost"),
         ],
@@ -175,8 +175,8 @@ class Product(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("active", "Active"),
-            ("inactive", "Inactive"),
+            ("active", "Ativo"),
+            ("inactive", "Inativo"),
             ("discontinued", "Discontinued"),
         ],
         default="active",
@@ -213,12 +213,12 @@ class Order(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
+            ("draft", "Rascunho"),
             ("confirmed", "Confirmed"),
             ("processing", "Processing"),
             ("shipped", "Shipped"),
             ("delivered", "Delivered"),
-            ("cancelled", "Cancelled"),
+            ("cancelled", "Cancelado"),
         ],
         default="draft",
     )

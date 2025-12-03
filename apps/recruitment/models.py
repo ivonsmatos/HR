@@ -61,10 +61,10 @@ class Job(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
-            ("published", "Published"),
-            ("closed", "Closed"),
-            ("on_hold", "On Hold"),
+            ("draft", "Rascunho"),
+            ("published", "Publicado"),
+            ("closed", "Fechado"),
+            ("on_hold", "Em Espera"),
         ],
         default="draft",
     )
@@ -119,11 +119,11 @@ class JobApplication(TenantAwareModel):
         max_length=20,
         choices=[
             ("applied", "Applied"),
-            ("screening", "Screening"),
-            ("interview", "Interview"),
+            ("screening", "Triagem"),
+            ("interview", "Entrevista"),
             ("offered", "Offered"),
-            ("hired", "Hired"),
-            ("rejected", "Rejected"),
+            ("hired", "Contratado"),
+            ("rejected", "Rejeitado"),
             ("withdrew", "Withdrew"),
         ],
         default="applied",
@@ -157,8 +157,8 @@ class InterviewSchedule(TenantAwareModel):
     interview_type = models.CharField(
         max_length=50,
         choices=[
-            ("phone", "Phone"),
-            ("video", "Video"),
+            ("phone", "Telefone"),
+            ("video", "Vídeo"),
             ("in_person", "In Person"),
             ("group", "Group"),
         ],
@@ -179,8 +179,8 @@ class InterviewSchedule(TenantAwareModel):
         max_length=20,
         choices=[
             ("scheduled", "Scheduled"),
-            ("completed", "Completed"),
-            ("cancelled", "Cancelled"),
+            ("completed", "Concluído"),
+            ("cancelled", "Cancelado"),
         ],
         default="scheduled",
     )
@@ -240,11 +240,11 @@ class OfferLetter(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
-            ("sent", "Sent"),
+            ("draft", "Rascunho"),
+            ("sent", "Enviado"),
             ("accepted", "Accepted"),
-            ("rejected", "Rejected"),
-            ("expired", "Expired"),
+            ("rejected", "Rejeitado"),
+            ("expired", "Expirado"),
         ],
         default="draft",
     )
@@ -291,11 +291,11 @@ class Candidate(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("active", "Active"),
+            ("active", "Ativo"),
             ("interested", "Interested"),
             ("not_interested", "Not Interested"),
-            ("hired", "Hired"),
-            ("archived", "Archived"),
+            ("hired", "Contratado"),
+            ("archived", "Arquivado"),
         ],
         default="active",
     )

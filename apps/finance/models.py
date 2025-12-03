@@ -49,13 +49,13 @@ class Invoice(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
-            ("sent", "Sent"),
+            ("draft", "Rascunho"),
+            ("sent", "Enviado"),
             ("viewed", "Viewed"),
             ("partially_paid", "Partially Paid"),
-            ("paid", "Paid"),
-            ("overdue", "Overdue"),
-            ("cancelled", "Cancelled"),
+            ("paid", "Pago"),
+            ("overdue", "Vencido"),
+            ("cancelled", "Cancelado"),
         ],
         default="draft",
     )
@@ -133,11 +133,11 @@ class Estimate(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
-            ("sent", "Sent"),
+            ("draft", "Rascunho"),
+            ("sent", "Enviado"),
             ("accepted", "Accepted"),
-            ("rejected", "Rejected"),
-            ("expired", "Expired"),
+            ("rejected", "Rejeitado"),
+            ("expired", "Expirado"),
         ],
         default="draft",
     )
@@ -175,11 +175,11 @@ class Proposal(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
-            ("sent", "Sent"),
+            ("draft", "Rascunho"),
+            ("sent", "Enviado"),
             ("accepted", "Accepted"),
-            ("rejected", "Rejected"),
-            ("expired", "Expired"),
+            ("rejected", "Rejeitado"),
+            ("expired", "Expirado"),
         ],
         default="draft",
     )
@@ -232,11 +232,11 @@ class Expense(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("draft", "Draft"),
+            ("draft", "Rascunho"),
             ("submitted", "Submitted"),
-            ("approved", "Approved"),
+            ("approved", "Aprovado"),
             ("reimbursed", "Reimbursed"),
-            ("rejected", "Rejected"),
+            ("rejected", "Rejeitado"),
         ],
         default="draft",
     )
@@ -323,11 +323,11 @@ class Payment(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("pending", "Pending"),
+            ("pending", "Pendente"),
             ("processing", "Processing"),
-            ("completed", "Completed"),
+            ("completed", "Concluído"),
             ("failed", "Failed"),
-            ("cancelled", "Cancelled"),
+            ("cancelled", "Cancelado"),
         ],
         default="pending",
     )

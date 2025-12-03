@@ -147,11 +147,11 @@ class Company(BaseModel):
         max_length=20,
         default="active",
         choices=[
-            ("trial", "Trial"),
-            ("active", "Active"),
-            ("paused", "Paused"),
-            ("cancelled", "Cancelled"),
-            ("expired", "Expired"),
+            ("trial", "Teste"),
+            ("active", "Ativo"),
+            ("paused", "Pausado"),
+            ("cancelled", "Cancelado"),
+            ("expired", "Expirado"),
         ],
     )
     trial_ends_at = models.DateTimeField(null=True, blank=True)
@@ -356,7 +356,7 @@ class AuditLog(TenantAwareModel):
         ("export", "Export"),
         ("import", "Import"),
         ("download", "Download"),
-        ("permission_change", "Permission Change"),
+        ("permission_change", "Mudança de Permissão"),
         ("config_change", "Configuration Change"),
     ]
 
