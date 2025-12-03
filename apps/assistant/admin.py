@@ -1,12 +1,12 @@
 """
-Helix Admin Dashboard - Advanced Admin Interface (FASE E+)
+Painel SyncRH - Interface Avançada de Administração (FASE E+)
 
-Features:
-- Document management (upload, delete, reindex)
-- Conversation analytics (users, messages, tokens)
-- System monitoring (GPU, memory, response times)
-- Configuration management (prompts, thresholds)
-- User activity logs
+Recursos:
+- Gestão de documentos (upload, deletar, reindexar)
+- Análise de conversas (usuários, mensagens, tokens)
+- Monitoramento do sistema (GPU, memória, tempos de resposta)
+- Gestão de configuração (prompts, limites)
+- Logs de atividade do usuário
 """
 
 from django.contrib import admin
@@ -21,26 +21,26 @@ from .gpu_manager import GPUManager
 
 
 class HelixAdminSite(AdminSite):
-    """Custom admin site for Helix"""
+    """Site de administração personalizado para SyncRH"""
     site_header = "Assistente SyncRH - Admin"
-    site_title = "Helix Admin"
-    index_title = "Dashboard"
+    site_title = "Admin SyncRH"
+    index_title = "Painel"
     
     def index(self, request):
-        """Custom dashboard index"""
+        """Índice personalizado do painel"""
         from django.template.response import TemplateResponse
         
-        # Get analytics
+        # Obter análises
         total_conversations = Conversation.objects.count()
         total_messages = Message.objects.count()
         total_documents = Document.objects.count()
         total_chunks = DocumentChunk.objects.count()
         
-        # Get user stats
+        # Obter estatísticas de usuário
         from apps.core.models import Company
         total_users = Company.objects.count()
         
-        # Get system status
+        # Obter status do sistema
         try:
             system_status = get_helix_status()
             gpu_info = GPUManager.get_performance_metrics()
@@ -48,11 +48,11 @@ class HelixAdminSite(AdminSite):
             system_status = {}
             gpu_info = {}
         
-        # Get recent activity
+        # Obter atividade recente
         recent_conversations = Conversation.objects.select_related('user', 'company').order_by('-created_at')[:5]
         recent_messages = Message.objects.select_related('conversation').order_by('-created_at')[:10]
         
-        # Get analytics
+        # Obter análises
         messages_7d = Message.objects.filter(
             created_at__gte=timezone.now() - timedelta(days=7)
         ).count()
@@ -62,7 +62,7 @@ class HelixAdminSite(AdminSite):
         ).count()
         
         context = {
-            'title': 'Helix Dashboard',
+            'title': 'Painel SyncRH',
             'stats': {
                 'total_conversations': total_conversations,
                 'total_messages': total_messages,
@@ -78,7 +78,7 @@ class HelixAdminSite(AdminSite):
             'recent_messages': recent_messages,
         }
         
-        return TemplateResponse(request, 'admin/helix_dashboard.html', context)
+        return TemplateResponse(request, 'admin/syncrh_dashboard.html', context)
 
 
 helix_admin = HelixAdminSite(name='helix_admin')
@@ -86,7 +86,7 @@ helix_admin = HelixAdminSite(name='helix_admin')
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    """Admin interface for Document model - ENHANCED"""
+    """Interface de administração para o modelo Document - APRIMORADO"""
     
     list_display = ['title', 'company_name', 'content_type', 'chunk_count', 'ingested_at', 'status_badge']
     list_filter = ['company', 'is_active', 'content_type', 'ingested_at']
@@ -119,7 +119,7 @@ class DocumentAdmin(admin.ModelAdmin):
     
     def status_badge(self, obj):
         color = 'green' if obj.is_active else 'red'
-        status = 'Active' if obj.is_active else 'Inactive'
+        status = 'Ativo' if obj.is_active else 'Inativo'
         return format_html(
             '<span style="background-color: {}; color: white; padding: 3px 10px; border-radius: 3px;">{}</span>',
             color,
@@ -132,7 +132,7 @@ class DocumentAdmin(admin.ModelAdmin):
 
 @admin.register(DocumentChunk)
 class DocumentChunkAdmin(admin.ModelAdmin):
-    """Admin interface for DocumentChunk model"""
+    """Interface de administração para o modelo DocumentChunk"""
     
     list_display = ['document_title', 'chunk_index', 'content_preview', 'created_at']
     list_filter = ['document__company', 'created_at', 'document']
@@ -175,7 +175,7 @@ class DocumentChunkAdmin(admin.ModelAdmin):
 
 @admin.register(Conversation)
 class ConversationAdmin(admin.ModelAdmin):
-    """Admin interface for Conversation model"""
+    """Interface de administração para o modelo Conversation"""
     
     list_display = ['user', 'title', 'company', 'is_active', 'created_at', 'message_count']
     list_filter = ['company', 'is_active', 'created_at']
@@ -195,7 +195,7 @@ class ConversationAdmin(admin.ModelAdmin):
     )
     
     def message_count(self, obj):
-        """Display message count"""
+        """Exibir contagem de mensagens"""
         return obj.messages.count()
     
     message_count.short_description = "Mensagens"
@@ -203,7 +203,7 @@ class ConversationAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    """Admin interface for Message model"""
+    """Interface de administração para o modelo Message"""
     
     list_display = ['conversation', 'role', 'content_preview', 'tokens_used', 'created_at']
     list_filter = ['conversation__company', 'role', 'created_at']
@@ -223,7 +223,7 @@ class MessageAdmin(admin.ModelAdmin):
     )
     
     def content_preview(self, obj):
-        """Show content preview"""
+        """Mostrar prévia do conteúdo"""
         return obj.content[:100] + '...' if len(obj.content) > 100 else obj.content
     
     content_preview.short_description = "Conteúdo"
@@ -231,7 +231,7 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(HelixConfig)
 class HelixConfigAdmin(admin.ModelAdmin):
-    """Admin interface for HelixConfig model"""
+    """Interface de administração para o modelo HelixConfig"""
     
     list_display = ['company', 'is_enabled', 'temperature', 'max_context_chunks']
     list_filter = ['company', 'is_enabled']
