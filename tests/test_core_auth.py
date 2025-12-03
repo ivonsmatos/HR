@@ -49,7 +49,7 @@ class TestUserModel(APITestCase):
             email="admin@example.com",
             password="adminpass123456",
         )
-        assert user.is_admin or user.is_superuser
+        assert user.is_superuser
         assert user.is_staff
 
     def test_user_str_representation(self):
