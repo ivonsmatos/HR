@@ -1,18 +1,18 @@
 """
 Models for Assistant (SyncRH)
-Armazena histórico de conversa and document metadata
+Stores conversation history and document metadata
 """
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from apps.core.models import Empresa, TenantAwareModel, Usuário
+from apps.core.models import Company, TenantAwareModel, User
 import uuid
 
 
-class Documento(TenantAwareModel):
+class Document(TenantAwareModel):
     """
-    Representa um documento ingerido para RAG
-    Armazena metadados sobre arquivos de origem e chunks
+    Represents an ingested document for RAG
+    Stores metadata about source files and chunks
     """
     
     title = models.CharField(
@@ -36,7 +36,7 @@ class Documento(TenantAwareModel):
         default='markdown'
     )
     
-    # Metadados
+    # Metadata
     version = models.CharField(
         max_length=20,
         default='1.0',
@@ -55,7 +55,7 @@ class Documento(TenantAwareModel):
     
     class Meta:
         verbose_name = "Documento"
-        verbose_name_plural = "Documentoos"
+        verbose_name_plural = "Documentos"
         ordering = ['-ingested_at']
         indexes = [
             models.Index(fields=['company', 'is_active']),
@@ -66,14 +66,14 @@ class Documento(TenantAwareModel):
         return f"{self.title} ({self.company.slug})"
 
 
-class DocumentoChunk(models.Model):
+class DocumentChunk(models.Model):
     """
     Vector chunk of a document
     Stores embeddings in pgvector column
     """
     
     document = models.ForeignKey(
-        Documento,
+        Document,
         on_delete=models.CASCADE,
         related_name='chunks'
     )
@@ -94,7 +94,7 @@ class DocumentoChunk(models.Model):
         help_text="Vetor de embedding da OpenAI (1536 dimensões para text-embedding-3-small)"
     )
     
-    # Incorporação metadata
+    # Embedding metadata
     token_count = models.IntegerField(
         default=0,
         help_text="Contagem de tokens para este chunk"
@@ -110,8 +110,8 @@ class DocumentoChunk(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        verbose_name = "Fragmento de Documentoo"
-        verbose_name_plural = "Fragmentos de Documentoos"
+        verbose_name = "Fragmento de Documento"
+        verbose_name_plural = "Fragmentos de Documentos"
         ordering = ['document', 'chunk_index']
         indexes = [
             models.Index(fields=['document', 'chunk_index']),
@@ -122,13 +122,13 @@ class DocumentoChunk(models.Model):
         return f"{self.document.title} - Chunk {self.chunk_index}"
 
 
-class Conversa(TenantAwareModel):
+class Conversation(TenantAwareModel):
     """
-    Armazena histórico de conversa with SyncRH
+    Stores conversation history with SyncRH
     """
     
     user = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name='assistant_conversations'
     )
@@ -156,9 +156,9 @@ class Conversa(TenantAwareModel):
         return f"Chat with {self.user.username} ({self.company.slug})"
 
 
-class Mensagem(models.Model):
+class Message(models.Model):
     """
-    Mensagem individual em uma conversa
+    Individual message in a conversation
     """
     
     ROLE_CHOICES = [
@@ -168,7 +168,7 @@ class Mensagem(models.Model):
     ]
     
     conversation = models.ForeignKey(
-        Conversa,
+        Conversation,
         on_delete=models.CASCADE,
         related_name='messages'
     )
@@ -187,10 +187,10 @@ class Mensagem(models.Model):
     context_sources = models.JSONField(
         default=list,
         blank=True,
-        help_text="Documentoos/chunks usados para resposta (contexto RAG)"
+        help_text="Documentos/chunks usados para resposta (contexto RAG)"
     )
     
-    # Metadados
+    # Metadata
     tokens_used = models.IntegerField(
         default=0,
         help_text="Tokens OpenAI consumidos por esta mensagem"
@@ -214,7 +214,7 @@ class Mensagem(models.Model):
 
 class HelixConfig(TenantAwareModel):
     """
-    Configuração por tenant para SyncRH
+    Tenant configuration for SyncRH
     """
     
     # Enable/Disable per company

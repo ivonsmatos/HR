@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, Usuário
+from apps.core.models import TenantAwareModel, User
 
 
 # ============================================================================
@@ -20,7 +20,7 @@ from apps.core.models import TenantAwareModel, Usuário
 class IpBlocklist(TenantAwareModel):
     """Blocked IP addresses."""
 
-    ip_address = models.GenericIPAdicionarressField(unique=True)
+    ip_address = models.GenericIPAddressField(unique=True)
     reason = models.CharField(
         max_length=50,
         choices=[
@@ -56,7 +56,7 @@ class TwoFactorAuth(TenantAwareModel):
     ]
 
     user = models.OneToOneField(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="two_factor_auth",
     )
@@ -77,16 +77,16 @@ class TwoFactorAuth(TenantAwareModel):
 # 3. SESSION MANAGEMENT SUB-MODULE
 # ============================================================================
 
-class UsuárioSession(TenantAwareModel):
+class UserSession(TenantAwareModel):
     """Active user sessions."""
 
     user = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="sessions",
     )
     token = models.CharField(max_length=500)
-    ip_address = models.GenericIPAdicionarressField()
+    ip_address = models.GenericIPAddressField()
     user_agent = models.TextField()
     device_type = models.CharField(
         max_length=20,
@@ -133,13 +133,13 @@ class SecurityEvent(TenantAwareModel):
     ]
 
     user = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="security_events",
     )
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
-    ip_address = models.GenericIPAdicionarressField()
+    ip_address = models.GenericIPAddressField()
     user_agent = models.TextField(blank=True)
     description = models.TextField()
     severity = models.CharField(

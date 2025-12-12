@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, Usuário
+from apps.core.models import TenantAwareModel, User
 from apps.hrm.models import Employee
 
 
@@ -42,13 +42,13 @@ class Ticket(TenantAwareModel):
     
     # Assignment
     created_by = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="tickets_created",
     )
     assigned_to = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -95,7 +95,7 @@ class TicketReply(TenantAwareModel):
         related_name="replies",
     )
     author = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="ticket_replies",
     )
@@ -206,14 +206,14 @@ class Event(TenantAwareModel):
     
     # Organizer
     organizer = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="events_organized",
     )
     
     # Attendees
     attendees = models.ManyToManyField(
-        Usuário,
+        User,
         related_name="events_attending",
         blank=True,
     )
@@ -225,7 +225,7 @@ class Event(TenantAwareModel):
             ("scheduled", "Scheduled"),
             ("in_progress", "Em Progresso"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
         ],
         default="scheduled",
     )
@@ -243,16 +243,16 @@ class Event(TenantAwareModel):
 # 4. MESSAGES SUB-MODULE
 # ============================================================================
 
-class Mensagem(TenantAwareModel):
+class Message(TenantAwareModel):
     """Internal messaging system."""
 
     sender = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="messages_sent",
     )
     recipient = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="messages_received",
     )
@@ -274,8 +274,8 @@ class Mensagem(TenantAwareModel):
 # 5. NOTICE BOARD SUB-MODULE
 # ============================================================================
 
-class Nãotice(TenantAwareModel):
-    """Nãotice board announcements."""
+class Notice(TenantAwareModel):
+    """Notice board announcements."""
 
     title = models.CharField(max_length=255)
     content = models.TextField()
@@ -287,14 +287,14 @@ class Nãotice(TenantAwareModel):
             ("general", "General"),
             ("hr", "HR"),
             ("technical", "Technical"),
-            ("important", "Importarante"),
+            ("important", "Importante"),
             ("event", "Evento"),
         ],
     )
     
     # Publication
     author = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="notices_created",
     )

@@ -1,6 +1,6 @@
 """Utilities app admin configuration."""
 from django.contrib import admin
-from .models import Ticket, TicketReply, Asset, Event, Mensagem, Nãotice
+from .models import Ticket, TicketReply, Asset, Event, Message, Notice
 
 
 @admin.register(Ticket)
@@ -32,15 +32,15 @@ class EventAdmin(admin.ModelAdmin):
     date_hierarchy = "start_date"
 
 
-@admin.register(Mensagem)
-class MensagemAdmin(admin.ModelAdmin):
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
     list_display = ["sender", "recipient", "subject", "is_read", "created_at"]
     list_filter = ["company", "is_read", "created_at"]
     search_fields = ["sender__username", "recipient__username"]
 
 
-@admin.register(Nãotice)
-class NãoticeAdmin(admin.ModelAdmin):
+@admin.register(Notice)
+class NoticeAdmin(admin.ModelAdmin):
     list_display = ["title", "category", "author", "publish_date", "is_pinned"]
     list_filter = ["company", "category", "is_pinned", "publish_date"]
     search_fields = ["title"]

@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, Usuário
+from apps.core.models import TenantAwareModel, User
 
 
 # ============================================================================
@@ -40,7 +40,7 @@ class Job(TenantAwareModel):
     
     # Hiring Manager
     hiring_manager = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="jobs_managing",
@@ -170,7 +170,7 @@ class InterviewSchedule(TenantAwareModel):
     
     # Interviewer(s)
     interviewers = models.ManyToManyField(
-        Usuário,
+        User,
         related_name="interview_schedules",
     )
     
@@ -180,7 +180,7 @@ class InterviewSchedule(TenantAwareModel):
         choices=[
             ("scheduled", "Scheduled"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
         ],
         default="scheduled",
     )

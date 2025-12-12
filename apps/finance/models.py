@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, Usuário
+from apps.core.models import TenantAwareModel, User
 
 
 # ============================================================================
@@ -55,7 +55,7 @@ class Invoice(TenantAwareModel):
             ("partially_paid", "Partially Paid"),
             ("paid", "Pago"),
             ("overdue", "Vencido"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
         ],
         default="draft",
     )
@@ -202,7 +202,7 @@ class Expense(TenantAwareModel):
     """Employee expenses."""
 
     employee = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="expenses",
     )
@@ -241,7 +241,7 @@ class Expense(TenantAwareModel):
         default="draft",
     )
     approved_by = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

@@ -18,5 +18,5 @@ class AssistantConfig(AppConfig):
         # Importar signals when app is ready
         try:
             from . import signals  # noqa
-        except ImportarErro:
+        except ImportError:
             pass

@@ -1,7 +1,7 @@
 """Security middleware for audit logging."""
 import logging
 from django.utils.deprecation import MiddlewareMixin
-from apps.core.models import AuditoriaLog
+from apps.core.models import AuditLog
 
 logger = logging.getLogger(__name__)
 

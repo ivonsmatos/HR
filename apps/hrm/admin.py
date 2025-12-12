@@ -1,7 +1,7 @@
 """HRM app admin configuration."""
 from django.contrib import admin
 from .models import (
-    Department, Designation, Employee, LeaveType, Leave, Shift, Presença,
+    Department, Designation, Employee, LeaveType, Leave, Shift, Attendance,
     SalaryStructure, EmployeeSalary, Payslip, PerformanceGoal, PerformanceReview
 )
 
@@ -48,8 +48,8 @@ class ShiftAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
 
-@admin.register(Presença)
-class PresençaAdmin(admin.ModelAdmin):
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
     list_display = ["employee", "date", "status", "company"]
     list_filter = ["company", "status", "date"]
     search_fields = ["employee__user__username"]

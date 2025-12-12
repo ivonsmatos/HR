@@ -9,7 +9,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, Usuário
+from apps.core.models import TenantAwareModel, User
 
 
 # ============================================================================
@@ -42,7 +42,7 @@ class Client(TenantAwareModel):
     
     # Assignment
     account_manager = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -115,7 +115,7 @@ class Lead(TenantAwareModel):
     
     # Assignment
     assigned_to = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -218,7 +218,7 @@ class Order(TenantAwareModel):
             ("processing", "Processing"),
             ("shipped", "Shipped"),
             ("delivered", "Delivered"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
         ],
         default="draft",
     )
