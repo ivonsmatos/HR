@@ -53,7 +53,7 @@ class Project(TenantAwareModel):
             ("active", "Ativo"),
             ("paused", "Pausado"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
         ],
         default="planning",
     )
@@ -139,9 +139,9 @@ class Task(TenantAwareModel):
         max_length=20,
         choices=[
             ("backlog", "Backlog"),
-            ("todo", "To Do"),
+            ("todo", "A Fazer"),
             ("in_progress", "Em Progresso"),
-            ("review", "Review"),
+            ("review", "Revisão"),
             ("done", "Concluído"),
         ],
         default="backlog",
@@ -255,10 +255,10 @@ class Contract(TenantAwareModel):
     contract_type = models.CharField(
         max_length=50,
         choices=[
-            ("fixed_price", "Fixed Price"),
-            ("hourly", "Hourly"),
-            ("retainer", "Retainer"),
-            ("T&M", "Time & Material"),
+            ("fixed_price", "Preço Fixo"),
+            ("hourly", "Por Hora"),
+            ("retainer", "Retentor"),
+            ("T&M", "Tempo & Material"),
         ],
     )
     amount = models.DecimalField(max_digits=12, decimal_places=2)

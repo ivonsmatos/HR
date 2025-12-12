@@ -88,13 +88,13 @@ class Lead(TenantAwareModel):
     source = models.CharField(
         max_length=50,
         choices=[
-            ("website", "Website"),
-            ("referral", "Referral"),
+            ("website", "Site"),
+            ("referral", "Indicação"),
             ("cold_call", "Cold Call"),
             ("email", "Email"),
-            ("social_media", "Social Media"),
+            ("social_media", "Redes Sociais"),
             ("event", "Evento"),
-            ("other", "Other"),
+            ("other", "Outros"),
         ],
     )
     
@@ -102,13 +102,13 @@ class Lead(TenantAwareModel):
     stage = models.CharField(
         max_length=50,
         choices=[
-            ("new", "Nãovo"),
-            ("contacted", "Contacted"),
+            ("new", "Novo"),
+            ("contacted", "Contatado"),
             ("qualified", "Qualificado"),
-            ("proposal", "Proposal Sent"),
+            ("proposal", "Proposta Enviada"),
             ("negotiation", "Negociação"),
-            ("closed_won", "Fechard Won"),
-            ("closed_lost", "Fechard Lost"),
+            ("closed_won", "Fechado Ganho"),
+            ("closed_lost", "Fechado Perdido"),
         ],
         default="new",
     )
@@ -158,10 +158,10 @@ class Product(TenantAwareModel):
     category = models.CharField(
         max_length=100,
         choices=[
-            ("service", "Service"),
+            ("service", "Serviço"),
             ("product", "Produto"),
             ("subscription", "Assinatura"),
-            ("license", "License"),
+            ("license", "Licença"),
         ],
     )
     
@@ -177,7 +177,7 @@ class Product(TenantAwareModel):
         choices=[
             ("active", "Ativo"),
             ("inactive", "Inativo"),
-            ("discontinued", "Discontinued"),
+            ("discontinued", "Descontinuado"),
         ],
         default="active",
     )
@@ -214,10 +214,10 @@ class Order(TenantAwareModel):
         max_length=20,
         choices=[
             ("draft", "Rascunho"),
-            ("confirmed", "Confirmed"),
-            ("processing", "Processing"),
-            ("shipped", "Shipped"),
-            ("delivered", "Delivered"),
+            ("confirmed", "Confirmado"),
+            ("processing", "Processando"),
+            ("shipped", "Enviado"),
+            ("delivered", "Entregue"),
             ("cancelled", "Cancelado"),
         ],
         default="draft",

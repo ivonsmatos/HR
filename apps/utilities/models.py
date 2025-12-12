@@ -63,11 +63,11 @@ class Ticket(TenantAwareModel):
     category = models.CharField(
         max_length=100,
         choices=[
-            ("technical", "Technical"),
-            ("billing", "Billing"),
+            ("technical", "Técnico"),
+            ("billing", "Faturamento"),
             ("feature_request", "Solicitação de Recurso"),
             ("bug_report", "Relatório de Bug"),
-            ("other", "Other"),
+            ("other", "Outros"),
         ],
     )
     
@@ -121,16 +121,16 @@ class Asset(TenantAwareModel):
     ASSET_TYPE_CHOICES = [
         ("hardware", "Hardware"),
         ("software", "Software"),
-        ("furniture", "Furniture"),
-        ("vehicle", "Vehicle"),
-        ("other", "Other"),
+        ("furniture", "Mobiliário"),
+        ("vehicle", "Veículo"),
+        ("other", "Outros"),
     ]
 
     STATUS_CHOICES = [
         ("available", "Disponível"),
         ("in_use", "Em Uso"),
         ("maintenance", "Manutenção"),
-        ("disposed", "Disposed"),
+        ("disposed", "Descartado"),
         ("lost", "Perdido"),
     ]
 
@@ -190,12 +190,12 @@ class Event(TenantAwareModel):
     event_type = models.CharField(
         max_length=50,
         choices=[
-            ("meeting", "Meeting"),
-            ("conference", "Conference"),
-            ("training", "Training"),
+            ("meeting", "Reunião"),
+            ("conference", "Conferência"),
+            ("training", "Treinamento"),
             ("social", "Social"),
-            ("holiday", "Holiday"),
-            ("other", "Other"),
+            ("holiday", "Feriado"),
+            ("other", "Outros"),
         ],
     )
     
@@ -222,7 +222,7 @@ class Event(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("scheduled", "Scheduled"),
+            ("scheduled", "Agendado"),
             ("in_progress", "Em Progresso"),
             ("completed", "Concluído"),
             ("cancelled", "Cancelado"),
@@ -284,9 +284,9 @@ class Notice(TenantAwareModel):
     category = models.CharField(
         max_length=50,
         choices=[
-            ("general", "General"),
-            ("hr", "HR"),
-            ("technical", "Technical"),
+            ("general", "Geral"),
+            ("hr", "RH"),
+            ("technical", "Técnico"),
             ("important", "Importante"),
             ("event", "Evento"),
         ],
