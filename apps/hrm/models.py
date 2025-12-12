@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, Usuário
+from apps.core.models import TenantAwareModel, User
 
 
 # ============================================================================
@@ -23,7 +23,7 @@ class Department(TenantAwareModel):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     head = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -67,9 +67,9 @@ class Designation(TenantAwareModel):
 
 
 class Employee(TenantAwareModel):
-    """Employee records (extends Usuário model)."""
+    """Employee records (extends User model)."""
 
-    user = models.OneToOneField(Usuário, on_delete=models.CASCADE, related_name="employee")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="employee")
     employee_id = models.CharField(
         max_length=50,
         unique=True,
@@ -168,7 +168,7 @@ class Leave(TenantAwareModel):
         ("submitted", "Submitted"),
         ("approved", "Aprovado"),
         ("rejected", "Rejeitado"),
-        ("cancelled", "Cancelarado"),
+        ("cancelled", "Cancelado"),
     ]
 
     employee = models.ForeignKey(
@@ -190,7 +190,7 @@ class Leave(TenantAwareModel):
         default="draft",
     )
     approved_by = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -228,7 +228,7 @@ class Shift(TenantAwareModel):
         return f"{self.name} ({self.start_time} - {self.end_time})"
 
 
-class Presença(TenantAwareModel):
+class Attendance(TenantAwareModel):
     """Daily attendance records."""
 
     employee = models.ForeignKey(
@@ -372,7 +372,7 @@ class PerformanceGoal(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("not_started", "Nãot Started"),
+            ("not_started", "Não Iniciado"),
             ("in_progress", "Em Progresso"),
             ("completed", "Concluído"),
             ("on_track", "On Track"),
@@ -401,7 +401,7 @@ class PerformanceReview(TenantAwareModel):
         related_name="performance_reviews",
     )
     reviewer = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="performance_reviews_given",

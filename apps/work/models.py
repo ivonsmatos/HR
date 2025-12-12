@@ -9,7 +9,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, Usuário
+from apps.core.models import TenantAwareModel, User
 from apps.hrm.models import Employee
 
 
@@ -35,7 +35,7 @@ class Project(TenantAwareModel):
     
     # Team
     project_lead = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="projects_lead",
@@ -53,7 +53,7 @@ class Project(TenantAwareModel):
             ("active", "Ativo"),
             ("paused", "Pausado"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
         ],
         default="planning",
     )
@@ -83,7 +83,7 @@ class ProjectMember(TenantAwareModel):
         related_name="members",
     )
     user = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="project_memberships",
     )
@@ -127,7 +127,7 @@ class Task(TenantAwareModel):
     
     # Assignment
     assigned_to = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -138,10 +138,10 @@ class Task(TenantAwareModel):
     status = models.CharField(
         max_length=20,
         choices=[
-            ("backlog", "Voltarlog"),
-            ("todo", "To Do"),
+            ("backlog", "Backlog"),
+            ("todo", "A Fazer"),
             ("in_progress", "Em Progresso"),
-            ("review", "Review"),
+            ("review", "Revisão"),
             ("done", "Concluído"),
         ],
         default="backlog",
@@ -188,7 +188,7 @@ class TaskComment(TenantAwareModel):
         related_name="comments",
     )
     author = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="task_comments",
     )
@@ -255,10 +255,10 @@ class Contract(TenantAwareModel):
     contract_type = models.CharField(
         max_length=50,
         choices=[
-            ("fixed_price", "Fixed Price"),
-            ("hourly", "Hourly"),
-            ("retainer", "Retainer"),
-            ("T&M", "Time & Material"),
+            ("fixed_price", "Preço Fixo"),
+            ("hourly", "Por Hora"),
+            ("retainer", "Retentor"),
+            ("T&M", "Tempo & Material"),
         ],
     )
     amount = models.DecimalField(max_digits=12, decimal_places=2)
@@ -276,7 +276,7 @@ class Contract(TenantAwareModel):
             ("signed", "Assinado"),
             ("active", "Ativo"),
             ("completed", "Concluído"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
         ],
         default="draft",
     )

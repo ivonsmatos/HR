@@ -34,7 +34,7 @@ class WorkProjectModelTests(TestCase):
         """Teste criação básica de projeto"""
         # Teste que o usuário está criado
         self.assertIsNotNone(self.user.id)
-        self.assertEqual(self.user, self.company)
+        # self.assertEqual(self.user, self.company) # Invalid check
     
     def test_project_user_assignment(self):
         """Teste atribuição de projeto ao usuário"""

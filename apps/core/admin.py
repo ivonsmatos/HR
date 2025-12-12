@@ -1,63 +1,50 @@
 """Core app admin configuration."""
 from django.contrib import admin
-from django.contrib.auth.admin import UsuárioAdmin as BaseUsuárioAdmin
-from .models import Empresa, EmpresaDomain, Usuário, UsuárioPermission, AuditoriaLog
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import Company, CompanyDomain, User, UserPermission, AuditLog
 
 
-@admin.register(Empresa)
-class EmpresaAdmin(admin.ModelAdmin):
-    list_display = ["name", "slug", "email", "subscription_status", "is_active", "created_at"]
-    list_filter = ["subscription_status", "is_active", "industry"]
-    search_fields = ["name", "email", "slug"]
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "email", "subscription_status", "created_at")
+    search_fields = ("name", "email", "slug")
+    list_filter = ("subscription_status", "is_verified", "created_at")
     prepopulated_fields = {"slug": ("name",)}
-    fieldsets = (
-        ("Informaçãormações Básicas", {"fields": ("name", "slug", "description")}),
-        ("Contato", {"fields": ("email", "phone", "website")}),
-        ("Endereço", {"fields": ("address", "city", "state", "postal_code", "country")}),
-        ("Organização", {"fields": ("industry", "company_size", "currency", "timezone")}),
-        ("Marca", {"fields": ("logo",)}),
-        ("Assinatura", {"fields": ("subscription_plan", "subscription_status", "trial_ends_at", "subscription_ends_at")}),
-        ("Status", {"fields": ("is_verified", "is_on_trial", "is_active")}),
+
+
+@admin.register(CompanyDomain)
+class CompanyDomainAdmin(admin.ModelAdmin):
+    list_display = ("domain", "company", "is_primary", "created_at")
+    search_fields = ("domain", "company__name")
+    list_filter = ("is_primary", "created_at")
+
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    """Custom User Admin."""
+    list_display = ("username", "email", "company", "is_staff", "is_active")
+    list_filter = ("company", "is_staff", "is_active", "groups")
+    fieldsets = BaseUserAdmin.fieldsets + (
+        ("Tenant Info", {"fields": ("company",)}),
+        ("Profile", {"fields": ("phone", "avatar", "bio", "language", "timezone")}),
+        ("Role", {"fields": ("department", "job_title", "is_employee", "is_contractor")}),
+        ("Security", {"fields": ("is_verified", "email_verified", "two_factor_enabled")}),
+    )
+    add_fieldsets = BaseUserAdmin.add_fieldsets + (
+        ("Tenant Info", {"fields": ("company",)}),
     )
 
 
-@admin.register(EmpresaDomain)
-class EmpresaDomainAdmin(admin.ModelAdmin):
-    list_display = ["domain", "company", "is_primary", "created_at"]
-    list_filter = ["is_primary", "created_at", "company"]
-    search_fields = ["domain", "company__name"]
-    fieldsets = (
-        ("Informaçãormações do Domínio", {"fields": ("domain", "company", "is_primary")}),
-        ("Metadados", {"fields": ("created_at", "updated_at"), "classes": ("collapse",)}),
-    )
-    readonly_fields = ["created_at", "updated_at"]
+@admin.register(UserPermission)
+class UserPermissionAdmin(admin.ModelAdmin):
+    list_display = ("user", "module", "permission_level", "company")
+    list_filter = ("company", "module", "permission_level")
+    search_fields = ("user__username", "user__email")
 
 
-@admin.register(Usuário)
-class UsuárioAdmin(BaseUsuárioAdmin):
-    list_display = ["username", "email", "company", "is_employee", "is_active"]
-    list_filter = ["company", "is_active", "is_employee", "is_contractor"]
-    search_fields = ["username", "email", "first_name", "last_name"]
-    fieldsets = BaseUsuárioAdmin.fieldsets + (
-        ("Empresa & Perfil", {"fields": ("company", "avatar", "phone", "bio")}),
-        ("Detalhes de RH", {"fields": ("department", "job_title", "is_employee", "is_contractor")}),
-        ("Segurança", {"fields": ("two_factor_enabled", "email_verified", "email_verified_at")}),
-        ("Preferências", {"fields": ("language", "timezone")}),
-        ("Atividade", {"fields": ("last_login_ip", "last_activity", "login_count")}),
-    )
-
-
-@admin.register(UsuárioPermission)
-class UsuárioPermissionAdmin(admin.ModelAdmin):
-    list_display = ["user", "module", "permission_level", "company", "is_active"]
-    list_filter = ["company", "module", "permission_level", "is_active"]
-    search_fields = ["user__username", "module"]
-
-
-@admin.register(AuditoriaLog)
-class AuditoriaLogAdmin(admin.ModelAdmin):
-    list_display = ["user", "action", "module", "created_at", "ip_address"]
-    list_filter = ["company", "action", "created_at"]
-    search_fields = ["user__username", "module", "object_id"]
-    date_hierarchy = "created_at"
-    readonly_fields = ["user", "action", "module", "object_type", "object_id", "created_at"]
+@admin.register(AuditLog)
+class AuditLogAdmin(admin.ModelAdmin):
+    list_display = ("user", "action", "module", "object_type", "created_at", "company")
+    list_filter = ("company", "action", "module", "created_at")
+    search_fields = ("user__username", "object_type", "object_id", "ip_address")
+    readonly_fields = ("created_at", "changes", "ip_address", "user_agent")

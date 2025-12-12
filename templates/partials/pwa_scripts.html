@@ -1,0 +1,15 @@
+{% if user.is_authenticated %}
+    <link rel="manifest" href="/static/manifest.json">
+    <script src="/static/sw.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/sw.js')
+            .then(function(registration) {
+                console.log('Service Worker Registered');
+            })
+            .catch(function(error) {
+                console.log('Service Worker Registration Failed');
+            });
+        }
+    </script>
+{% endif %}

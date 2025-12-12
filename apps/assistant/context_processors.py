@@ -9,7 +9,7 @@ Provides global context variables to all templates:
 
 import logging
 from .services import get_helix_status, check_ollama_connection
-from .models import Conversa
+from .models import Conversation
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def helix_context(request):
             'ollama_available': False,
             'models_available': [],
             'has_conversations': False,
-            'current_conversation': Nãone,
+            'current_conversation': None,
             'user_authenticated': request.user.is_authenticated,
         }
     }
@@ -48,7 +48,7 @@ def helix_context(request):
         context['helix']['models_available'] = status.get('models_available', [])
         
         # Check for user's conversations
-        conversations = Conversa.objects.filter(
+        conversations = Conversation.objects.filter(
             user=request.user,
             company=request.user.tenant,
             is_active=True

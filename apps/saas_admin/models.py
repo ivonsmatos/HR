@@ -9,7 +9,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, BaseModel, Usuário, Empresa
+from apps.core.models import TenantAwareModel, BaseModel, User, Company
 
 
 # ============================================================================
@@ -96,7 +96,7 @@ class Subscription(TenantAwareModel):
             ("trial", "Teste"),
             ("active", "Ativo"),
             ("paused", "Pausado"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
             ("expired", "Expirado"),
         ],
         default="trial",

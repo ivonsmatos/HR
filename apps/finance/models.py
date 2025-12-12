@@ -10,7 +10,7 @@ Sub-modules:
 """
 
 from django.db import models
-from apps.core.models import TenantAwareModel, Usuário
+from apps.core.models import TenantAwareModel, User
 
 
 # ============================================================================
@@ -55,7 +55,7 @@ class Invoice(TenantAwareModel):
             ("partially_paid", "Partially Paid"),
             ("paid", "Pago"),
             ("overdue", "Vencido"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
         ],
         default="draft",
     )
@@ -202,7 +202,7 @@ class Expense(TenantAwareModel):
     """Employee expenses."""
 
     employee = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="expenses",
     )
@@ -217,11 +217,11 @@ class Expense(TenantAwareModel):
     category = models.CharField(
         max_length=50,
         choices=[
-            ("travel", "Travel"),
-            ("meals", "Meals"),
-            ("supplies", "Supplies"),
+            ("travel", "Viagem"),
+            ("meals", "Alimentação"),
+            ("supplies", "Suprimentos"),
             ("software", "Software"),
-            ("other", "Other"),
+            ("other", "Outros"),
         ],
     )
     description = models.CharField(max_length=255)
@@ -233,15 +233,15 @@ class Expense(TenantAwareModel):
         max_length=20,
         choices=[
             ("draft", "Rascunho"),
-            ("submitted", "Submitted"),
+            ("submitted", "Submetido"),
             ("approved", "Aprovado"),
-            ("reimbursed", "Reimbursed"),
+            ("reimbursed", "Reembolsado"),
             ("rejected", "Rejeitado"),
         ],
         default="draft",
     )
     approved_by = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -309,12 +309,12 @@ class Payment(TenantAwareModel):
     payment_method = models.CharField(
         max_length=50,
         choices=[
-            ("credit_card", "Credit Card"),
-            ("debit_card", "Debit Card"),
-            ("bank_transfer", "Bank Transfer"),
-            ("check", "Check"),
-            ("cash", "Cash"),
-            ("other", "Other"),
+            ("credit_card", "Cartão de Crédito"),
+            ("debit_card", "Cartão de Débito"),
+            ("bank_transfer", "Transferência Bancária"),
+            ("check", "Cheque"),
+            ("cash", "Dinheiro"),
+            ("other", "Outros"),
         ],
     )
     
@@ -324,9 +324,9 @@ class Payment(TenantAwareModel):
         max_length=20,
         choices=[
             ("pending", "Pendente"),
-            ("processing", "Processing"),
+            ("processing", "Processando"),
             ("completed", "Concluído"),
-            ("failed", "Failed"),
+            ("failed", "Falhou"),
             ("cancelled", "Cancelarado"),
         ],
         default="pending",

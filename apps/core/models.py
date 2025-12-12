@@ -6,7 +6,7 @@ All models that need to be isolated by tenant should inherit from TenantAwareMod
 """
 
 from django.db import models
-from django.contrib.auth.models import AbstractUsuário
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 # from django_tenants.models import TenantMixin, DomainMixin  # Disabled for Django 5.1 compatibility
 import uuid
@@ -41,7 +41,7 @@ class TenantAwareModel(BaseModel):
     """
 
     company = models.ForeignKey(
-        "core.Empresa",
+        "core.Company",
         on_delete=models.CASCADE,
         related_name="%(class)s_company",
         help_text="Empresa (Tenant) a qual este registro pertence",
@@ -57,18 +57,9 @@ class TenantAwareModel(BaseModel):
         super().save(*args, **kwargs)
 
 
-# Commented out - django_tenants not compatible with Django 5.1
-# class Empresa(TenantMixin, BaseModel):
-#     """
-#     Tenant (Empresa) model for multi-tenant SaaS application.
-#     
-#     Represents each organization using the platform.
-#     Each company has isolated data via schema isolation (django-tenants).
-#     """
-
-class Empresa(BaseModel):
+class Company(BaseModel):
     """
-    Empresa (Organization) model for SaaS application.
+    Company (Organization) model for SaaS application.
     
     Represents each organization using the platform.
     """
@@ -76,7 +67,7 @@ class Empresa(BaseModel):
     name = models.CharField(
         max_length=255,
         unique=True,
-        help_text="Nãome da Empresa",
+        help_text="Nome da Empresa",
     )
     slug = models.SlugField(
         max_length=50,
@@ -85,12 +76,12 @@ class Empresa(BaseModel):
     )
     description = models.TextField(blank=True, help_text="Descrição da Empresa")
     
-    # Contact Informaçãormation
+    # Contact Information
     email = models.EmailField(help_text="E-mail principal da empresa")
     phone = models.CharField(max_length=20, blank=True)
     website = models.URLField(blank=True)
     
-    # Adicionarress
+    # Address
     address = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=100, blank=True)
@@ -107,11 +98,11 @@ class Empresa(BaseModel):
         max_length=50,
         blank=True,
         choices=[
-            ("1-10", "1-10 employees"),
-            ("11-50", "11-50 employees"),
-            ("51-200", "51-200 employees"),
-            ("201-500", "201-500 employees"),
-            ("500+", "500+ employees"),
+            ("1-10", "1-10 funcionários"),
+            ("11-50", "11-50 funcionários"),
+            ("51-200", "51-200 funcionários"),
+            ("201-500", "201-500 funcionários"),
+            ("500+", "500+ funcionários"),
         ],
     )
     
@@ -150,7 +141,7 @@ class Empresa(BaseModel):
             ("trial", "Teste"),
             ("active", "Ativo"),
             ("paused", "Pausado"),
-            ("cancelled", "Cancelarado"),
+            ("cancelled", "Cancelado"),
             ("expired", "Expirado"),
         ],
     )
@@ -161,7 +152,7 @@ class Empresa(BaseModel):
     is_verified = models.BooleanField(default=False)
     is_on_trial = models.BooleanField(default=True)
     
-    # Auditoria
+    # Audit
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -175,16 +166,16 @@ class Empresa(BaseModel):
         return f"{self.name} ({self.slug})"
 
 
-class EmpresaDomain(models.Model):
+class CompanyDomain(models.Model):
     """
-    Domain model for routing requests to correct tenant (Empresa).
+    Domain model for routing requests to correct tenant (Company).
     
     Associates domain names with companies for multi-tenant routing.
     Each company can have one or more domains.
     """
 
     company = models.ForeignKey(
-        Empresa,
+        Company,
         on_delete=models.CASCADE,
         related_name="domains",
         help_text="A empresa a qual este domínio pertence"
@@ -193,7 +184,7 @@ class EmpresaDomain(models.Model):
     domain = models.CharField(
         max_length=253,
         unique=True,
-        help_text="Nãome de domínio (ex: tenant.example.com)"
+        help_text="Nome de domínio (ex: tenant.example.com)"
     )
     
     is_primary = models.BooleanField(
@@ -205,7 +196,7 @@ class EmpresaDomain(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("Empresa Domain")
+        verbose_name = _("Domínio da Empresa")
         verbose_name_plural = _("Domínios da Empresa")
         unique_together = [['company', 'is_primary']]
 
@@ -213,16 +204,16 @@ class EmpresaDomain(models.Model):
         return f"{self.domain} ({self.company.name})"
 
 
-class Usuário(AbstractUsuário):
+class User(AbstractUser):
     """
-    Custom Usuário model for the platform.
+    Custom User model for the platform.
     
-    Extends Django's AbstractUsuário to add custom fields and tenant awareness.
+    Extends Django's AbstractUser to add custom fields and tenant awareness.
     """
 
     # Tenant Reference
     company = models.ForeignKey(
-        Empresa,
+        Company,
         on_delete=models.CASCADE,
         related_name="users",
         null=True,
@@ -230,7 +221,7 @@ class Usuário(AbstractUsuário):
         help_text="Empresa a qual este usuário pertence",
     )
 
-    # Perfil Informaçãormation
+    # Profile Information
     avatar = models.ImageField(
         upload_to="user_avatars/",
         null=True,
@@ -239,7 +230,7 @@ class Usuário(AbstractUsuário):
     phone = models.CharField(max_length=20, blank=True)
     bio = models.TextField(max_length=500, blank=True)
     
-    # Department & Papel (for HRM)
+    # Department & Role (for HRM)
     department = models.CharField(max_length=100, blank=True)
     job_title = models.CharField(max_length=100, blank=True)
     
@@ -266,7 +257,7 @@ class Usuário(AbstractUsuário):
     timezone = models.CharField(max_length=50, default="America/Sao_Paulo")
     
     # Activity Tracking
-    last_login_ip = models.GenericIPAdicionarressField(null=True, blank=True)
+    last_login_ip = models.GenericIPAddressField(null=True, blank=True)
     last_activity = models.DateTimeField(null=True, blank=True)
     login_count = models.IntegerField(default=0)
 
@@ -288,7 +279,7 @@ class Usuário(AbstractUsuário):
         return self.first_name or self.username
 
 
-class UsuárioPermission(TenantAwareModel):
+class UserPermission(TenantAwareModel):
     """
     Custom permission model for granular access control.
     
@@ -297,15 +288,15 @@ class UsuárioPermission(TenantAwareModel):
     """
 
     PERMISSION_LEVELS = [
-        ("view", "View Only"),
-        ("create", "Create"),
+        ("view", "Visualizar"),
+        ("create", "Criar"),
         ("edit", "Editar"),
-        ("delete", "Deletar"),
+        ("delete", "Excluir"),
         ("export", "Exportar"),
     ]
 
     user = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name="custom_permissions",
     )
@@ -315,14 +306,14 @@ class UsuárioPermission(TenantAwareModel):
             ("employees", "Funcionários"),
             ("leaves", "Licenças/Férias"),
             ("attendance", "Frequência"),
-            ("payroll", "Payroll"),
-            ("performance", "Performance"),
+            ("payroll", "Folha de Pagamento"),
+            ("performance", "Desempenho"),
             ("projects", "Projetos"),
             ("tasks", "Tarefas"),
             ("timelogs", "Registros de Tempo"),
-            ("finance", "Finance"),
+            ("finance", "Finanças"),
             ("crm", "CRM"),
-            ("recruitment", "Recruitment"),
+            ("recruitment", "Recrutamento"),
             ("assets", "Ativos/Bens"),
             ("tickets", "Tickets/Chamados"),
         ],
@@ -331,7 +322,7 @@ class UsuárioPermission(TenantAwareModel):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = _("Usuário Permission")
+        verbose_name = _("Permissão do Usuário")
         verbose_name_plural = _("Permissões do Usuário")
         unique_together = ["company", "user", "module"]
 
@@ -339,29 +330,29 @@ class UsuárioPermission(TenantAwareModel):
         return f"{self.user.username} - {self.module} ({self.permission_level})"
 
 
-class AuditoriaLog(TenantAwareModel):
+class AuditLog(TenantAwareModel):
     """
-    Auditoria logging model for security and compliance.
+    Audit logging model for security and compliance.
     
     Records all significant actions performed by users for auditing
     and compliance purposes.
     """
 
     ACTION_CHOICES = [
-        ("create", "Create"),
-        ("update", "Update"),
-        ("delete", "Deletar"),
+        ("create", "Criar"),
+        ("update", "Atualizar"),
+        ("delete", "Excluir"),
         ("login", "Entrar"),
         ("logout", "Sair"),
         ("export", "Exportar"),
         ("import", "Importar"),
-        ("download", "Download"),
+        ("download", "Baixar"),
         ("permission_change", "Mudança de Permissão"),
-        ("config_change", "Configuração Alterar"),
+        ("config_change", "Mudança de Configuração"),
     ]
 
     user = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.SET_NULL,
         null=True,
         related_name="audit_logs",
@@ -371,14 +362,14 @@ class AuditoriaLog(TenantAwareModel):
     object_type = models.CharField(max_length=100)
     object_id = models.CharField(max_length=255)
     changes = models.JSONField(null=True, blank=True)
-    ip_address = models.GenericIPAdicionarressField(null=True, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.TextField(blank=True)
     status_code = models.IntegerField(null=True, blank=True)
     error_message = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = _("Auditoria Log")
-        verbose_name_plural = _("Logs de Auditoriaoria")
+        verbose_name = _("Log de Auditoria")
+        verbose_name_plural = _("Logs de Auditoria")
         indexes = [
             models.Index(fields=["company", "-created_at"]),
             models.Index(fields=["user", "-created_at"]),

@@ -4,15 +4,15 @@ RAG Services for SyncRH - FASE B (Ollama Stack)
 Core RAG pipeline implementation using:
 - LangChain for orchestration
 - Ollama (qwen2.5:14b) for LLM generation (localhost:11434)
-- Nãomic embeddings for vector representation
+- Nomic embeddings for vector representation
 - PostgreSQL pgvector for similarity search
 - LangChain-Postgres for vector storage integration
 
 Hardware: 32GB RAM (sufficient for 14B model)
 
 Modules:
-1. HelixConfig - Configuração management
-2. DocumentoIngestion - Read docs/, parse, chunk, embed (async)
+1. HelixConfig - Configuration management
+2. DocumentIngestion - Read docs/, parse, chunk, embed (async)
 3. RAGPipeline - Query processing with pgvector retrieval
 4. HelixAssistant - LLM interaction with conversational memory
 """
@@ -25,23 +25,23 @@ import json
 
 try:
     from langchain.text_splitter import RecursiveCharacterTextSplitter
-    from langchain_community.embeddings import OllamaIncorporaçãos
+    from langchain_community.embeddings import OllamaEmbeddings
     from langchain_community.llms import Ollama
     from langchain.chains import RetrievalQA
     from langchain_postgres import PGVector
-    from langchain_core.documents import Documento as LangChainDocumento
+    from langchain_core.documents import Document as LangChainDocument
     from langchain.prompts import PromptTemplate
-except ImportarErro as e:
+except ImportError as e:
     # Langchain optional dependency
-    RecursiveCharacterTextSplitter = Nãone
-    OllamaIncorporaçãos = Nãone
-    Ollama = Nãone
-    RetrievalQA = Nãone
-    PGVector = Nãone
-    LangChainDocumento = Nãone
-    PromptTemplate = Nãone
+    RecursiveCharacterTextSplitter = None
+    OllamaEmbeddings = None
+    Ollama = None
+    RetrievalQA = None
+    PGVector = None
+    LangChainDocument = None
+    PromptTemplate = None
 
-from .models import Documento, DocumentoChunk, Conversa, Mensagem, HelixConfig
+from .models import Document, DocumentChunk, Conversation, Message, HelixConfig
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 # CONFIGURATION
 # ============================================================================
 
-# Ollama Configuração
+# Ollama Configuration
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 LLM_MODEL = os.getenv("LLM_MODEL", "qwen2.5:14b")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "nomic-embed-text")
@@ -60,15 +60,15 @@ DOCS_FOLDER = Path(__file__).parent.parent.parent / "docs"
 
 # LangChain initialization - Ollama Stack
 try:
-    embeddings = OllamaIncorporaçãos(
+    embeddings = OllamaEmbeddings(
         base_url=OLLAMA_BASE_URL,
         model=EMBEDDING_MODEL,
         show_progress=True,
     )
-    logger.info(f"✓ Ollama Incorporaçãos initialized ({EMBEDDING_MODEL})")
+    logger.info(f"✓ Ollama Embeddings initialized ({EMBEDDING_MODEL})")
 except Exception as e:
-    logger.error(f"✗ Failed to initialize Ollama Incorporaçãos: {e}")
-    embeddings = Nãone
+    logger.error(f"✗ Failed to initialize Ollama Embeddings: {e}")
+    embeddings = None
 
 try:
     llm = Ollama(
@@ -82,9 +82,9 @@ try:
     logger.info(f"✓ Ollama LLM initialized ({LLM_MODEL})")
 except Exception as e:
     logger.error(f"✗ Failed to initialize Ollama LLM: {e}")
-    llm = Nãone
+    llm = None
 
-# Prompt do Sistema for Helix
+# System Prompt for Helix
 HELIX_SYSTEM_PROMPT = """Você é o assistente virtual do sistema SyncRH. 
 Você é profissional, direto e prestativo. 
 Use estritamente o contexto fornecido para responder. 
@@ -111,7 +111,7 @@ def check_ollama_connection() -> bool:
 def get_vector_db() -> Optional[PGVector]:
     """Initialize or retrieve vector database connection."""
     if not DATABASE_URL or not embeddings:
-        return Nãone
+        return None
     
     try:
         return PGVector(
@@ -121,11 +121,11 @@ def get_vector_db() -> Optional[PGVector]:
         )
     except Exception as e:
         logger.error(f"Failed to initialize PGVector: {e}")
-        return Nãone
+        return None
 
 
-class HelixConfig:
-    """Configuração manager for Helix Secretary per tenant."""
+class HelixConfigManager:
+    """Configuration manager for Helix Secretary per tenant."""
     
     @staticmethod
     def get_config(company_id: int) -> Dict:
@@ -152,7 +152,7 @@ class HelixConfig:
             }
 
 
-class DocumentoIngestion:
+class DocumentIngestion:
     """
     Handles document ingestion pipeline using Ollama embeddings
     
@@ -212,7 +212,7 @@ class DocumentoIngestion:
             return content, content_type
             
         except Exception as e:
-            logger.error(f"✗ Erro parsing {file_path}: {e}")
+            logger.error(f"✗ Error parsing {file_path}: {e}")
             return "", "text"
     
     @staticmethod
@@ -223,7 +223,7 @@ class DocumentoIngestion:
         Preserves context with overlap for better retrieval
         """
         splitter = RecursiveCharacterTextSplitter(
-            **DocumentoIngestion.TEXT_SPLITTER_CONFIG
+            **DocumentIngestion.TEXT_SPLITTER_CONFIG
         )
         chunks = splitter.split_text(content)
         logger.debug(f"✓ Generated {len(chunks)} chunks")
@@ -247,12 +247,12 @@ class DocumentoIngestion:
         3. Parse each document
         4. Chunk content
         5. Generate embeddings using Ollama
-        6. Create Documento + DocumentoChunk records in DB
+        6. Create Document + DocumentChunk records in DB
         7. Track statistics
         """
         
         if not check_ollama_connection():
-            logger.error("✗ Ollama not running at {OLLAMA_BASE_URL}")
+            logger.error(f"✗ Ollama not running at {OLLAMA_BASE_URL}")
             return {
                 'documents_ingested': 0,
                 'chunks_created': 0,
@@ -262,13 +262,13 @@ class DocumentoIngestion:
             }
         
         if not embeddings:
-            logger.error("✗ Incorporaçãos not initialized")
+            logger.error("✗ Embeddings not initialized")
             return {
                 'documents_ingested': 0,
                 'chunks_created': 0,
                 'errors': 1,
                 'status': 'failed',
-                'message': "Incorporaçãos not initialized"
+                'message': "Embeddings not initialized"
             }
         
         stats = {
@@ -279,18 +279,18 @@ class DocumentoIngestion:
         }
         
         # Discover documents
-        doc_paths = DocumentoIngestion.discover_documents()
+        doc_paths = DocumentIngestion.discover_documents()
         if not doc_paths:
-            logger.warning("Não documents found in docs folder")
-            stats['message'] = "Não documents to ingest"
+            logger.warning("No documents found in docs folder")
+            stats['message'] = "No documents to ingest"
             return stats
         
-        # Get or create company Documento objects
-        from apps.core.models import Empresa
+        # Get or create company Document objects
+        from apps.core.models import Company
         try:
-            company = Empresa.objects.get(id=company_id)
-        except Empresa.DoesNãotExist:
-            logger.error(f"✗ Empresa {company_id} not found")
+            company = Company.objects.get(id=company_id)
+        except Company.DoesNotExist:
+            logger.error(f"✗ Company {company_id} not found")
             stats['errors'] = 1
             stats['status'] = 'failed'
             return stats
@@ -301,13 +301,13 @@ class DocumentoIngestion:
                 logger.info(f"Processing: {doc_path.name}")
                 
                 # Parse document
-                content, content_type = DocumentoIngestion.parse_document(doc_path)
+                content, content_type = DocumentIngestion.parse_document(doc_path)
                 if not content:
                     stats['errors'] += 1
                     continue
                 
-                # Create Documento record
-                document, created = Documento.objects.get_or_create(
+                # Create Document record
+                document, created = Document.objects.get_or_create(
                     company=company,
                     source_path=str(doc_path.relative_to(DOCS_FOLDER)),
                     defaults={
@@ -321,23 +321,23 @@ class DocumentoIngestion:
                 
                 if created:
                     stats['documents_ingested'] += 1
-                    logger.info(f"✓ Created Documento: {document.title}")
+                    logger.info(f"✓ Created Document: {document.title}")
                 else:
-                    logger.debug(f"  Documento already exists: {document.title}")
+                    logger.debug(f"  Document already exists: {document.title}")
                 
                 # Chunk and embed content
-                chunks = DocumentoIngestion.chunk_text(content)
+                chunks = DocumentIngestion.chunk_text(content)
                 
                 # Generate embeddings for chunks
                 logger.info(f"  Generating embeddings for {len(chunks)} chunks...")
                 try:
                     chunk_embeddings = embeddings.embed_documents(chunks)
                     
-                    # Create DocumentoChunk records
+                    # Create DocumentChunk records
                     for chunk_idx, (chunk_content, embedding_vec) in enumerate(
                         zip(chunks, chunk_embeddings)
                     ):
-                        chunk_obj, _ = DocumentoChunk.objects.get_or_create(
+                        chunk_obj, _ = DocumentChunk.objects.get_or_create(
                             document=document,
                             chunk_index=chunk_idx,
                             defaults={
@@ -352,12 +352,12 @@ class DocumentoIngestion:
                     logger.info(f"✓ Created {len(chunks)} chunks for {document.title}")
                     
                 except Exception as e:
-                    logger.error(f"✗ Erro generating embeddings: {e}")
+                    logger.error(f"✗ Error generating embeddings: {e}")
                     stats['errors'] += 1
                     stats['status'] = 'partial'
                     
             except Exception as e:
-                logger.error(f"✗ Erro processing {doc_path}: {e}")
+                logger.error(f"✗ Error processing {doc_path}: {e}")
                 stats['errors'] += 1
                 stats['status'] = 'partial'
         
@@ -384,24 +384,24 @@ class RAGPipeline:
         company_id: int,
         k: int = 5,
         threshold: float = 0.7
-    ) -> List[DocumentoChunk]:
+    ) -> List[DocumentChunk]:
         """
         Retrieve most relevant document chunks using pgvector similarity search
         
         Process:
         1. Generate query embedding using Ollama
         2. Find similar chunks using pgvector <-> operator (L2 distance)
-        3. Filtrar by similarity threshold
+        3. Filter by similarity threshold
         4. Return top K chunks sorted by relevance
         
         Args:
-            query: Usuário question
+            query: User question
             company_id: Tenant identifier
             k: Number of chunks to retrieve
             threshold: Minimum similarity score (0.0 to 1.0)
             
         Returns:
-            List of most relevant DocumentoChunk objects
+            List of most relevant DocumentChunk objects
         """
         
         if not embeddings or not query.strip():
@@ -441,22 +441,22 @@ class RAGPipeline:
                 results = cursor.fetchall()
                 logger.info(f"✓ Retrieved {len(results)} similar chunks (threshold: {threshold})")
                 
-                # Convert results to DocumentoChunk objects
+                # Convert results to DocumentChunk objects
                 chunk_ids = [row[0] for row in results]
                 if chunk_ids:
-                    chunks = DocumentoChunk.objects.filter(id__in=chunk_ids)
+                    chunks = DocumentChunk.objects.filter(id__in=chunk_ids)
                     return list(chunks)
                 
                 return []
                 
         except Exception as e:
-            logger.error(f"✗ Erro retrieving context: {e}")
+            logger.error(f"✗ Error retrieving context: {e}")
             return []
     
     @staticmethod
     def build_prompt(
         query: str,
-        context_chunks: List[DocumentoChunk],
+        context_chunks: List[DocumentChunk],
         system_prompt: str = HELIX_SYSTEM_PROMPT,
         enable_citation: bool = True
     ) -> str:
@@ -474,11 +474,11 @@ class RAGPipeline:
         Source: {document_title} (Section {chunk_index})
         ...
         
-        Pergunta: {query}
-        Resposta:
+        Question: {query}
+        Answer:
         
         Args:
-            query: Usuário question
+            query: User question
             context_chunks: List of relevant document chunks
             system_prompt: System instruction for model
             enable_citation: Include source references
@@ -518,8 +518,8 @@ Resposta (em Português, concisa e objetiva):"""
     @staticmethod
     def answer_query(
         query: str,
-        conversation: Conversa,
-        context_chunks: Optional[List[DocumentoChunk]] = Nãone,
+        conversation: Conversation,
+        context_chunks: Optional[List[DocumentChunk]] = None,
         use_conversation_history: bool = True
     ) -> Tuple[str, List[Dict]]:
         """
@@ -531,11 +531,11 @@ Resposta (em Português, concisa e objetiva):"""
         3. Build prompt with context
         4. Call Qwen 2.5 LLM
         5. Extract citations from context chunks
-        6. Create Mensagem records
+        6. Create Message records
         
         Args:
-            query: Usuário question
-            conversation: Conversa object (contains user, company context)
+            query: User question
+            conversation: Conversation object (contains user, company context)
             context_chunks: Optional pre-retrieved chunks
             use_conversation_history: Include previous messages for context
             
@@ -543,17 +543,17 @@ Resposta (em Português, concisa e objetiva):"""
             Tuple of (response_text, citations_list)
             
         Raises:
-            ValueErro if LLM or embeddings not initialized
+            ValueError if LLM or embeddings not initialized
         """
         
         if not llm or not embeddings:
-            raise ValueErro("Ollama LLM or Incorporaçãos not initialized")
+            raise ValueError("Ollama LLM or Embeddings not initialized")
         
         try:
             logger.info(f"Processing query: {query[:50]}...")
             
             # Step 1: Retrieve context if not provided
-            if context_chunks is Nãone:
+            if context_chunks is None:
                 context_chunks = RAGPipeline.retrieve_context(
                     query=query,
                     company_id=conversation.company_id,
@@ -562,7 +562,7 @@ Resposta (em Português, concisa e objetiva):"""
                 )
             
             # Step 2: Get Helix config for this company
-            config = HelixConfig.get_config(conversation.company_id)
+            config = HelixConfigManager.get_config(conversation.company_id)
             
             # Step 3: Build prompt with context
             prompt = RAGPipeline.build_prompt(
@@ -592,7 +592,7 @@ Resposta (em Português, concisa e objetiva):"""
             return response, citations
             
         except Exception as e:
-            logger.error(f"✗ Erro answering query: {e}")
+            logger.error(f"✗ Error answering query: {e}")
             raise
 
 
@@ -611,29 +611,29 @@ class HelixAssistant:
     @staticmethod
     def get_config(company_id: int) -> Dict:
         """Get Helix configuration for company"""
-        return HelixConfig.get_config(company_id)
+        return HelixConfigManager.get_config(company_id)
     
     @staticmethod
     def chat(
         user_message: str,
-        conversation: Conversa,
+        conversation: Conversation,
         user_id: int,
     ) -> Dict:
         """
         Process user message and return assistant response
         
-        Conversa flow:
-        1. Create user Mensagem record
+        Conversation flow:
+        1. Create user Message record
         2. Retrieve RAG context using pgvector
         3. Build prompt with conversation history + context
         4. Call Qwen 2.5 LLM via Ollama
-        5. Create assistant Mensagem record with citations
+        5. Create assistant Message record with citations
         6. Return response with metadata
         
         Args:
-            user_message: Usuário's query/message
-            conversation: Conversa object
-            user_id: Usuário ID for message creation
+            user_message: User's query/message
+            conversation: Conversation object
+            user_id: User ID for message creation
             
         Returns:
             {
@@ -647,16 +647,16 @@ class HelixAssistant:
         """
         
         import time
-        from django.contrib.auth.models import Usuário
+        from apps.core.models import User
         
         start_time = time.time()
         
         try:
             logger.info(f"Chat initiated: {user_message[:50]}...")
             
-            # Step 1: Create user Mensagem record
-            user_obj = Usuário.objects.get(id=user_id)
-            user_msg = Mensagem.objects.create(
+            # Step 1: Create user Message record
+            user_obj = User.objects.get(id=user_id)
+            user_msg = Message.objects.create(
                 conversation=conversation,
                 role='user',
                 content=user_message,
@@ -672,8 +672,8 @@ class HelixAssistant:
                 use_conversation_history=True
             )
             
-            # Step 5: Create assistant Mensagem record
-            assistant_msg = Mensagem.objects.create(
+            # Step 5: Create assistant Message record
+            assistant_msg = Message.objects.create(
                 conversation=conversation,
                 role='assistant',
                 content=response_text,
@@ -683,7 +683,7 @@ class HelixAssistant:
             logger.info(f"✓ Created assistant message: {assistant_msg.id}")
             
             # Update conversation title if first message
-            if conversation.title is Nãone or conversation.title == '':
+            if conversation.title is None or conversation.title == '':
                 title = HelixAssistant.summarize_conversation(user_message)
                 conversation.title = title
                 conversation.save()
@@ -731,7 +731,7 @@ class HelixAssistant:
     
     @staticmethod
     def get_conversation_history(
-        conversation: Conversa,
+        conversation: Conversation,
         limit: int = 10
     ) -> List[Dict]:
         """
@@ -786,7 +786,7 @@ def verify_ollama_models() -> Dict[str, bool]:
                 model_name = model.split(':')[0]
                 models_check[model] = model_name in available_models
     except Exception as e:
-        logger.error(f"Erro checking models: {e}")
+        logger.error(f"Error checking models: {e}")
     
     return models_check
 
@@ -839,22 +839,22 @@ def get_helix_status() -> Dict[str, any]:
         'llm_model': LLM_MODEL,
         'embedding_model': EMBEDDING_MODEL,
         'models_available': verify_ollama_models(),
-        'embeddings_initialized': embeddings is not Nãone,
-        'llm_initialized': llm is not Nãone,
-        'database_available': DATABASE_URL is not Nãone,
+        'embeddings_initialized': embeddings is not None,
+        'llm_initialized': llm is not None,
+        'database_available': DATABASE_URL is not None,
     }
 
 
-# ===== Celery Tasks (Voltarground Processing) =====
+# ===== Celery Tasks (Background Processing) =====
 
 try:
     from celery import shared_task
     
     @shared_task
     def ingest_documents_task(company_id: int):
-        """Voltarground task for document ingestion"""
+        """Background task for document ingestion"""
         logger.info(f"Starting background ingestion for company {company_id}")
-        result = DocumentoIngestion.ingest_documents(company_id)
+        result = DocumentIngestion.ingest_documents(company_id)
         logger.info(f"Ingestion complete: {result}")
         return result
     
@@ -872,7 +872,7 @@ try:
         from django.utils import timezone
         
         cutoff_date = timezone.now() - timedelta(days=90)
-        archived = Conversa.objects.filter(
+        archived = Conversation.objects.filter(
             created_at__lt=cutoff_date,
             is_active=True
         ).update(is_active=False)
@@ -880,6 +880,5 @@ try:
         logger.info(f"Archived {archived} old conversations")
         return {'archived': archived}
     
-except ImportarErro:
+except ImportError:
     logger.warning("Celery not available - background tasks disabled")
-

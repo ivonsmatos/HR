@@ -50,7 +50,7 @@ class WorkTaskManagementExtendedTests(TestCase):
         
         # Validar progresso
         progress = (task['subtasks_completed'] / task['subtasks_total']) * 100
-        self.assertEqual(progress, 66.67)  # 2 de 3
+        self.assertAlmostEqual(progress, 66.67, places=2)  # 2 de 3
         self.assertEqual(task['status'], 'in_progress')
     
     def test_task_progress_calculation(self):

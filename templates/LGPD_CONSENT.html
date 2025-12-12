@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="lgpd-consent-container">
+    <h1>Política de Privacidade e Proteção de Dados (LGPD)</h1>
+    <p>
+        Em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018),
+        o SyncRH compromete-se a proteger a privacidade e os dados pessoais de seus usuários.
+    </p>
+
+    <h2>Seus Direitos</h2>
+    <ul>
+        <li>Confirmação da existência de tratamento;</li>
+        <li>Acesso aos dados;</li>
+        <li>Correção de dados incompletos, inexatos ou desatualizados;</li>
+        <li>Anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desconformidade;</li>
+        <li>Portabilidade dos dados a outro fornecedor de serviço ou produto;</li>
+        <li>Eliminação dos dados pessoais tratados com o consentimento do titular;</li>
+    </ul>
+
+    <h2>Consentimento</h2>
+    <p>
+        Ao utilizar este sistema, você concorda com a coleta e tratamento de seus dados
+        para fins de gestão de recursos humanos e operações empresariais.
+    </p>
+
+    <form method="post" action="{% url 'lgpd_consent' %}">
+        {% csrf_token %}
+        <label>
+            <input type="checkbox" name="consent" required>
+            Li e aceito a política de privacidade.
+        </label>
+        <button type="submit">Aceitar e Continuar</button>
+    </form>
+</div>
+{% endblock %}
