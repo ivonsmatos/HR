@@ -1,19 +1,17 @@
 /**
- * Service Worker for Worksuite Clone PWA
+ * Service Worker for SyncRH PWA
  * Handles offline support, caching, and background sync
  */
 
-const CACHE_PREFIX = "worksuite-cache";
-const CACHE_VERSION = "v1";
+const CACHE_PREFIX = "syncrh-cache";
+const CACHE_VERSION = "v2";
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
 
-// Static assets to cache on install
+// Static assets to cache on install (only existing files)
 const STATIC_ASSETS = [
   "/",
-  "/static/css/style.css",
   "/static/js/app.js",
   "/static/js/pwa.js",
-  "/offline/",
   "/api/pwa/metadata/",
 ];
 
@@ -136,8 +134,10 @@ function networkFirstStrategy(request) {
     .then((response) => {
       // Cache successful responses
       if (response.status === 200) {
-        const cache = caches.open(CACHE_NAME);
-        cache.then((c) => c.put(request, response.clone()));
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(request, responseToCache);
+        });
       }
       return response;
     })
@@ -201,8 +201,10 @@ function cacheFirstStrategy(request) {
         .then((response) => {
           // Cache successful responses
           if (response.status === 200) {
-            const cache = caches.open(CACHE_NAME);
-            cache.then((c) => c.put(request, response.clone()));
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseToCache);
+            });
           }
           return response;
         })
@@ -229,8 +231,9 @@ function cacheFirstStrategy(request) {
 function updateCacheInBackground(request) {
   return fetch(request).then((response) => {
     if (response.status === 200) {
+      const responseToCache = response.clone();
       caches.open(CACHE_NAME).then((cache) => {
-        cache.put(request, response.clone());
+        cache.put(request, responseToCache);
         // Notify all clients of update
         self.clients.matchAll().then((clients) => {
           clients.forEach((client) => {

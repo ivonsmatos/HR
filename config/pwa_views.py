@@ -84,16 +84,30 @@ def browserconfig(request):
 @require_http_methods(["GET"])
 def service_worker(request):
     """
-    Serve service worker with proper caching headers
+    Serve service worker from root with proper scope header
+    This allows the service worker to control the entire site
     """
-    from django.views.static import serve
+    from django.http import HttpResponse
     from django.conf import settings
     import os
-
-    sw_path = os.path.join(settings.STATIC_ROOT, "js", "service-worker.js")
-    if os.path.exists(sw_path):
-        response = serve(request, "js/service-worker.js", settings.STATIC_ROOT)
-        response["Cache-Control"] = "public, max-age=3600"
+    
+    # Try multiple paths for the service worker file
+    possible_paths = [
+        os.path.join(settings.BASE_DIR, "static", "js", "service-worker.js"),
+        os.path.join(settings.STATIC_ROOT or "", "js", "service-worker.js"),
+    ]
+    
+    sw_content = None
+    for sw_path in possible_paths:
+        if os.path.exists(sw_path):
+            with open(sw_path, 'r', encoding='utf-8') as f:
+                sw_content = f.read()
+            break
+    
+    if sw_content:
+        response = HttpResponse(sw_content, content_type='application/javascript')
+        response["Cache-Control"] = "public, max-age=0, must-revalidate"
+        response["Service-Worker-Allowed"] = "/"
         return response
 
     return JsonResponse({"error": "Service worker not found"}, status=404)

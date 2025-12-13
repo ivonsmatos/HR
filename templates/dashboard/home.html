@@ -1,0 +1,263 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Dashboard - SyncRH{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Bem-vindo de volta, {{ user.first_name|default:user.username }}!{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Funcionários -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-400 text-sm">Total Funcionários</p>
+                <p class="text-3xl font-bold text-white mt-2">{{ stats.total_employees|default:"247" }}</p>
+                <p class="text-success text-sm mt-2"><i class="fas fa-arrow-up mr-1"></i>+12 este mês</p>
+            </div>
+            <div class="w-14 h-14 bg-accent/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-users text-accent text-2xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Departamentos -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-400 text-sm">Departamentos</p>
+                <p class="text-3xl font-bold text-white mt-2">{{ stats.total_departments|default:"12" }}</p>
+                <p class="text-gray-400 text-sm mt-2">Ativos no sistema</p>
+            </div>
+            <div class="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-building text-purple-500 text-2xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projetos Ativos -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-400 text-sm">Projetos Ativos</p>
+                <p class="text-3xl font-bold text-white mt-2">{{ stats.active_projects|default:"23" }}</p>
+                <p class="text-warning text-sm mt-2"><i class="fas fa-clock mr-1"></i>5 próximos do prazo</p>
+            </div>
+            <div class="w-14 h-14 bg-warning/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-project-diagram text-warning text-2xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vagas Abertas -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-400 text-sm">Vagas Abertas</p>
+                <p class="text-3xl font-bold text-white mt-2">{{ stats.open_positions|default:"8" }}</p>
+                <p class="text-success text-sm mt-2"><i class="fas fa-user-check mr-1"></i>34 candidatos</p>
+            </div>
+            <div class="w-14 h-14 bg-success/20 rounded-xl flex items-center justify-center">
+                <i class="fas fa-user-plus text-success text-2xl"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Second Row -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Folha de Pagamento -->
+    <div class="bg-secondary rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-white font-semibold">Folha de Pagamento</h3>
+            <span class="text-gray-400 text-sm">Dezembro/2025</span>
+        </div>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-400">Salários</span>
+                <span class="text-white font-semibold">R$ 1.247.890,00</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-400">Benefícios</span>
+                <span class="text-white font-semibold">R$ 234.567,00</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-400">Encargos</span>
+                <span class="text-white font-semibold">R$ 498.234,00</span>
+            </div>
+            <hr class="border-gray-700">
+            <div class="flex justify-between items-center">
+                <span class="text-white font-semibold">Total</span>
+                <span class="text-accent font-bold text-xl">R$ 1.980.691,00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Próximos Aniversários -->
+    <div class="bg-secondary rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-white font-semibold">Aniversários do Mês</h3>
+            <i class="fas fa-birthday-cake text-pink-500"></i>
+        </div>
+        <div class="space-y-3">
+            <div class="flex items-center gap-3 p-2 bg-primary/50 rounded-lg">
+                <div class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold">MS</div>
+                <div class="flex-1">
+                    <p class="text-white text-sm">Maria Silva</p>
+                    <p class="text-gray-400 text-xs">Marketing - 15/12</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-2 bg-primary/50 rounded-lg">
+                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">JC</div>
+                <div class="flex-1">
+                    <p class="text-white text-sm">João Costa</p>
+                    <p class="text-gray-400 text-xs">TI - 18/12</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-2 bg-primary/50 rounded-lg">
+                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">AL</div>
+                <div class="flex-1">
+                    <p class="text-white text-sm">Ana Lima</p>
+                    <p class="text-gray-400 text-xs">Financeiro - 22/12</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status do Sistema -->
+    <div class="bg-secondary rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-white font-semibold">Status do Sistema</h3>
+            <span class="bg-success/20 text-success text-xs px-2 py-1 rounded-full">Online</span>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-400">Ollama (IA)</span>
+                    <span class="text-success">Ativo</span>
+                </div>
+                <div class="w-full bg-primary rounded-full h-2">
+                    <div class="bg-success h-2 rounded-full" style="width: 100%"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-400">Banco de Dados</span>
+                    <span class="text-success">Conectado</span>
+                </div>
+                <div class="w-full bg-primary rounded-full h-2">
+                    <div class="bg-success h-2 rounded-full" style="width: 100%"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-400">Uso de Memória</span>
+                    <span class="text-white">68%</span>
+                </div>
+                <div class="w-full bg-primary rounded-full h-2">
+                    <div class="bg-accent h-2 rounded-full" style="width: 68%"></div>
+                </div>
+            </div>
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-400">Armazenamento</span>
+                    <span class="text-white">45%</span>
+                </div>
+                <div class="w-full bg-primary rounded-full h-2">
+                    <div class="bg-accent h-2 rounded-full" style="width: 45%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Third Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Tarefas Recentes -->
+    <div class="bg-secondary rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-white font-semibold">Tarefas Pendentes</h3>
+            <a href="{% url 'dashboard:tasks' %}" class="text-accent text-sm hover:underline">Ver todas</a>
+        </div>
+        <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 bg-primary/50 rounded-lg">
+                <input type="checkbox" class="w-5 h-5 rounded border-gray-600 bg-primary text-accent">
+                <div class="flex-1">
+                    <p class="text-white text-sm">Revisar contratos de dezembro</p>
+                    <p class="text-gray-400 text-xs">Departamento Pessoal • Vence hoje</p>
+                </div>
+                <span class="text-danger text-xs"><i class="fas fa-exclamation-circle"></i></span>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-primary/50 rounded-lg">
+                <input type="checkbox" class="w-5 h-5 rounded border-gray-600 bg-primary text-accent">
+                <div class="flex-1">
+                    <p class="text-white text-sm">Aprovar solicitações de férias</p>
+                    <p class="text-gray-400 text-xs">RH • 5 pendentes</p>
+                </div>
+                <span class="text-warning text-xs"><i class="fas fa-clock"></i></span>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-primary/50 rounded-lg">
+                <input type="checkbox" class="w-5 h-5 rounded border-gray-600 bg-primary text-accent">
+                <div class="flex-1">
+                    <p class="text-white text-sm">Entrevistas agendadas</p>
+                    <p class="text-gray-400 text-xs">Recrutamento • 3 candidatos</p>
+                </div>
+                <span class="text-accent text-xs"><i class="fas fa-calendar"></i></span>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-primary/50 rounded-lg">
+                <input type="checkbox" class="w-5 h-5 rounded border-gray-600 bg-primary text-accent">
+                <div class="flex-1">
+                    <p class="text-white text-sm">Relatório mensal de performance</p>
+                    <p class="text-gray-400 text-xs">Gestão • Prazo: 20/12</p>
+                </div>
+                <span class="text-gray-400 text-xs"><i class="fas fa-file-alt"></i></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Atividades Recentes -->
+    <div class="bg-secondary rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-white font-semibold">Atividades Recentes</h3>
+            <span class="text-gray-400 text-sm">Última hora</span>
+        </div>
+        <div class="space-y-4">
+            <div class="flex gap-3">
+                <div class="w-2 h-2 bg-success rounded-full mt-2"></div>
+                <div>
+                    <p class="text-white text-sm">Novo funcionário cadastrado</p>
+                    <p class="text-gray-400 text-xs">Carlos Mendes - Desenvolvimento • há 15 min</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                <div>
+                    <p class="text-white text-sm">Projeto "Portal RH" atualizado</p>
+                    <p class="text-gray-400 text-xs">Status: Em andamento • há 32 min</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="w-2 h-2 bg-warning rounded-full mt-2"></div>
+                <div>
+                    <p class="text-white text-sm">Solicitação de férias aprovada</p>
+                    <p class="text-gray-400 text-xs">Ana Paula - 02/01 a 15/01 • há 45 min</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                <div>
+                    <p class="text-white text-sm">Avaliação de performance concluída</p>
+                    <p class="text-gray-400 text-xs">Equipe de Marketing • há 1 hora</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="w-2 h-2 bg-pink-500 rounded-full mt-2"></div>
+                <div>
+                    <p class="text-white text-sm">Novo candidato para vaga Dev Sr</p>
+                    <p class="text-gray-400 text-xs">Recrutamento • há 1 hora</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

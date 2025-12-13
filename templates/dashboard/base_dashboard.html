@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SyncRH{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0D1F2D',
+                        secondary: '#1A3A4A',
+                        accent: '#3B82F6',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-link:hover, .sidebar-link.active {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.2) 0%, transparent 100%);
+            border-left: 3px solid #3B82F6;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-primary min-h-screen">
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-secondary min-h-screen fixed left-0 top-0 overflow-y-auto">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-700">
+                <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-sync-alt text-accent"></i>
+                    SyncRH
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">Sistema de RH Inteligente</p>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="p-4">
+                <!-- Dashboard -->
+                <a href="{% url 'dashboard:home' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- Gestão de Pessoas -->
+                <div class="mt-6">
+                    <p class="text-gray-500 text-xs uppercase tracking-wider px-4 mb-2">Gestão de Pessoas</p>
+                    
+                    <a href="{% url 'dashboard:employees' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-users w-5"></i>
+                        <span>Funcionários</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:departments' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-building w-5"></i>
+                        <span>Departamentos</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:recruitment' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-user-plus w-5"></i>
+                        <span>Recrutamento</span>
+                    </a>
+                </div>
+
+                <!-- Departamento Pessoal -->
+                <div class="mt-6">
+                    <p class="text-gray-500 text-xs uppercase tracking-wider px-4 mb-2">Depto. Pessoal</p>
+                    
+                    <a href="{% url 'dashboard:payroll' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-money-bill-wave w-5"></i>
+                        <span>Folha de Pagamento</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:benefits' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-gift w-5"></i>
+                        <span>Benefícios</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:vacation' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-umbrella-beach w-5"></i>
+                        <span>Férias</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:timesheet' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-clock w-5"></i>
+                        <span>Ponto</span>
+                    </a>
+                </div>
+
+                <!-- Performance -->
+                <div class="mt-6">
+                    <p class="text-gray-500 text-xs uppercase tracking-wider px-4 mb-2">Performance</p>
+                    
+                    <a href="{% url 'dashboard:performance' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-chart-line w-5"></i>
+                        <span>Avaliações</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:goals' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-bullseye w-5"></i>
+                        <span>Metas & OKRs</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:training' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-graduation-cap w-5"></i>
+                        <span>Treinamentos</span>
+                    </a>
+                </div>
+
+                <!-- Projetos & Tarefas -->
+                <div class="mt-6">
+                    <p class="text-gray-500 text-xs uppercase tracking-wider px-4 mb-2">Trabalho</p>
+                    
+                    <a href="{% url 'dashboard:projects' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-project-diagram w-5"></i>
+                        <span>Projetos</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:tasks' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-tasks w-5"></i>
+                        <span>Tarefas</span>
+                    </a>
+                </div>
+
+                <!-- CRM & Finanças -->
+                <div class="mt-6">
+                    <p class="text-gray-500 text-xs uppercase tracking-wider px-4 mb-2">CRM & Finanças</p>
+                    
+                    <a href="{% url 'dashboard:clients' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-handshake w-5"></i>
+                        <span>Clientes</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:invoices' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-file-invoice-dollar w-5"></i>
+                        <span>Faturas</span>
+                    </a>
+                </div>
+
+                <!-- Configurações -->
+                <div class="mt-6">
+                    <p class="text-gray-500 text-xs uppercase tracking-wider px-4 mb-2">Sistema</p>
+                    
+                    <a href="{% url 'dashboard:settings' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-cog w-5"></i>
+                        <span>Configurações</span>
+                    </a>
+                    
+                    <a href="{% url 'dashboard:reports' %}" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-chart-bar w-5"></i>
+                        <span>Relatórios</span>
+                    </a>
+                    
+                    <a href="/admin/" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-300 rounded-lg mb-1 transition-all">
+                        <i class="fas fa-tools w-5"></i>
+                        <span>Admin Django</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-64">
+            <!-- Top Bar -->
+            <header class="bg-secondary border-b border-gray-700 px-6 py-4 flex justify-between items-center sticky top-0 z-10">
+                <div>
+                    <h2 class="text-xl font-semibold text-white">{% block page_title %}Dashboard{% endblock %}</h2>
+                    <p class="text-gray-400 text-sm">{% block page_subtitle %}Visão geral do sistema{% endblock %}</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- Search -->
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar..." class="bg-primary border border-gray-600 rounded-lg px-4 py-2 pl-10 text-gray-300 focus:outline-none focus:border-accent w-64">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-500"></i>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <button class="relative text-gray-400 hover:text-white">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
+                            <span class="text-white font-semibold">{{ user.first_name|default:"A"|slice:":1"|upper }}</span>
+                        </div>
+                        <div>
+                            <p class="text-white text-sm font-medium">{{ user.get_full_name|default:user.username }}</p>
+                            <p class="text-gray-400 text-xs">Administrador</p>
+                        </div>
+                        <a href="{% url 'logout' %}" class="text-gray-400 hover:text-white ml-2">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-6">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Chat Bubble -->
+    <div id="chat-widget" class="fixed bottom-6 right-6 z-50">
+        <button onclick="window.location.href='/'" class="bg-accent hover:bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-all">
+            <i class="fas fa-robot text-xl"></i>
+        </button>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

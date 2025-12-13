@@ -1,0 +1,202 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Projetos - SyncRH{% endblock %}
+{% block page_title %}Projetos{% endblock %}
+{% block page_subtitle %}Gestão de projetos e entregas{% endblock %}
+
+{% block content %}
+<!-- Actions Bar -->
+<div class="flex justify-between items-center mb-6">
+    <div class="flex gap-3">
+        <button class="bg-accent hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all">
+            <i class="fas fa-plus"></i>
+            Novo Projeto
+        </button>
+        <div class="flex bg-secondary rounded-lg">
+            <button class="px-4 py-2 text-white bg-accent rounded-l-lg"><i class="fas fa-th-large"></i></button>
+            <button class="px-4 py-2 text-gray-400 hover:text-white"><i class="fas fa-list"></i></button>
+        </div>
+    </div>
+    <div class="flex gap-3">
+        <select class="bg-secondary border border-gray-600 text-gray-300 rounded-lg px-4 py-2">
+            <option>Status: Todos</option>
+            <option>Em Andamento</option>
+            <option>Concluído</option>
+            <option>Pausado</option>
+            <option>Cancelado</option>
+        </select>
+    </div>
+</div>
+
+<!-- Project Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Project 1 -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-start justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-xs bg-success/20 text-success">Em Andamento</span>
+            <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">Portal do Colaborador</h3>
+        <p class="text-gray-400 text-sm mb-4">Sistema de autoatendimento para funcionários</p>
+        
+        <div class="mb-4">
+            <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Progresso</span>
+                <span class="text-white">75%</span>
+            </div>
+            <div class="w-full bg-primary rounded-full h-2">
+                <div class="bg-accent h-2 rounded-full" style="width: 75%"></div>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <div class="flex -space-x-2">
+                <div class="w-8 h-8 bg-blue-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">JC</div>
+                <div class="w-8 h-8 bg-pink-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">MS</div>
+                <div class="w-8 h-8 bg-green-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">AL</div>
+            </div>
+            <span class="text-gray-400 text-sm"><i class="fas fa-calendar mr-1"></i>20/12/2025</span>
+        </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-start justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-xs bg-warning/20 text-warning">Atrasado</span>
+            <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">Integração eSocial</h3>
+        <p class="text-gray-400 text-sm mb-4">Adequação ao sistema do governo federal</p>
+        
+        <div class="mb-4">
+            <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Progresso</span>
+                <span class="text-white">45%</span>
+            </div>
+            <div class="w-full bg-primary rounded-full h-2">
+                <div class="bg-warning h-2 rounded-full" style="width: 45%"></div>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <div class="flex -space-x-2">
+                <div class="w-8 h-8 bg-purple-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">PS</div>
+                <div class="w-8 h-8 bg-orange-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">CF</div>
+            </div>
+            <span class="text-danger text-sm"><i class="fas fa-exclamation-triangle mr-1"></i>Atrasado</span>
+        </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-start justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-xs bg-success/20 text-success">Em Andamento</span>
+            <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">App Mobile RH</h3>
+        <p class="text-gray-400 text-sm mb-4">Aplicativo para iOS e Android</p>
+        
+        <div class="mb-4">
+            <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Progresso</span>
+                <span class="text-white">30%</span>
+            </div>
+            <div class="w-full bg-primary rounded-full h-2">
+                <div class="bg-accent h-2 rounded-full" style="width: 30%"></div>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <div class="flex -space-x-2">
+                <div class="w-8 h-8 bg-blue-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">JC</div>
+                <div class="w-8 h-8 bg-indigo-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">RM</div>
+                <div class="w-8 h-8 bg-gray-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">+2</div>
+            </div>
+            <span class="text-gray-400 text-sm"><i class="fas fa-calendar mr-1"></i>15/03/2026</span>
+        </div>
+    </div>
+
+    <!-- Project 4 -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-start justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400">Concluído</span>
+            <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">Sistema de Ponto</h3>
+        <p class="text-gray-400 text-sm mb-4">Controle de jornada de trabalho</p>
+        
+        <div class="mb-4">
+            <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Progresso</span>
+                <span class="text-white">100%</span>
+            </div>
+            <div class="w-full bg-primary rounded-full h-2">
+                <div class="bg-success h-2 rounded-full" style="width: 100%"></div>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <div class="flex -space-x-2">
+                <div class="w-8 h-8 bg-pink-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">CF</div>
+                <div class="w-8 h-8 bg-green-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">AL</div>
+            </div>
+            <span class="text-success text-sm"><i class="fas fa-check mr-1"></i>Entregue</span>
+        </div>
+    </div>
+
+    <!-- Project 5 -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-start justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-xs bg-success/20 text-success">Em Andamento</span>
+            <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">Avaliação 360°</h3>
+        <p class="text-gray-400 text-sm mb-4">Sistema de feedback e performance</p>
+        
+        <div class="mb-4">
+            <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Progresso</span>
+                <span class="text-white">60%</span>
+            </div>
+            <div class="w-full bg-primary rounded-full h-2">
+                <div class="bg-accent h-2 rounded-full" style="width: 60%"></div>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <div class="flex -space-x-2">
+                <div class="w-8 h-8 bg-orange-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">PS</div>
+                <div class="w-8 h-8 bg-blue-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">MS</div>
+            </div>
+            <span class="text-gray-400 text-sm"><i class="fas fa-calendar mr-1"></i>30/01/2026</span>
+        </div>
+    </div>
+
+    <!-- Project 6 -->
+    <div class="bg-secondary rounded-xl p-6 card-hover transition-all">
+        <div class="flex items-start justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-xs bg-gray-500/20 text-gray-400">Planejamento</span>
+            <button class="text-gray-400 hover:text-white"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">Chat Sync IA</h3>
+        <p class="text-gray-400 text-sm mb-4">Assistente inteligente com RAG</p>
+        
+        <div class="mb-4">
+            <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-400">Progresso</span>
+                <span class="text-white">10%</span>
+            </div>
+            <div class="w-full bg-primary rounded-full h-2">
+                <div class="bg-gray-500 h-2 rounded-full" style="width: 10%"></div>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <div class="flex -space-x-2">
+                <div class="w-8 h-8 bg-blue-500 rounded-full border-2 border-secondary flex items-center justify-center text-white text-xs">JC</div>
+            </div>
+            <span class="text-gray-400 text-sm"><i class="fas fa-calendar mr-1"></i>Q1 2026</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,232 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Funcionários - SyncRH{% endblock %}
+{% block page_title %}Funcionários{% endblock %}
+{% block page_subtitle %}Gestão de colaboradores da empresa{% endblock %}
+
+{% block content %}
+<!-- Actions Bar -->
+<div class="flex justify-between items-center mb-6">
+    <div class="flex gap-3">
+        <button class="bg-accent hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all">
+            <i class="fas fa-plus"></i>
+            Novo Funcionário
+        </button>
+        <button class="bg-secondary hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all">
+            <i class="fas fa-file-export"></i>
+            Exportar
+        </button>
+    </div>
+    <div class="flex gap-3">
+        <select class="bg-secondary border border-gray-600 text-gray-300 rounded-lg px-4 py-2">
+            <option>Todos os Departamentos</option>
+            <option>TI</option>
+            <option>RH</option>
+            <option>Financeiro</option>
+            <option>Marketing</option>
+            <option>Comercial</option>
+        </select>
+        <select class="bg-secondary border border-gray-600 text-gray-300 rounded-lg px-4 py-2">
+            <option>Status: Todos</option>
+            <option>Ativo</option>
+            <option>Férias</option>
+            <option>Afastado</option>
+            <option>Desligado</option>
+        </select>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-secondary rounded-lg p-4">
+        <p class="text-gray-400 text-sm">Total</p>
+        <p class="text-2xl font-bold text-white">247</p>
+    </div>
+    <div class="bg-secondary rounded-lg p-4">
+        <p class="text-gray-400 text-sm">Ativos</p>
+        <p class="text-2xl font-bold text-success">232</p>
+    </div>
+    <div class="bg-secondary rounded-lg p-4">
+        <p class="text-gray-400 text-sm">Em Férias</p>
+        <p class="text-2xl font-bold text-warning">12</p>
+    </div>
+    <div class="bg-secondary rounded-lg p-4">
+        <p class="text-gray-400 text-sm">Afastados</p>
+        <p class="text-2xl font-bold text-danger">3</p>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="bg-secondary rounded-xl overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-primary/50">
+            <tr>
+                <th class="text-left text-gray-400 text-sm font-medium px-6 py-4">Funcionário</th>
+                <th class="text-left text-gray-400 text-sm font-medium px-6 py-4">Departamento</th>
+                <th class="text-left text-gray-400 text-sm font-medium px-6 py-4">Cargo</th>
+                <th class="text-left text-gray-400 text-sm font-medium px-6 py-4">Admissão</th>
+                <th class="text-left text-gray-400 text-sm font-medium px-6 py-4">Status</th>
+                <th class="text-left text-gray-400 text-sm font-medium px-6 py-4">Ações</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-700">
+            {% for employee in employees %}
+            <tr class="hover:bg-primary/30 transition-all">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white font-bold">
+                            {{ employee.name|slice:":2"|upper }}
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">{{ employee.name }}</p>
+                            <p class="text-gray-400 text-sm">{{ employee.email }}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-gray-300">{{ employee.department }}</td>
+                <td class="px-6 py-4 text-gray-300">{{ employee.position }}</td>
+                <td class="px-6 py-4 text-gray-300">{{ employee.hire_date }}</td>
+                <td class="px-6 py-4">
+                    <span class="px-3 py-1 rounded-full text-xs {% if employee.status == 'Ativo' %}bg-success/20 text-success{% elif employee.status == 'Férias' %}bg-warning/20 text-warning{% else %}bg-danger/20 text-danger{% endif %}">
+                        {{ employee.status }}
+                    </span>
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-eye"></i></button>
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-edit"></i></button>
+                        <button class="text-gray-400 hover:text-danger"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <!-- Sample Data -->
+            <tr class="hover:bg-primary/30 transition-all">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">MS</div>
+                        <div>
+                            <p class="text-white font-medium">Maria Silva</p>
+                            <p class="text-gray-400 text-sm">maria.silva@empresa.com</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-gray-300">Marketing</td>
+                <td class="px-6 py-4 text-gray-300">Gerente de Marketing</td>
+                <td class="px-6 py-4 text-gray-300">15/03/2020</td>
+                <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs bg-success/20 text-success">Ativo</span></td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-eye"></i></button>
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-edit"></i></button>
+                        <button class="text-gray-400 hover:text-danger"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+            <tr class="hover:bg-primary/30 transition-all">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">JC</div>
+                        <div>
+                            <p class="text-white font-medium">João Costa</p>
+                            <p class="text-gray-400 text-sm">joao.costa@empresa.com</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-gray-300">TI</td>
+                <td class="px-6 py-4 text-gray-300">Desenvolvedor Sênior</td>
+                <td class="px-6 py-4 text-gray-300">22/07/2019</td>
+                <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs bg-success/20 text-success">Ativo</span></td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-eye"></i></button>
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-edit"></i></button>
+                        <button class="text-gray-400 hover:text-danger"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+            <tr class="hover:bg-primary/30 transition-all">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">AL</div>
+                        <div>
+                            <p class="text-white font-medium">Ana Lima</p>
+                            <p class="text-gray-400 text-sm">ana.lima@empresa.com</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-gray-300">Financeiro</td>
+                <td class="px-6 py-4 text-gray-300">Analista Financeiro</td>
+                <td class="px-6 py-4 text-gray-300">10/01/2021</td>
+                <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs bg-warning/20 text-warning">Férias</span></td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-eye"></i></button>
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-edit"></i></button>
+                        <button class="text-gray-400 hover:text-danger"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+            <tr class="hover:bg-primary/30 transition-all">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">PS</div>
+                        <div>
+                            <p class="text-white font-medium">Pedro Santos</p>
+                            <p class="text-gray-400 text-sm">pedro.santos@empresa.com</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-gray-300">Comercial</td>
+                <td class="px-6 py-4 text-gray-300">Executivo de Vendas</td>
+                <td class="px-6 py-4 text-gray-300">05/06/2022</td>
+                <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs bg-success/20 text-success">Ativo</span></td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-eye"></i></button>
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-edit"></i></button>
+                        <button class="text-gray-400 hover:text-danger"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+            <tr class="hover:bg-primary/30 transition-all">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold">CF</div>
+                        <div>
+                            <p class="text-white font-medium">Carla Ferreira</p>
+                            <p class="text-gray-400 text-sm">carla.ferreira@empresa.com</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 text-gray-300">RH</td>
+                <td class="px-6 py-4 text-gray-300">Coordenadora de RH</td>
+                <td class="px-6 py-4 text-gray-300">18/09/2018</td>
+                <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs bg-success/20 text-success">Ativo</span></td>
+                <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-eye"></i></button>
+                        <button class="text-gray-400 hover:text-accent"><i class="fas fa-edit"></i></button>
+                        <button class="text-gray-400 hover:text-danger"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- Pagination -->
+    <div class="px-6 py-4 border-t border-gray-700 flex justify-between items-center">
+        <p class="text-gray-400 text-sm">Mostrando 1-5 de 247 funcionários</p>
+        <div class="flex gap-2">
+            <button class="px-3 py-1 bg-primary rounded text-gray-400 hover:text-white"><i class="fas fa-chevron-left"></i></button>
+            <button class="px-3 py-1 bg-accent rounded text-white">1</button>
+            <button class="px-3 py-1 bg-primary rounded text-gray-400 hover:text-white">2</button>
+            <button class="px-3 py-1 bg-primary rounded text-gray-400 hover:text-white">3</button>
+            <button class="px-3 py-1 bg-primary rounded text-gray-400 hover:text-white">...</button>
+            <button class="px-3 py-1 bg-primary rounded text-gray-400 hover:text-white">50</button>
+            <button class="px-3 py-1 bg-primary rounded text-gray-400 hover:text-white"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+</div>
+{% endblock %}

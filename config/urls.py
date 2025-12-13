@@ -20,10 +20,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.shortcuts import redirect
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from apps.core.health_check import health_check, readiness_check, liveness_check
+from config.pwa_views import manifest, pwa_metadata, service_worker
 
 urlpatterns = [
+    # Home redirect to Dashboard
+    path('', lambda request: redirect('dashboard:home'), name='home'),
+    
     # Authentication URLs
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
@@ -33,11 +38,21 @@ urlpatterns = [
     path("health/ready/", readiness_check, name="readiness_check"),
     path("health/live/", liveness_check, name="liveness_check"),
     
+    # Service Worker (must be served from root for proper scope)
+    path("service-worker.js", service_worker, name="service_worker"),
+    
+    # PWA Endpoints
+    path("api/pwa/manifest/", manifest, name="pwa_manifest"),
+    path("api/pwa/metadata/", pwa_metadata, name="pwa_metadata"),
+    
     # Admin
     path("admin/", admin.site.urls),
     
-    # Assistant (main app)
-    path("", include("apps.assistant.urls")),
+    # Dashboard (Frontend Principal)
+    path("dashboard/", include("apps.core.dashboard_urls")),
+    
+    # Assistant (Chat)
+    path("chat/", include("apps.assistant.urls")),
     
     # API Documentation
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

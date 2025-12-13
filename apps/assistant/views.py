@@ -9,7 +9,7 @@ Integration:
 
 Stack:
 - Ollama (qwen2.5:14b LLM)
-- Nãomic Embed (embeddings)
+- Nomic Embed (embeddings)
 - pgvector (similarity search)
 - HTMX (frontend interactivity)
 - Django templates (server-side rendering)
@@ -28,6 +28,18 @@ from django.utils.timezone import now
 from datetime import datetime
 
 from .models import Conversa, Mensagem, Documento, DocumentoChunk
+
+
+def get_user_company(user):
+    """Helper to get company/tenant ID from user safely."""
+    if hasattr(user, 'tenant') and user.tenant:
+        return user.tenant
+    if hasattr(user, 'company') and user.company:
+        return user.company
+    if hasattr(user, 'company_id') and user.company_id:
+        return user.company_id
+    # Default company ID for single-tenant or test mode
+    return None
 from .services import (
     HelixAssistant, 
     DocumentoIngestion, 
@@ -84,6 +96,7 @@ def chat_interface(request):
         return render(request, 'assistant/error.html', {'error': str(e)}, status=500)
 
 
+@csrf_exempt
 @login_required
 @require_http_methods(["POST"])
 def chat_message(request):
@@ -203,6 +216,7 @@ def chat_history(request, conversation_id):
         return HttpResponse(f"Erro: {str(e)}", status=500)
 
 
+@csrf_exempt
 @login_required
 @require_http_methods(["POST"])
 def create_conversation(request):
@@ -218,7 +232,6 @@ def create_conversation(request):
         
         conversation = Conversa.objects.create(
             user=request.user,
-            company=request.user.tenant,
             title=title,
             is_active=True,
         )
@@ -246,9 +259,13 @@ def list_documents(request):
     Returns: JSON list of documents
     """
     try:
+        company = get_user_company(request.user)
+        filter_kwargs = {'is_active': True}
+        if company:
+            filter_kwargs['company'] = company
+        
         documents = Documento.objects.filter(
-            company=request.user.tenant,
-            is_active=True
+            **filter_kwargs
         ).values(
             'id', 'title', 'source_path', 'content_type',
             'ingested_at', 'version'
@@ -273,6 +290,7 @@ def list_documents(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
+@csrf_exempt
 @login_required
 @require_http_methods(["POST"])
 def ingest_documents(request):
@@ -290,7 +308,9 @@ def ingest_documents(request):
     Returns: JSON with ingestion results
     """
     try:
-        logger.info(f"Starting document ingestion for company {request.user.tenant.id}")
+        company = get_user_company(request.user)
+        company_id = company.id if company and hasattr(company, 'id') else None
+        logger.info(f"Starting document ingestion for company {company_id}")
         
         # Check Ollama connection
         if not check_ollama_connection():
@@ -301,7 +321,7 @@ def ingest_documents(request):
         
         # Ingest documents
         result = DocumentoIngestion.ingest_documents(
-            company_id=request.user.tenant.id
+            company_id=company_id
         )
         
         logger.info(f"Ingestion complete: {result}")

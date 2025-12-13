@@ -53,7 +53,7 @@ class WorksuitePWA {
       console.log("[PWA] Registering service worker...");
 
       const registration = await navigator.serviceWorker.register(
-        "/static/js/service-worker.js",
+        "/service-worker.js",
         {
           scope: "/",
         }

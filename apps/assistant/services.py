@@ -51,7 +51,7 @@ logger = logging.getLogger(__name__)
 
 # Ollama Configuração
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-LLM_MODEL = os.getenv("LLM_MODEL", "qwen2.5:14b")
+LLM_MODEL = os.getenv("LLM_MODEL", "mistral-nemo")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "nomic-embed-text")
 
 # Database
@@ -90,8 +90,8 @@ if Ollama is not None:
 else:
     llm = None
 
-# Prompt do Sistema for Helix
-HELIX_SYSTEM_PROMPT = """Você é o assistente virtual do sistema SyncRH. 
+# Prompt do Sistema for Chat Sync
+HELIX_SYSTEM_PROMPT = """Você é o Chat Sync, assistente virtual inteligente do sistema SyncRH. 
 Você é profissional, direto e prestativo. 
 Use estritamente o contexto fornecido para responder. 
 Se a resposta não estiver no contexto, diga que não sabe. 

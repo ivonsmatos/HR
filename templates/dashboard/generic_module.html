@@ -1,0 +1,73 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}{{ page_title }} - SyncRH{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+{% block page_subtitle %}{{ page_subtitle }}{% endblock %}
+
+{% block content %}
+<div class="bg-secondary rounded-xl p-8 text-center">
+    <div class="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="{{ page_icon }} text-accent text-4xl"></i>
+    </div>
+    <h3 class="text-white text-xl font-semibold mb-2">{{ page_title }}</h3>
+    <p class="text-gray-400 mb-6">{{ page_description|default:"Este módulo está em desenvolvimento." }}</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-6">
+        <div class="bg-primary/50 rounded-lg p-4">
+            <p class="text-2xl font-bold text-white">{{ stat1_value|default:"0" }}</p>
+            <p class="text-gray-400 text-sm">{{ stat1_label|default:"Total" }}</p>
+        </div>
+        <div class="bg-primary/50 rounded-lg p-4">
+            <p class="text-2xl font-bold text-success">{{ stat2_value|default:"0" }}</p>
+            <p class="text-gray-400 text-sm">{{ stat2_label|default:"Ativos" }}</p>
+        </div>
+        <div class="bg-primary/50 rounded-lg p-4">
+            <p class="text-2xl font-bold text-warning">{{ stat3_value|default:"0" }}</p>
+            <p class="text-gray-400 text-sm">{{ stat3_label|default:"Pendentes" }}</p>
+        </div>
+    </div>
+    
+    <button class="bg-accent hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-all">
+        <i class="fas fa-plus mr-2"></i>Adicionar Novo
+    </button>
+</div>
+
+<!-- Quick Actions -->
+<div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-secondary rounded-lg p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-700 transition-all">
+        <div class="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-plus text-accent"></i>
+        </div>
+        <div>
+            <p class="text-white text-sm font-medium">Novo Registro</p>
+            <p class="text-gray-400 text-xs">Adicionar item</p>
+        </div>
+    </div>
+    <div class="bg-secondary rounded-lg p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-700 transition-all">
+        <div class="w-10 h-10 bg-success/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-file-export text-success"></i>
+        </div>
+        <div>
+            <p class="text-white text-sm font-medium">Exportar</p>
+            <p class="text-gray-400 text-xs">Excel ou PDF</p>
+        </div>
+    </div>
+    <div class="bg-secondary rounded-lg p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-700 transition-all">
+        <div class="w-10 h-10 bg-warning/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-chart-bar text-warning"></i>
+        </div>
+        <div>
+            <p class="text-white text-sm font-medium">Relatórios</p>
+            <p class="text-gray-400 text-xs">Visualizar dados</p>
+        </div>
+    </div>
+    <div class="bg-secondary rounded-lg p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-700 transition-all">
+        <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-cog text-purple-500"></i>
+        </div>
+        <div>
+            <p class="text-white text-sm font-medium">Configurações</p>
+            <p class="text-gray-400 text-xs">Ajustar módulo</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

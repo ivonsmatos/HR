@@ -1,5 +1,5 @@
 <!--
-Helix Secretary - Chat Widget Component (HTMX + Tailwind)
+Chat Sync - Chat Widget Component (HTMX + Tailwind)
 Arquivo: apps/assistant/templates/assistant/partials/chat_bubble.html
 
 Design System (Onyx Palette):
@@ -31,7 +31,7 @@ HTMX Integration:
           d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5z"
         ></path>
       </svg>
-      <h3 id="chat-widget-title" class="font-semibold">Helix Secretary</h3>
+      <h3 id="chat-widget-title" class="font-semibold">Chat Sync</h3>
     </div>
     <button
       onclick="document.getElementById('helix-chat-widget').classList.add('hidden')"
@@ -58,12 +58,12 @@ HTMX Integration:
         <span
           class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-[#274B59]"
         >
-          <span class="text-[#D0E5F2] text-sm">H</span>
+          <span class="text-[#D0E5F2] text-sm">C</span>
         </span>
       </div>
       <div class="bg-[#122E40] text-[#D0E5F2] rounded-lg p-3 max-w-xs">
         <p class="text-sm">
-          Olá! Sou Helix, seu secretário executivo. Como posso ajudá-lo?
+          Olá! Sou o Chat Sync, seu secretário executivo. Como posso ajudá-lo?
         </p>
         <span class="text-xs text-[#274B59] mt-1 block"
           >{{ now|date:"H:i" }}</span
@@ -79,7 +79,7 @@ HTMX Integration:
     hx-indicator="#chat-loading"
     role="status"
     aria-live="polite"
-    aria-label="Helix está digitando"
+    aria-label="Chat Sync está digitando"
   >
     <div class="flex gap-1">
       <div
@@ -95,7 +95,7 @@ HTMX Integration:
         style="animation-delay: 0.4s"
       ></div>
     </div>
-    <span class="text-xs text-[#D0E5F2]">Helix is typing...</span>
+    <span class="text-xs text-[#D0E5F2]">Chat Sync está digitando...</span>
   </div>
 
   <!-- Input Form -->
@@ -250,13 +250,20 @@ HTMX Integration:
   });
 
   document.addEventListener("htmx:responseError", function (event) {
-    console.error("Chat error:", event.detail);
-    document.getElementById("chat-loading").classList.add("hidden");
+    // Only handle errors from the chat widget
+    const target = event.detail.target;
+    if (target && target.closest && target.closest('#helix-chat-widget')) {
+      console.error("Chat widget error:", event.detail);
+      document.getElementById("chat-loading").classList.add("hidden");
 
-    // Show error message
-    const errorMsg = document.createElement("div");
-    errorMsg.className = "bg-red-900 text-red-200 rounded p-3 text-sm";
-    errorMsg.textContent = "Erro ao enviar mensagem. Tente novamente.";
-    document.getElementById("chat-messages").appendChild(errorMsg);
+      // Show error message
+      const errorMsg = document.createElement("div");
+      errorMsg.className = "bg-red-900 text-red-200 rounded p-3 text-sm";
+      errorMsg.textContent = "Erro ao enviar mensagem. Tente novamente.";
+      const chatMessages = document.getElementById("chat-messages");
+      if (chatMessages) {
+        chatMessages.appendChild(errorMsg);
+      }
+    }
   });
 </script>
