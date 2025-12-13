@@ -15,7 +15,6 @@ import secrets
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from django.contrib.postgres.fields import ArrayField
 from datetime import timedelta
 
 
@@ -103,7 +102,7 @@ class TrustedDevice(BaseZeroTrustModel):
     push_subscription = models.JSONField(null=True, blank=True)
     
     class Meta:
-        app_label = 'security'
+        app_label = 'zero_trust'
         verbose_name = 'Dispositivo Confiável'
         verbose_name_plural = 'Dispositivos Confiáveis'
         ordering = ['-last_seen']
@@ -205,7 +204,7 @@ class AccessContext(BaseZeroTrustModel):
     response_code = models.IntegerField(null=True, blank=True)
     
     class Meta:
-        app_label = 'security'
+        app_label = 'zero_trust'
         verbose_name = 'Contexto de Acesso'
         verbose_name_plural = 'Contextos de Acesso'
         ordering = ['-access_time']
@@ -267,8 +266,7 @@ class ContinuousAuth(BaseZeroTrustModel):
     next_verification_due = models.DateTimeField()
     
     # Fatores de autenticação usados
-    auth_factors_used = ArrayField(
-        models.CharField(max_length=30),
+    auth_factors_used = models.JSONField(
         default=list,
         blank=True
     )
@@ -280,7 +278,7 @@ class ContinuousAuth(BaseZeroTrustModel):
     reauthentication_reason = models.CharField(max_length=100, blank=True)
     
     class Meta:
-        app_label = 'security'
+        app_label = 'zero_trust'
         verbose_name = 'Autenticação Contínua'
         verbose_name_plural = 'Autenticações Contínuas'
         indexes = [
@@ -337,14 +335,12 @@ class SecurityPolicy(BaseZeroTrustModel):
     policy_type = models.CharField(max_length=20, choices=POLICY_TYPES)
     
     # Escopo
-    applies_to_roles = ArrayField(
-        models.CharField(max_length=50),
+    applies_to_roles = models.JSONField(
         default=list,
         blank=True,
         help_text='Roles afetadas (vazio = todas)'
     )
-    applies_to_resources = ArrayField(
-        models.CharField(max_length=200),
+    applies_to_resources = models.JSONField(
         default=list,
         blank=True,
         help_text='Padrões de URL (regex)'
@@ -386,7 +382,7 @@ class SecurityPolicy(BaseZeroTrustModel):
     is_enforced = models.BooleanField(default=False)  # False = audit mode
     
     class Meta:
-        app_label = 'security'
+        app_label = 'zero_trust'
         verbose_name = 'Política de Segurança'
         verbose_name_plural = 'Políticas de Segurança'
         ordering = ['priority', 'name']
@@ -419,13 +415,11 @@ class UserBehaviorProfile(BaseZeroTrustModel):
     typical_session_duration = models.DurationField(null=True, blank=True)
     
     # Padrões de localização
-    typical_locations = ArrayField(
-        models.CharField(max_length=100),
+    typical_locations = models.JSONField(
         default=list,
         blank=True
     )
-    typical_ips = ArrayField(
-        models.GenericIPAddressField(),
+    typical_ips = models.JSONField(
         default=list,
         blank=True
     )
@@ -435,8 +429,7 @@ class UserBehaviorProfile(BaseZeroTrustModel):
     primary_device_type = models.CharField(max_length=20, blank=True)
     
     # Padrões de uso
-    typical_resources = ArrayField(
-        models.CharField(max_length=200),
+    typical_resources = models.JSONField(
         default=list,
         blank=True
     )
@@ -461,7 +454,7 @@ class UserBehaviorProfile(BaseZeroTrustModel):
     last_profile_update = models.DateTimeField(auto_now=True)
     
     class Meta:
-        app_label = 'security'
+        app_label = 'zero_trust'
         verbose_name = 'Perfil Comportamental'
         verbose_name_plural = 'Perfis Comportamentais'
     
@@ -527,19 +520,16 @@ class APISecurityToken(BaseZeroTrustModel):
     token_prefix = models.CharField(max_length=10)  # Primeiros caracteres para identificação
     
     # Escopo e permissões
-    scopes = ArrayField(
-        models.CharField(max_length=100),
+    scopes = models.JSONField(
         default=list,
         help_text='Escopos permitidos: read:users, write:employees, etc'
     )
-    allowed_ips = ArrayField(
-        models.GenericIPAddressField(),
+    allowed_ips = models.JSONField(
         default=list,
         blank=True,
         help_text='IPs permitidos (vazio = todos)'
     )
-    allowed_resources = ArrayField(
-        models.CharField(max_length=200),
+    allowed_resources = models.JSONField(
         default=list,
         blank=True,
         help_text='Padrões de URL permitidos'
@@ -563,7 +553,7 @@ class APISecurityToken(BaseZeroTrustModel):
     revoked_reason = models.CharField(max_length=200, blank=True)
     
     class Meta:
-        app_label = 'security'
+        app_label = 'zero_trust'
         verbose_name = 'Token de API'
         verbose_name_plural = 'Tokens de API'
         ordering = ['-created_at']
@@ -627,14 +617,13 @@ class ThreatIndicator(BaseZeroTrustModel):
     expires_at = models.DateTimeField(null=True, blank=True)
     
     # Tags para categorização
-    tags = ArrayField(
-        models.CharField(max_length=50),
+    tags = models.JSONField(
         default=list,
         blank=True
     )
     
     class Meta:
-        app_label = 'security'
+        app_label = 'zero_trust'
         verbose_name = 'Indicador de Ameaça'
         verbose_name_plural = 'Indicadores de Ameaça'
         unique_together = ['indicator_type', 'indicator_value']
