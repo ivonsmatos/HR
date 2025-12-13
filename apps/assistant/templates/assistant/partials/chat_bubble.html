@@ -17,22 +17,26 @@ HTMX Integration:
 <div
   id="helix-chat-widget"
   class="fixed bottom-4 right-4 w-96 h-[600px] bg-[#00080D] rounded-lg shadow-2xl border-2 border-[#274B59] flex flex-col overflow-hidden"
+  role="dialog"
+  aria-labelledby="chat-widget-title"
+  aria-modal="false"
 >
   <!-- Header -->
   <div
     class="bg-gradient-to-r from-[#122E40] to-[#274B59] text-[#D0E5F2] px-4 py-3 flex justify-between items-center"
   >
     <div class="flex items-center gap-2">
-      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
         <path
           d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5z"
         ></path>
       </svg>
-      <h3 class="font-semibold">Helix Secretary</h3>
+      <h3 id="chat-widget-title" class="font-semibold">Helix Secretary</h3>
     </div>
     <button
       onclick="document.getElementById('helix-chat-widget').classList.add('hidden')"
       class="text-[#D0E5F2] hover:text-white transition"
+      aria-label="Fechar chat widget"
     >
       ✕
     </button>
@@ -43,6 +47,10 @@ HTMX Integration:
     id="chat-messages"
     class="flex-1 overflow-y-auto p-4 space-y-4 bg-[#00080D]"
     hx-swap="beforeend"
+    role="log"
+    aria-label="Mensagens do chat"
+    aria-live="polite"
+    aria-atomic="false"
   >
     <!-- Welcome Message -->
     <div class="flex gap-2 mb-4">
@@ -69,6 +77,9 @@ HTMX Integration:
     id="chat-loading"
     class="hidden px-4 py-2 flex items-center gap-2"
     hx-indicator="#chat-loading"
+    role="status"
+    aria-live="polite"
+    aria-label="Helix está digitando"
   >
     <div class="flex gap-1">
       <div
@@ -100,6 +111,8 @@ HTMX Integration:
         }
       "
       class="flex gap-2"
+      role="form"
+      aria-label="Enviar mensagem para Helix"
     >
       {% csrf_token %}
 
@@ -111,6 +124,7 @@ HTMX Integration:
       />
 
       <!-- Message Input -->
+      <label for="chat-input" class="sr-only">Digite sua pergunta para Helix</label>
       <input
         id="chat-input"
         type="text"
@@ -119,13 +133,16 @@ HTMX Integration:
         class="flex-1 bg-[#00080D] text-[#D0E5F2] border border-[#274B59] rounded px-3 py-2 text-sm placeholder-[#274B59] focus:outline-none focus:border-[#D0E5F2] transition"
         required
         autocomplete="off"
+        aria-describedby="chat-input-help"
       />
+      <span id="chat-input-help" class="sr-only">Pressione Enter para enviar sua mensagem</span>
 
       <!-- Send Button -->
       <button
         type="submit"
         class="bg-[#274B59] hover:bg-[#1F3A4A] text-[#D0E5F2] px-4 py-2 rounded font-medium transition"
         hx-indicator="#chat-loading"
+        aria-label="Enviar mensagem"
       >
         ↑
       </button>

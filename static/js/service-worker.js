@@ -27,6 +27,20 @@ const API_CACHE_ROUTES = [
   "/api/v1/crm/clients/",
 ];
 
+// Chat-specific cache routes
+const CHAT_CACHE_ROUTES = [
+  "/api/chat/message/",
+  "/api/assistant/chat_history/",
+  "/api/assistant/conversations/",
+];
+
+// Cache strategies
+const CACHE_STRATEGIES = {
+  NETWORK_FIRST: 'network-first',
+  CACHE_FIRST: 'cache-first',
+  STALE_WHILE_REVALIDATE: 'stale-while-revalidate'
+};
+
 // Install event - cache essential files
 self.addEventListener("install", (event) => {
   console.log("[Service Worker] Installing...");
@@ -100,6 +114,12 @@ self.addEventListener("fetch", (event) => {
     )
   ) {
     event.respondWith(cacheFirstStrategy(request));
+    return;
+  }
+
+  // Chat requests - Stale while revalidate for better UX
+  if (CHAT_CACHE_ROUTES.some(route => url.pathname.startsWith(route))) {
+    event.respondWith(staleWhileRevalidateStrategy(request));
     return;
   }
 
@@ -222,6 +242,35 @@ function updateCacheInBackground(request) {
         });
       });
     }
+  });
+}
+
+/**
+ * Stale while revalidate strategy - Perfect for chat
+ * Return cached version immediately, then update in background
+ */
+function staleWhileRevalidateStrategy(request) {
+  return caches.match(request).then((cachedResponse) => {
+    // Start background update
+    const updatePromise = fetch(request).then((networkResponse) => {
+      if (networkResponse.status === 200) {
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(request, networkResponse.clone());
+        });
+      }
+      return networkResponse;
+    }).catch(() => {
+      // Network failed, but we already returned cached version
+      console.log('[Service Worker] Network update failed for:', request.url);
+    });
+
+    // Return cached version immediately if available
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    // No cache, wait for network
+    return updatePromise;
   });
 }
 

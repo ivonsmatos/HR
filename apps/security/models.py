@@ -20,7 +20,7 @@ from apps.core.models import TenantAwareModel, Usuário
 class IpBlocklist(TenantAwareModel):
     """Blocked IP addresses."""
 
-    ip_address = models.GenericIPAdicionarressField(unique=True)
+    ip_address = models.GenericIPAddressField(unique=True)
     reason = models.CharField(
         max_length=50,
         choices=[
@@ -86,7 +86,7 @@ class UsuárioSession(TenantAwareModel):
         related_name="sessions",
     )
     token = models.CharField(max_length=500)
-    ip_address = models.GenericIPAdicionarressField()
+    ip_address = models.GenericIPAddressField()
     user_agent = models.TextField()
     device_type = models.CharField(
         max_length=20,
@@ -139,7 +139,7 @@ class SecurityEvent(TenantAwareModel):
         related_name="security_events",
     )
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
-    ip_address = models.GenericIPAdicionarressField()
+    ip_address = models.GenericIPAddressField()
     user_agent = models.TextField(blank=True)
     description = models.TextField()
     severity = models.CharField(

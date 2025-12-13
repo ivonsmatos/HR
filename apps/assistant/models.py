@@ -5,8 +5,32 @@ Armazena histórico de conversa and document metadata
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from apps.core.models import Empresa, TenantAwareModel, Usuário
+from django.contrib.auth.models import User
 import uuid
+
+
+class BaseModel(models.Model):
+    """
+    Abstract base model with common fields for all models.
+    """
+
+    id = models.BigAutoField(primary_key=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+
+    class Meta:
+        abstract = True
+
+
+class TenantAwareModel(BaseModel):
+    """
+    Simplified tenant-aware model for demo - no company field
+    """
+
+    class Meta:
+        abstract = True
 
 
 class Documento(TenantAwareModel):
@@ -58,12 +82,12 @@ class Documento(TenantAwareModel):
         verbose_name_plural = "Documentoos"
         ordering = ['-ingested_at']
         indexes = [
-            models.Index(fields=['company', 'is_active']),
+            models.Index(fields=['is_active']),
             models.Index(fields=['source_path']),
         ]
     
     def __str__(self):
-        return f"{self.title} ({self.company.slug})"
+        return f"{self.title}"
 
 
 class DocumentoChunk(models.Model):
@@ -128,7 +152,7 @@ class Conversa(TenantAwareModel):
     """
     
     user = models.ForeignKey(
-        Usuário,
+        User,
         on_delete=models.CASCADE,
         related_name='assistant_conversations'
     )
@@ -149,11 +173,11 @@ class Conversa(TenantAwareModel):
         verbose_name_plural = "Conversas"
         ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['user', 'company', '-created_at']),
+            models.Index(fields=['user', '-created_at']),
         ]
     
     def __str__(self):
-        return f"Chat with {self.user.username} ({self.company.slug})"
+        return f"Chat with {self.user.username}"
 
 
 class Mensagem(models.Model):
@@ -253,7 +277,7 @@ class HelixConfig(TenantAwareModel):
     class Meta:
         verbose_name = "Configuração do SyncRH"
         verbose_name_plural = "Configurações do SyncRH"
-        unique_together = ['company']
+        # unique_together = ['company']  # Disabled for demo
     
     def __str__(self):
-        return f"Configuração do SyncRH - {self.company.name}"
+        return f"Configuração do SyncRH"

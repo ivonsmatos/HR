@@ -1,34 +1,68 @@
 {% extends 'base.html' %} {% load static %} {% block title %}Helix - Secretário
 Executivo{% endblock %} {% block content %}
 <div class="bg-[#00080D] min-h-screen text-[#D0E5F2]">
-  <div class="container mx-auto px-4 py-8">
+  <!-- Navigation Landmark -->
+  <nav id="navigation" aria-label="Navegação principal" class="sr-only">
+    <a href="{% url 'assistant:chat_interface' %}" aria-current="page">Chat Interface</a>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="main-content" class="container mx-auto px-4 py-8" role="main">
     {# Header #}
-    <div class="mb-8">
+    <header class="mb-8">
       <h1 class="text-3xl font-bold text-[#D0E5F2] mb-2">
         Helix - Secretário Executivo
       </h1>
       <p class="text-[#D0E5F2] opacity-70">
         Assistente inteligente local com base em conhecimento
       </p>
-    </div>
+    </header>
 
     {# Main Content Grid #}
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
       {# Sidebar - Conversations #}
-      <div class="lg:col-span-1">
-        <div class="bg-[#122E40] rounded-lg border border-[#274B59] p-4">
+      <aside class="lg:col-span-1" role="complementary" aria-label="Conversas e configurações">
+        {# Mobile Toggle Button #}
+        <div class="lg:hidden mb-4">
+          <button
+            id="sidebar-toggle"
+            class="w-full bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-4 py-2 rounded transition"
+            aria-expanded="false"
+            aria-controls="sidebar-content"
+            aria-label="Alternar visibilidade da barra lateral"
+          >
+            <span id="toggle-icon">📱</span> Conversas
+          </button>
+        </div>
+
+        {# Sidebar Content #}
+        <div id="sidebar-content" class="bg-[#122E40] rounded-lg border border-[#274B59] p-4 hidden lg:block">
+          {# Search Conversations #}
+          <div class="mb-4">
+            <label for="conversation-search" class="sr-only">Buscar conversas</label>
+            <input
+              id="conversation-search"
+              type="text"
+              placeholder="Buscar conversas..."
+              class="w-full bg-[#00080D] text-[#D0E5F2] border border-[#274B59] rounded px-3 py-2 text-sm placeholder-[#274B59] focus:outline-none focus:ring-2 focus:ring-[#274B59]"
+              aria-describedby="search-help"
+            />
+            <span id="search-help" class="sr-only">Digite para filtrar conversas por título</span>
+          </div>
+
           {# New Conversation Button #}
           <button
             hx-post="{% url 'assistant:create_conversation' %}"
             hx-target="#conversations-list"
             hx-swap="beforeend"
-            class="w-full bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-4 py-2 rounded mb-4 transition"
+            class="w-full bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-4 py-2 rounded transition focus-ring btn-animated"
+            aria-label="Criar nova conversa"
           >
             + Nova Conversa
           </button>
 
           {# Conversations List #}
-          <div id="conversations-list" class="space-y-2">
+          <div id="conversations-list" class="space-y-2" role="list" aria-label="Lista de conversas">
             <h3 class="text-sm font-semibold text-[#274B59] mb-3">
               Conversas Recentes
             </h3>
@@ -41,6 +75,9 @@ Executivo{% endblock %} {% block content %}
               hx-target="#chat-window"
               hx-swap="innerHTML"
               class="block p-2 rounded hover:bg-[#274B59] transition text-sm truncate {% if conversation == active_conversation %}bg-[#274B59]{% endif %}"
+              role="listitem"
+              aria-label="Conversa: {{ conversation.title }}, criada em {{ conversation.created_at|date:'d/m H:i' }}"
+              {% if conversation == active_conversation %}aria-current="true"{% endif %}
             >
               {{ conversation.title }}
               <span class="text-xs opacity-70 block">
@@ -53,7 +90,7 @@ Executivo{% endblock %} {% block content %}
           </div>
 
           {# Health Status #}
-          <div class="mt-6 pt-4 border-t border-[#274B59]">
+          <div class="mt-6 pt-4 border-t border-[#274B59]" role="status" aria-label="Status do sistema">
             <p class="text-xs font-semibold mb-2">Status do Sistema</p>
             {% if helix_status.ollama_running %}
             <p class="text-xs text-green-400">✓ Ollama: Online</p>
@@ -69,19 +106,40 @@ Executivo{% endblock %} {% block content %}
       </div>
 
       {# Main Chat Area #}
-      <div class="lg:col-span-3">
+      <section class="lg:col-span-3" aria-label="Área de chat principal">
         <div
           id="chat-window"
           class="bg-[#122E40] rounded-lg border border-[#274B59] p-6 min-h-96"
+          role="log"
+          aria-label="Janela de chat"
+          aria-live="polite"
+          aria-atomic="false"
         >
           {# Messages Container #}
           <div
             id="chat-messages"
-            class="space-y-4 mb-6 max-h-96 overflow-y-auto"
+            class="space-y-4 mb-6 max-h-96 overflow-y-auto custom-scrollbar"
             hx-get="{% url 'assistant:chat_history' active_conversation.id %}"
             hx-trigger="load"
             hx-swap="innerHTML"
           >
+            {# Loading skeleton #}
+            <div id="messages-skeleton" class="space-y-4">
+              <div class="flex justify-start">
+                <div class="flex gap-3">
+                  <div class="w-8 h-8 rounded-full skeleton"></div>
+                  <div class="space-y-2">
+                    <div class="h-4 bg-[#274B59] rounded skeleton w-48"></div>
+                    <div class="h-4 bg-[#274B59] rounded skeleton w-32"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-end">
+                <div class="bg-[#274B59] rounded-lg px-4 py-3">
+                  <div class="h-4 bg-[#122E40] rounded skeleton w-40"></div>
+                </div>
+              </div>
+            </div>
             {# Welcome message #}
             <div class="flex justify-start mb-4">
               <div class="flex gap-3">
@@ -116,6 +174,8 @@ Executivo{% endblock %} {% block content %}
             hx-swap="innerHTML swap:1s"
             hx-indicator="#chat-loading"
             class="flex gap-2"
+            role="form"
+            aria-label="Formulário de envio de mensagem"
           >
             {% csrf_token %}
             <input
@@ -124,24 +184,29 @@ Executivo{% endblock %} {% block content %}
               value="{{ active_conversation.id }}"
             />
 
+            <label for="message-input" class="sr-only">Digite sua mensagem</label>
             <input
+              id="message-input"
               type="text"
               name="message"
               placeholder="Digite sua mensagem aqui..."
               class="flex-1 bg-[#00080D] text-[#D0E5F2] border border-[#274B59] rounded px-4 py-2 placeholder-[#D0E5F2] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[#274B59]"
               autocomplete="off"
+              aria-describedby="message-help"
             />
+            <span id="message-help" class="sr-only">Pressione Enter ou clique em Enviar para enviar sua mensagem</span>
 
             <button
               type="submit"
-              class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-2 rounded transition font-semibold"
+              class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-2 rounded transition font-semibold focus-ring btn-animated"
+              aria-label="Enviar mensagem"
             >
               Enviar
             </button>
           </form>
 
           {# Loading Indicator #}
-          <div id="chat-loading" class="htmx-indicator flex justify-start mt-4">
+          <div id="chat-loading" class="htmx-indicator flex justify-start mt-4" role="status" aria-live="polite" aria-label="Processando mensagem">
             <div
               class="bg-[#274B59] text-[#D0E5F2] rounded-lg px-4 py-2 flex items-center gap-2"
             >
@@ -167,8 +232,8 @@ Executivo{% endblock %} {% block content %}
     </div>
 
     {# Document Management Section #}
-    <div class="mt-8 bg-[#122E40] rounded-lg border border-[#274B59] p-6">
-      <h2 class="text-xl font-bold text-[#D0E5F2] mb-4">
+    <section class="mt-8 bg-[#122E40] rounded-lg border border-[#274B59] p-6" aria-labelledby="document-management-heading">
+      <h2 id="document-management-heading" class="text-xl font-bold text-[#D0E5F2] mb-4">
         Base de Conhecimento
       </h2>
 
@@ -178,7 +243,8 @@ Executivo{% endblock %} {% block content %}
           hx-post="{% url 'assistant:ingest_documents' %}"
           hx-target="#ingestion-result"
           hx-swap="innerHTML"
-          class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-3 rounded font-semibold transition"
+          class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-3 rounded font-semibold transition focus-ring btn-animated"
+          aria-label="Importar documentos para a base de conhecimento"
         >
           📄 Importar Documentos
         </button>
@@ -188,7 +254,8 @@ Executivo{% endblock %} {% block content %}
           hx-get="{% url 'assistant:list_documents' %}"
           hx-target="#documents-list"
           hx-swap="innerHTML"
-          class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-3 rounded font-semibold transition"
+          class="bg-[#274B59] hover:bg-[#3A6375] text-[#D0E5F2] px-6 py-3 rounded font-semibold transition focus-ring btn-animated"
+          aria-label="Ver lista de documentos na base de conhecimento"
         >
           📚 Ver Documentos
         </button>
@@ -218,6 +285,108 @@ Executivo{% endblock %} {% block content %}
       const input = document.querySelector('input[name="message"]');
       if (input) input.value = '';
       input?.focus();
+    }
+  });
+
+  {# Enhanced UX functionality #}
+  document.addEventListener('DOMContentLoaded', function() {
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebarContent = document.getElementById('sidebar-content');
+    const toggleIcon = document.getElementById('toggle-icon');
+    const searchInput = document.getElementById('conversation-search');
+    const conversationList = document.getElementById('conversations-list');
+    const messagesSkeleton = document.getElementById('messages-skeleton');
+
+    {# Sidebar toggle #}
+    if (sidebarToggle && sidebarContent) {
+      sidebarToggle.addEventListener('click', function() {
+        const isExpanded = sidebarContent.classList.contains('block');
+
+        if (isExpanded) {
+          sidebarContent.classList.remove('block');
+          sidebarContent.classList.add('hidden');
+          toggleIcon.textContent = '📱';
+          sidebarToggle.setAttribute('aria-expanded', 'false');
+        } else {
+          sidebarContent.classList.remove('hidden');
+          sidebarContent.classList.add('block');
+          toggleIcon.textContent = '📂';
+          sidebarToggle.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    {# Conversation search #}
+    if (searchInput && conversationList) {
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const conversationItems = conversationList.querySelectorAll('[role="listitem"]');
+
+        conversationItems.forEach(item => {
+          const title = item.textContent.toLowerCase();
+          if (title.includes(searchTerm)) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        {# Announce search results #}
+        const visibleItems = Array.from(conversationItems).filter(item => item.style.display !== 'none');
+        if (window.AccessibilityUtils) {
+          window.AccessibilityUtils.announceToScreenReader(
+            `Encontradas ${visibleItems.length} conversas para "${searchTerm}"`
+          );
+        }
+      });
+    }
+
+    {# Hide skeleton when messages load #}
+    if (messagesSkeleton) {
+      document.body.addEventListener('htmx:afterSwap', function(event) {
+        if (event.detail.target.id === 'chat-messages') {
+          messagesSkeleton.style.display = 'none';
+        }
+      });
+    }
+  });
+
+  {# Message animations #}
+  document.body.addEventListener('htmx:afterSwap', function(event) {
+    if (event.detail.target.id === 'chat-messages') {
+      const messagesDiv = document.getElementById('chat-messages');
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      {# Add entrance animation to new messages #}
+      const newMessages = messagesDiv.querySelectorAll('.message-enter');
+      newMessages.forEach(message => {
+        message.style.animation = 'messageSlideIn 0.3s ease-out';
+      });
+    }
+  });
+
+  {# Button feedback #}
+  document.addEventListener('htmx:beforeRequest', function(event) {
+    const button = event.target.closest('button');
+    if (button) {
+      button.classList.add('loading');
+    }
+  });
+
+  document.addEventListener('htmx:afterRequest', function(event) {
+    const button = event.target.closest('button');
+    if (button) {
+      button.classList.remove('loading');
+
+      {# Success feedback #}
+      if (event.detail.xhr.status >= 200 && event.detail.xhr.status < 300) {
+        button.classList.add('success-feedback');
+        setTimeout(() => button.classList.remove('success-feedback'), 600);
+      } else {
+        {# Error feedback #}
+        button.classList.add('error-feedback');
+        setTimeout(() => button.classList.remove('error-feedback'), 500);
+      }
     }
   });
 </script>

@@ -37,8 +37,8 @@ class HelixAdminSite(AdminSite):
         total_chunks = DocumentoChunk.objects.count()
         
         # Obter estatísticas de usuário
-        from apps.core.models import Empresa
-        total_users = Empresa.objects.count()
+        # from apps.core.models import Empresa
+        total_users = 0  # Temporarily disabled for demo
         
         # Obter status do sistema
         try:
@@ -88,14 +88,14 @@ helix_admin = HelixAdminSite(name='helix_admin')
 class DocumentoAdmin(admin.ModelAdmin):
     """Interface de administração para o modelo Documento - APRIMORADO"""
     
-    list_display = ['title', 'company_name', 'content_type', 'chunk_count', 'ingested_at', 'status_badge']
-    list_filter = ['company', 'is_active', 'content_type', 'ingested_at']
+    list_display = ['title', 'content_type', 'chunk_count', 'ingested_at', 'status_badge']
+    list_filter = ['is_active', 'content_type', 'ingested_at']
     search_fields = ['title', 'source_path', 'content']
     readonly_fields = ['ingested_at', 'updated_at', 'created_at', 'chunk_count_display']
     
     fieldsets = (
         ('Informações Básicas', {
-            'fields': ('title', 'source_path', 'company')
+            'fields': ('title', 'source_path')
         }),
         ('Conteúdo', {
             'fields': ('content', 'content_type')
@@ -104,10 +104,6 @@ class DocumentoAdmin(admin.ModelAdmin):
             'fields': ('version', 'is_active', 'ingested_at', 'updated_at', 'chunk_count_display')
         }),
     )
-    
-    def company_name(self, obj):
-        return obj.company.name if obj.company else '-'
-    company_name.short_description = 'Empresa'
     
     def chunk_count(self, obj):
         return obj.documentchunk_set.count()
@@ -135,7 +131,7 @@ class DocumentoChunkAdmin(admin.ModelAdmin):
     """Interface de administração para o modelo DocumentoChunk"""
     
     list_display = ['document_title', 'chunk_index', 'content_preview', 'created_at']
-    list_filter = ['document__company', 'created_at', 'document']
+    list_filter = ['created_at', 'document']
     search_fields = ['document__title', 'content']
     readonly_fields = ['created_at', 'embedding_info']
     
@@ -177,20 +173,20 @@ class DocumentoChunkAdmin(admin.ModelAdmin):
 class ConversaAdmin(admin.ModelAdmin):
     """Interface de administração para o modelo Conversa"""
     
-    list_display = ['user', 'title', 'company', 'is_active', 'created_at', 'message_count']
-    list_filter = ['company', 'is_active', 'created_at']
+    list_display = ['user', 'title', 'is_active', 'created_at', 'message_count']
+    list_filter = ['is_active', 'created_at']
     search_fields = ['user__username', 'title']
-    readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
+    readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = (
         ('Informações da Conversa', {
-            'fields': ('user', 'company', 'title')
+            'fields': ('user', 'title')
         }),
         ('Status', {
             'fields': ('is_active',)
         }),
         ('Auditoria', {
-            'fields': ('created_at', 'updated_at', 'created_by', 'updated_by')
+            'fields': ('created_at', 'updated_at')
         }),
     )
 
@@ -206,7 +202,7 @@ class MensagemAdmin(admin.ModelAdmin):
     """Interface de administração para o modelo Mensagem"""
     
     list_display = ['conversation', 'role', 'content_preview', 'tokens_used', 'created_at']
-    list_filter = ['conversation__company', 'role', 'created_at']
+    list_filter = ['role', 'created_at']
     search_fields = ['conversation__user__username', 'content']
     readonly_fields = ['created_at', 'updated_at', 'context_sources']
     
@@ -233,13 +229,13 @@ class MensagemAdmin(admin.ModelAdmin):
 class HelixConfigAdmin(admin.ModelAdmin):
     """Interface de administração para o modelo HelixConfig"""
     
-    list_display = ['company', 'is_enabled', 'temperature', 'max_context_chunks']
-    list_filter = ['company', 'is_enabled']
-    readonly_fields = ['created_at', 'updated_at', 'created_by', 'updated_by']
+    list_display = ['is_enabled', 'temperature', 'max_context_chunks']
+    list_filter = ['is_enabled']
+    readonly_fields = ['created_at', 'updated_at']
     
     fieldsets = (
         ('Configuração', {
-            'fields': ('company', 'is_enabled')
+            'fields': ('is_enabled',)
         }),
         ('Prompt do Sistema', {
             'fields': ('system_prompt',),

@@ -1,6 +1,6 @@
 """Core app admin configuration."""
 from django.contrib import admin
-from django.contrib.auth.admin import UsuárioAdmin as BaseUsuárioAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import Empresa, EmpresaDomain, Usuário, UsuárioPermission, AuditoriaLog
 
 
@@ -34,11 +34,11 @@ class EmpresaDomainAdmin(admin.ModelAdmin):
 
 
 @admin.register(Usuário)
-class UsuárioAdmin(BaseUsuárioAdmin):
+class UsuárioAdmin(BaseUserAdmin):
     list_display = ["username", "email", "company", "is_employee", "is_active"]
     list_filter = ["company", "is_active", "is_employee", "is_contractor"]
     search_fields = ["username", "email", "first_name", "last_name"]
-    fieldsets = BaseUsuárioAdmin.fieldsets + (
+    fieldsets = BaseUserAdmin.fieldsets + (
         ("Empresa & Perfil", {"fields": ("company", "avatar", "phone", "bio")}),
         ("Detalhes de RH", {"fields": ("department", "job_title", "is_employee", "is_contractor")}),
         ("Segurança", {"fields": ("two_factor_enabled", "email_verified", "email_verified_at")}),

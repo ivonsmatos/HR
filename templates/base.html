@@ -200,6 +200,14 @@
     <title>SyncRH</title>
   </head>
   <body>
+    <!-- Skip Navigation Links (Acessibilidade) -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-[#274B59] text-[#D0E5F2] px-4 py-2 rounded z-50">
+      Pular para conteúdo principal
+    </a>
+    <a href="#navigation" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:top-16 bg-[#274B59] text-[#D0E5F2] px-4 py-2 rounded z-50">
+      Pular para navegação
+    </a>
+
     <!-- Main app container -->
     <div id="app">
       <div class="pwa-loading">
@@ -215,6 +223,9 @@
 
     <!-- PWA Scripts -->
     <script src="/static/js/pwa.js" defer></script>
+
+    <!-- Accessibility Enhancements -->
+    <script src="/static/js/accessibility.js" defer></script>
 
     <!-- Your main app script -->
     <script src="/static/js/app.js" defer></script>

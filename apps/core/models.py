@@ -6,7 +6,7 @@ All models that need to be isolated by tenant should inherit from TenantAwareMod
 """
 
 from django.db import models
-from django.contrib.auth.models import AbstractUsuário
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 # from django_tenants.models import TenantMixin, DomainMixin  # Disabled for Django 5.1 compatibility
 import uuid
@@ -213,7 +213,7 @@ class EmpresaDomain(models.Model):
         return f"{self.domain} ({self.company.name})"
 
 
-class Usuário(AbstractUsuário):
+class Usuário(AbstractUser):
     """
     Custom Usuário model for the platform.
     
@@ -266,7 +266,7 @@ class Usuário(AbstractUsuário):
     timezone = models.CharField(max_length=50, default="America/Sao_Paulo")
     
     # Activity Tracking
-    last_login_ip = models.GenericIPAdicionarressField(null=True, blank=True)
+    last_login_ip = models.GenericIPAddressField(null=True, blank=True)
     last_activity = models.DateTimeField(null=True, blank=True)
     login_count = models.IntegerField(default=0)
 
@@ -286,6 +286,19 @@ class Usuário(AbstractUsuário):
     def get_short_name(self):
         """Return user's short name."""
         return self.first_name or self.username
+
+
+# User class for AUTH_USER_MODEL = "core.User"
+# This is the primary user model for the application
+class User(Usuário):
+    """
+    User model for Django authentication.
+    This class extends Usuário for compatibility with AUTH_USER_MODEL.
+    """
+    class Meta:
+        proxy = True
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
 
 
 class UsuárioPermission(TenantAwareModel):
@@ -371,7 +384,7 @@ class AuditoriaLog(TenantAwareModel):
     object_type = models.CharField(max_length=100)
     object_id = models.CharField(max_length=255)
     changes = models.JSONField(null=True, blank=True)
-    ip_address = models.GenericIPAdicionarressField(null=True, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.TextField(blank=True)
     status_code = models.IntegerField(null=True, blank=True)
     error_message = models.TextField(blank=True)

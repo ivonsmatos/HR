@@ -1,0 +1,1 @@
+# Módulo Departamento Pessoal - SyncRHdefault_app_config = 'apps.departamento_pessoal.apps.DepartamentoPessoalConfig'

@@ -31,6 +31,9 @@ urlpatterns = [
     # Admin
     path("admin/", admin.site.urls),
     
+    # Assistant (main app)
+    path("", include("apps.assistant.urls")),
+    
     # API Documentation
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
@@ -39,7 +42,7 @@ urlpatterns = [
         name="swagger-ui",
     ),
     
-    # API v1
+    # API v1 - Módulos Originais
     path("api/v1/core/", include("apps.core.urls")),
     path("api/v1/hrm/", include("apps.hrm.urls")),
     path("api/v1/work/", include("apps.work.urls")),
@@ -49,9 +52,26 @@ urlpatterns = [
     path("api/v1/security/", include("apps.security.urls")),
     path("api/v1/saas/", include("apps.saas_admin.urls")),
     path("api/v1/utilities/", include("apps.utilities.urls")),
+    
+    # API v1 - Módulos SyncRH HR
+    path("api/v1/dp/", include("apps.departamento_pessoal.urls")),
+    path("api/v1/recrutamento/", include("apps.recrutamento_selecao.urls")),
+    path("api/v1/performance/", include("apps.desenvolvimento_performance.urls")),
+    path("api/v1/engajamento/", include("apps.engajamento_retencao.urls")),
+    path("api/v1/comportamental/", include("apps.gestao_comportamental.urls")),
 ]
 
 # Serve media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+from django.urls import path
+from django.http import HttpResponse
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+urlpatterns += [
+    path('sentry-debug/', trigger_error),
+]

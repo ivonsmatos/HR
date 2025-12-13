@@ -17,7 +17,8 @@ Stack:
 
 import logging
 from django.http import JsonResponse, HttpResponse, StreamingHttpResponse
-from django.views.decorators.http import require_http_methods, csrf_exempt
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -56,14 +57,12 @@ def chat_interface(request):
     try:
         # Get user's conversations
         conversations = Conversa.objects.filter(
-            user=request.user,
-            company=request.user.tenant
+            user=request.user
         ).order_by('-created_at')
         
         # Get or create default conversation
         default_conv, _ = Conversa.objects.get_or_create(
             user=request.user,
-            company=request.user.tenant,
             defaults={
                 'title': f'Conversa iniciada em {now().strftime("%d/%m %H:%M")}'
             }
@@ -345,33 +344,11 @@ def health_check(request):
 
 # ===== Erro Views =====
 
-def assistant_error(request, exception=Nãone):
+def assistant_error(request, exception=None):
     """Erro page for assistant app"""
     return render(request, 'assistant/error.html', {
         'error': str(exception) if exception else 'Unknown error'
     }, status=500)
-    
-    Fase C: Implement HTMX hx-request handling
-    """
-    conversation_id = request.GET.get('conversation_id')
-    
-    if conversation_id:
-        conversation = get_object_or_404(
-            Conversa,
-            id=conversation_id,
-            user=request.user
-        )
-        messages = conversation.messages.all().order_by('created_at')
-    else:
-        messages = []
-    
-    context = {
-        'conversation': conversation if conversation_id else Nãone,
-        'messages': messages,
-    }
-    return render(request, 'assistant/chat_window.html', context)
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def chat_message(request):
@@ -441,7 +418,6 @@ def create_conversation(request):
     
     conversation = Conversa.objects.create(
         user=request.user,
-        company=request.user.tenant,
         title=title,
     )
     
@@ -464,7 +440,6 @@ def list_documents(request):
     Fase B: Filtrar by company and active status
     """
     documents = Documento.objects.filter(
-        company=request.user.tenant,
         is_active=True
     ).values('id', 'title', 'source_path', 'content_type')
     

@@ -65,6 +65,15 @@ LOCAL_APPS = [
     "apps.saas_admin",
     "apps.utilities",
     "apps.assistant",
+    # HR Modules (Módulos de RH)
+    "apps.departamento_pessoal",
+    "apps.recrutamento_selecao",
+    "apps.desenvolvimento_performance",
+    "apps.engajamento_retencao",
+    "apps.gestao_comportamental",
+    # Compliance & Security Frameworks
+    "apps.lgpd",  # Lei Geral de Proteção de Dados (13.709/2018)
+    "apps.nist",  # NIST Cybersecurity Framework
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -120,7 +129,7 @@ DATABASES = {
     }
 }
 
-# Custom user model
+# Custom user model (Usuário em apps/core/models.py)
 AUTH_USER_MODEL = "core.User"
 
 # Password validation
