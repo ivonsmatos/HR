@@ -40,16 +40,6 @@ TENANT_APPS = [
     'apps.assistant',
 ]
 
-# Disable migrations for faster testing
-class DisableMigrations:
-    def __contains__(self, item):
-        return True
-    
-    def __getitem__(self, item):
-        return None
-
-MIGRATION_MODULES = DisableMigrations()
-
 # Disable email backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

@@ -59,6 +59,7 @@ LOCAL_APPS = [
     "apps.crm",
     "apps.recruitment",
     "apps.security",
+    "apps.security.zero_trust",  # Zero-Trust Security Architecture
     "apps.saas_admin",
     "apps.utilities",
     "apps.assistant",
@@ -87,7 +88,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "apps.security.middleware.AuditLoggingMiddleware",
+    "apps.security.middleware.AuditoriaLoggingMiddleware",
     "apps.core.monitoring.PerformanceMiddleware",
     "apps.core.monitoring.PerformanceCheckMiddleware",
 ]
