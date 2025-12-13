@@ -6,16 +6,18 @@ Serializers para APIs do módulo Departamento Pessoal.
 """
 
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from .models import (
     Colaborador, Departamento, Cargo, EscalaTrabalho,
     RegistroPonto, JustificativaPonto, FolhaPagamento,
-    ItemFolha, ProcessoAdmissao, DocumentoAdmissao,
+    ProcessoAdmissao, DocumentoAdmissao,
     CategoriaDocumento, DocumentoGED, PeriodoAquisitivo,
     SolicitacaoFerias, FeriasColetivas, Contador, ExportacaoContabil
 )
 from apps.core.base.validators import validate_cpf, validate_phone
+
+User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -137,21 +139,9 @@ class JustificativaPontoSerializer(serializers.ModelSerializer):
         ]
 
 
-class ItemFolhaSerializer(serializers.ModelSerializer):
-    """Serializer para itens da folha de pagamento"""
-    
-    class Meta:
-        model = ItemFolha
-        fields = [
-            'id', 'codigo', 'descricao', 'tipo',
-            'referencia', 'valor'
-        ]
-
-
 class FolhaPagamentoSerializer(serializers.ModelSerializer):
     """Serializer para folha de pagamento"""
     colaborador_nome = serializers.CharField(source='colaborador.nome_completo', read_only=True)
-    itens = ItemFolhaSerializer(many=True, read_only=True)
     
     class Meta:
         model = FolhaPagamento
@@ -159,7 +149,7 @@ class FolhaPagamentoSerializer(serializers.ModelSerializer):
             'id', 'uuid', 'colaborador', 'colaborador_nome',
             'mes', 'ano', 'salario_base', 'total_proventos',
             'total_descontos', 'salario_liquido', 'status',
-            'data_pagamento', 'itens', 'created_at'
+            'data_pagamento', 'created_at'
         ]
         read_only_fields = ['id', 'uuid', 'created_at']
 

@@ -24,31 +24,41 @@ from .models import (
 @admin.register(RegistroTratamento)
 class RegistroTratamentoAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'finalidade', 'base_legal', 'categoria_dados',
-        'departamento_responsavel', 'ativo', 'created_at'
+        'nome', 'finalidade', 'base_legal', 'transferencia_internacional',
+        'controlador', 'is_active', 'created_at'
     ]
-    list_filter = ['base_legal', 'categoria_dados', 'ativo', 'transferencia_internacional']
-    search_fields = ['nome', 'finalidade', 'descricao']
-    readonly_fields = ['created_at', 'updated_at']
+    list_filter = ['base_legal', 'finalidade', 'is_active', 'transferencia_internacional']
+    search_fields = ['nome', 'descricao', 'controlador', 'encarregado_dpo']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['aprovado_por']
     
     fieldsets = (
         ('Identificação', {
-            'fields': ('nome', 'finalidade', 'descricao')
+            'fields': ('nome', 'descricao', 'uuid')
         }),
-        ('Base Legal', {
-            'fields': ('base_legal', 'categoria_dados', 'categoria_titulares')
+        ('Base Legal e Finalidade', {
+            'fields': ('base_legal', 'finalidade')
         }),
-        ('Responsabilidades', {
-            'fields': ('departamento_responsavel', 'responsavel_tratamento')
+        ('Dados Tratados', {
+            'fields': ('dados_pessoais', 'dados_sensiveis', 'categorias_titulares')
         }),
-        ('Transferência', {
-            'fields': ('transferencia_internacional', 'pais_destino', 'garantias_transferencia')
+        ('Compartilhamento', {
+            'fields': ('destinatarios', 'transferencia_internacional', 'paises_transferencia')
         }),
         ('Retenção', {
-            'fields': ('prazo_retencao', 'justificativa_retencao')
+            'fields': ('prazo_retencao_dias', 'justificativa_retencao')
+        }),
+        ('Segurança', {
+            'fields': ('medidas_seguranca',)
+        }),
+        ('Responsáveis', {
+            'fields': ('controlador', 'operador', 'encarregado_dpo')
+        }),
+        ('Aprovação', {
+            'fields': ('aprovado_por', 'data_aprovacao')
         }),
         ('Status', {
-            'fields': ('ativo', 'created_at', 'updated_at')
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
 
@@ -57,15 +67,16 @@ class RegistroTratamentoAdmin(admin.ModelAdmin):
 class TermoConsentimentoAdmin(admin.ModelAdmin):
     list_display = [
         'titulo', 'versao', 'data_vigencia_inicio', 
-        'data_vigencia_fim', 'obrigatorio', 'ativo'
+        'data_vigencia_fim', 'is_active'
     ]
-    list_filter = ['obrigatorio', 'ativo', 'finalidades']
-    search_fields = ['titulo', 'texto_completo']
-    readonly_fields = ['versao', 'created_at', 'hash_conteudo']
+    list_filter = ['is_active', 'data_vigencia_inicio']
+    search_fields = ['titulo', 'conteudo']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['aprovado_por']
     
     fieldsets = (
         ('Informações Básicas', {
-            'fields': ('titulo', 'texto_completo', 'versao', 'hash_conteudo')
+            'fields': ('titulo', 'versao', 'conteudo', 'uuid')
         }),
         ('Finalidades', {
             'fields': ('finalidades',)
@@ -73,8 +84,11 @@ class TermoConsentimentoAdmin(admin.ModelAdmin):
         ('Vigência', {
             'fields': ('data_vigencia_inicio', 'data_vigencia_fim')
         }),
-        ('Configurações', {
-            'fields': ('obrigatorio', 'ativo')
+        ('Aprovação', {
+            'fields': ('aprovado_por',)
+        }),
+        ('Status', {
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
 
@@ -89,9 +103,27 @@ class ConsentimentoTitularAdmin(admin.ModelAdmin):
     search_fields = ['titular__username', 'titular__email']
     readonly_fields = [
         'data_consentimento', 'data_revogacao', 'hash_consentimento',
-        'ip_address', 'user_agent'
+        'ip_address', 'user_agent', 'created_at', 'updated_at', 'uuid'
     ]
     raw_id_fields = ['titular', 'termo']
+    
+    fieldsets = (
+        ('Titular e Termo', {
+            'fields': ('titular', 'termo', 'uuid')
+        }),
+        ('Consentimento', {
+            'fields': ('finalidades_aceitas', 'data_consentimento', 'hash_consentimento')
+        }),
+        ('Revogação', {
+            'fields': ('data_revogacao', 'motivo_revogacao')
+        }),
+        ('Informações Técnicas', {
+            'fields': ('ip_address', 'user_agent')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
     
     def status_consentimento(self, obj):
         if obj.esta_ativo:
@@ -108,24 +140,30 @@ class SolicitacaoTitularAdmin(admin.ModelAdmin):
     ]
     list_filter = ['tipo', 'status', 'created_at']
     search_fields = ['protocolo', 'titular__username', 'titular__email']
-    readonly_fields = ['protocolo', 'created_at', 'data_limite']
+    readonly_fields = ['protocolo', 'created_at', 'updated_at', 'uuid']
     raw_id_fields = ['titular', 'responsavel']
     
     fieldsets = (
         ('Identificação', {
-            'fields': ('protocolo', 'titular', 'tipo')
+            'fields': ('protocolo', 'titular', 'tipo', 'uuid')
         }),
         ('Detalhes', {
-            'fields': ('descricao', 'email_contato')
+            'fields': ('descricao', 'dados_solicitados', 'email_contato')
         }),
         ('Processamento', {
             'fields': ('status', 'responsavel', 'resposta', 'data_resposta')
+        }),
+        ('Negativa', {
+            'fields': ('justificativa_negativa',)
         }),
         ('Prazos', {
             'fields': ('created_at', 'data_limite')
         }),
         ('Anexos', {
-            'fields': ('documentos_anexos',)
+            'fields': ('arquivo_resposta',)
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'updated_at')
         }),
     )
     
@@ -133,22 +171,24 @@ class SolicitacaoTitularAdmin(admin.ModelAdmin):
         if obj.status == 'concluida':
             return format_html('<span style="color: green;">Concluída</span>')
         
-        dias_restantes = (obj.data_limite - timezone.now().date()).days
-        
-        if dias_restantes < 0:
+        if obj.data_limite:
+            dias_restantes = (obj.data_limite.date() - timezone.now().date()).days
+            
+            if dias_restantes < 0:
+                return format_html(
+                    '<span style="color: red; font-weight: bold;">⚠ Atrasada ({} dias)</span>',
+                    abs(dias_restantes)
+                )
+            elif dias_restantes <= 3:
+                return format_html(
+                    '<span style="color: orange;">⚠ {} dias restantes</span>',
+                    dias_restantes
+                )
             return format_html(
-                '<span style="color: red; font-weight: bold;">⚠ Atrasada ({} dias)</span>',
-                abs(dias_restantes)
-            )
-        elif dias_restantes <= 3:
-            return format_html(
-                '<span style="color: orange;">⚠ {} dias restantes</span>',
+                '<span style="color: green;">{} dias restantes</span>',
                 dias_restantes
             )
-        return format_html(
-            '<span style="color: green;">{} dias restantes</span>',
-            dias_restantes
-        )
+        return '-'
     prazo_status.short_description = 'Prazo'
 
 
@@ -160,41 +200,65 @@ class RegistroAnonimizacaoAdmin(admin.ModelAdmin):
     ]
     list_filter = ['tipo', 'modelo', 'reversivel', 'created_at']
     search_fields = ['modelo', 'motivo', 'descricao']
-    readonly_fields = ['created_at']
+    readonly_fields = ['created_at', 'updated_at', 'uuid', 'data_execucao']
+    raw_id_fields = ['executado_por']
+    
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('tipo', 'motivo', 'descricao', 'uuid')
+        }),
+        ('Dados Afetados', {
+            'fields': ('modelo', 'campos', 'quantidade_registros')
+        }),
+        ('Técnica', {
+            'fields': ('tecnica', 'reversivel')
+        }),
+        ('Execução', {
+            'fields': ('executado_por', 'data_execucao')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
 
 
 @admin.register(RelatorioImpacto)
 class RelatorioImpactoAdmin(admin.ModelAdmin):
     list_display = [
-        'titulo', 'registro_tratamento', 'nivel_risco_inicial',
-        'nivel_risco_residual', 'status', 'data_elaboracao'
+        'titulo', 'versao', 'registro_tratamento', 'probabilidade_risco',
+        'impacto_risco', 'status', 'created_at'
     ]
-    list_filter = ['status', 'nivel_risco_inicial', 'nivel_risco_residual']
+    list_filter = ['status', 'probabilidade_risco', 'impacto_risco']
     search_fields = ['titulo', 'descricao_tratamento']
-    readonly_fields = ['created_at', 'updated_at']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
     raw_id_fields = ['registro_tratamento', 'elaborado_por', 'aprovado_por']
     
     fieldsets = (
         ('Identificação', {
-            'fields': ('titulo', 'registro_tratamento', 'elaborado_por')
+            'fields': ('titulo', 'versao', 'registro_tratamento', 'uuid')
+        }),
+        ('Elaboração', {
+            'fields': ('elaborado_por',)
         }),
         ('Descrição do Tratamento', {
             'fields': ('descricao_tratamento', 'necessidade_proporcionalidade')
         }),
         ('Análise de Riscos', {
             'fields': (
-                'riscos_identificados', 'nivel_risco_inicial',
-                'medidas_mitigacao', 'nivel_risco_residual'
+                'riscos_identificados', 'probabilidade_risco', 'impacto_risco'
             )
         }),
-        ('Consulta ao Titular', {
-            'fields': ('consulta_titular', 'parecer_dpo')
+        ('Medidas Mitigadoras', {
+            'fields': ('medidas_mitigadoras', 'riscos_residuais')
+        }),
+        ('Parecer do DPO', {
+            'fields': ('parecer_dpo', 'data_parecer_dpo')
         }),
         ('Aprovação', {
-            'fields': ('status', 'aprovado_por', 'data_aprovacao', 'observacoes_aprovacao')
+            'fields': ('status', 'aprovado_por', 'data_aprovacao')
         }),
-        ('Datas', {
-            'fields': ('data_elaboracao', 'data_revisao', 'created_at', 'updated_at')
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
 
@@ -202,38 +266,44 @@ class RelatorioImpactoAdmin(admin.ModelAdmin):
 @admin.register(IncidenteSeguranca)
 class IncidenteSegurancaAdmin(admin.ModelAdmin):
     list_display = [
-        'protocolo', 'tipo_incidente', 'severidade', 'status',
+        'protocolo', 'titulo', 'tipo_incidente', 'severidade', 'status',
         'comunicado_anpd', 'comunicado_titulares', 'created_at'
     ]
     list_filter = ['tipo_incidente', 'severidade', 'status', 'comunicado_anpd']
-    search_fields = ['protocolo', 'descricao', 'sistemas_afetados']
-    readonly_fields = ['protocolo', 'created_at', 'updated_at']
-    raw_id_fields = ['reportado_por', 'responsavel_resposta']
+    search_fields = ['protocolo', 'titulo', 'descricao']
+    readonly_fields = ['protocolo', 'created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['reportado_por', 'responsavel_investigacao']
     
     fieldsets = (
         ('Identificação', {
-            'fields': ('protocolo', 'tipo_incidente', 'severidade', 'status')
+            'fields': ('protocolo', 'titulo', 'uuid')
+        }),
+        ('Classificação', {
+            'fields': ('tipo_incidente', 'severidade', 'status')
         }),
         ('Descrição', {
-            'fields': ('descricao', 'sistemas_afetados', 'dados_comprometidos')
+            'fields': ('descricao',)
         }),
-        ('Impacto', {
-            'fields': ('quantidade_titulares_afetados', 'categorias_dados_afetados')
+        ('Dados Afetados', {
+            'fields': ('dados_afetados', 'quantidade_titulares', 'categorias_titulares')
         }),
         ('Cronologia', {
-            'fields': ('data_deteccao', 'data_inicio_incidente', 'data_contencao')
+            'fields': ('data_ocorrencia', 'data_deteccao', 'data_contencao', 'data_resolucao')
         }),
-        ('Resposta', {
-            'fields': ('reportado_por', 'responsavel_resposta', 'acoes_tomadas')
+        ('Responsáveis', {
+            'fields': ('reportado_por', 'responsavel_investigacao')
         }),
-        ('Comunicações', {
-            'fields': (
-                'comunicado_anpd', 'data_comunicacao_anpd', 'protocolo_anpd',
-                'comunicado_titulares', 'data_comunicacao_titulares'
-            )
+        ('Investigação', {
+            'fields': ('causa_raiz', 'acoes_tomadas', 'medidas_preventivas')
         }),
-        ('Pós-Incidente', {
-            'fields': ('licoes_aprendidas', 'acoes_preventivas')
+        ('Comunicação ANPD', {
+            'fields': ('comunicado_anpd', 'data_comunicacao_anpd', 'protocolo_anpd')
+        }),
+        ('Comunicação aos Titulares', {
+            'fields': ('comunicado_titulares', 'data_comunicacao_titulares', 'metodo_comunicacao_titulares')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
 
@@ -241,12 +311,37 @@ class IncidenteSegurancaAdmin(admin.ModelAdmin):
 @admin.register(LogAcessoDados)
 class LogAcessoDadosAdmin(admin.ModelAdmin):
     list_display = [
-        'usuario', 'modelo_acessado', 'tipo_operacao', 
-        'finalidade', 'created_at'
+        'usuario', 'modelo', 'operacao', 
+        'finalidade', 'data_acesso'
     ]
-    list_filter = ['tipo_operacao', 'finalidade', 'modelo_acessado', 'created_at']
-    search_fields = ['usuario__username', 'modelo_acessado', 'justificativa']
-    readonly_fields = ['created_at', 'hash_registro']
+    list_filter = ['operacao', 'modelo', 'data_acesso']
+    search_fields = ['usuario__username', 'modelo', 'finalidade', 'endpoint']
+    readonly_fields = [
+        'created_at', 'updated_at', 'uuid', 'data_acesso',
+        'usuario', 'modelo', 'objeto_id', 'campos_acessados',
+        'operacao', 'finalidade', 'ip_address', 'user_agent', 'endpoint'
+    ]
+    
+    fieldsets = (
+        ('Usuário', {
+            'fields': ('usuario', 'uuid')
+        }),
+        ('Dados Acessados', {
+            'fields': ('modelo', 'objeto_id', 'campos_acessados')
+        }),
+        ('Operação', {
+            'fields': ('operacao', 'finalidade')
+        }),
+        ('Contexto', {
+            'fields': ('ip_address', 'user_agent', 'endpoint')
+        }),
+        ('Timestamps', {
+            'fields': ('data_acesso', 'created_at', 'updated_at')
+        }),
+    )
+    
+    def has_add_permission(self, request):
+        return False  # Logs não podem ser criados manualmente
     
     def has_change_permission(self, request, obj=None):
         return False  # Logs não podem ser alterados

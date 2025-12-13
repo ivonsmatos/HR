@@ -12,7 +12,7 @@ Funcionalidades:
 """
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 
@@ -58,6 +58,7 @@ class PerfilCargo(BaseModel):
     is_template = models.BooleanField(default=False, help_text='Marcar como template reutilizável')
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Perfil de Cargo'
         verbose_name_plural = 'Perfis de Cargos'
         ordering = ['nome']
@@ -81,6 +82,7 @@ class CompetenciaCargo(BaseModel):
     descricao = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Competência do Cargo'
         verbose_name_plural = 'Competências do Cargo'
     
@@ -149,6 +151,7 @@ class PerfilComportamental(BaseModel):
     respostas = models.JSONField(default=dict, blank=True)
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Perfil Comportamental'
         verbose_name_plural = 'Perfis Comportamentais'
         ordering = ['-data_mapeamento']
@@ -207,6 +210,7 @@ class MatchPerfil(BaseModel):
     justificativa_ia = models.TextField(blank=True, help_text='Justificativa gerada pela IA')
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Match de Perfil'
         verbose_name_plural = 'Matches de Perfil'
         unique_together = ['perfil_comportamental', 'perfil_cargo', 'vaga']
@@ -302,6 +306,7 @@ class Candidato(BaseModel):
     motivo_blacklist = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Candidato'
         verbose_name_plural = 'Candidatos'
         ordering = ['-created_at']
@@ -321,6 +326,7 @@ class ExperienciaProfissional(BaseModel):
     descricao = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Experiência Profissional'
         verbose_name_plural = 'Experiências Profissionais'
         ordering = ['-data_inicio']
@@ -387,8 +393,8 @@ class Vaga(BaseModel):
     ], default='rascunho')
     
     # Responsável
-    recrutador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='vagas_responsavel')
-    gestor_vaga = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='vagas_gestor')
+    recrutador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='vagas_responsavel')
+    gestor_vaga = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='vagas_gestor')
     
     # Publicação
     publicar_site_carreiras = models.BooleanField(default=True)
@@ -398,6 +404,7 @@ class Vaga(BaseModel):
     etapas = models.JSONField(default=list, help_text='Etapas do processo seletivo')
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Vaga'
         verbose_name_plural = 'Vagas'
         ordering = ['-created_at']
@@ -447,9 +454,10 @@ class CandidaturaVaga(BaseModel):
     motivo_reprovacao = models.TextField(blank=True)
     
     # Responsável
-    recrutador_responsavel = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='candidaturas_responsavel')
+    recrutador_responsavel = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='candidaturas_responsavel')
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Candidatura'
         verbose_name_plural = 'Candidaturas'
         unique_together = ['candidato', 'vaga']
@@ -478,7 +486,7 @@ class Entrevista(BaseModel):
     link_videoconferencia = models.URLField(blank=True)
     
     # Participantes
-    entrevistadores = models.ManyToManyField(User, related_name='entrevistas_participante')
+    entrevistadores = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='entrevistas_participante')
     
     # Status
     status = models.CharField(max_length=30, choices=[
@@ -504,6 +512,7 @@ class Entrevista(BaseModel):
     roteiro_ia = models.TextField(blank=True, help_text='Roteiro sugerido pelo Agente SyncRH')
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Entrevista'
         verbose_name_plural = 'Entrevistas'
         ordering = ['data_hora']
@@ -550,6 +559,7 @@ class MetricaRecrutamento(BaseModel):
     candidatos_por_origem = models.JSONField(default=dict)
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Métrica de Recrutamento'
         verbose_name_plural = 'Métricas de Recrutamento'
         ordering = ['-periodo_fim']
@@ -594,6 +604,7 @@ class PaginaCarreiras(BaseModel):
     cor_secundaria = models.CharField(max_length=7, default='#2ecc71')
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Página de Carreiras'
         verbose_name_plural = 'Páginas de Carreiras'
     
@@ -613,6 +624,7 @@ class DepoimentoColaborador(BaseModel):
     ordem = models.IntegerField(default=0)
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Depoimento de Colaborador'
         verbose_name_plural = 'Depoimentos de Colaboradores'
         ordering = ['ordem']
@@ -654,9 +666,10 @@ class SugestaoIA(BaseModel):
     feedback_usuario = models.TextField(blank=True)
     
     # Usuário
-    solicitado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    solicitado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     
     class Meta:
+        app_label = 'recrutamento_selecao'
         verbose_name = 'Sugestão IA'
         verbose_name_plural = 'Sugestões IA'
         ordering = ['-created_at']

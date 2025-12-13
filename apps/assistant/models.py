@@ -5,7 +5,7 @@ Armazena histórico de conversa and document metadata
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.auth.models import User
+from django.conf import settings
 import uuid
 
 
@@ -152,7 +152,7 @@ class Conversa(TenantAwareModel):
     """
     
     user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='assistant_conversations'
     )

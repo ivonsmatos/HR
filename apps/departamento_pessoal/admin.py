@@ -26,7 +26,7 @@ class ColaboradorAdmin(admin.ModelAdmin):
     list_filter = ['is_active', 'departamento', 'cargo', 'data_admissao']
     search_fields = ['nome_completo', 'cpf', 'user__email']
     readonly_fields = ['created_at', 'updated_at']
-    autocomplete_fields = ['user', 'cargo', 'departamento', 'gestor']
+    raw_id_fields = ['user', 'cargo', 'departamento', 'gestor']
     
     fieldsets = (
         ('Dados Pessoais', {

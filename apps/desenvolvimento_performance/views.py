@@ -88,7 +88,7 @@ class SyncBoxViewSet(viewsets.ModelViewSet):
 
 class CursoViewSet(viewsets.ModelViewSet):
     """ViewSet para cursos LMS"""
-    queryset = Curso.objects.filter(is_active=True, publicado=True)
+    queryset = Curso.objects.filter(is_active=True, status='publicado')
     permission_classes = [permissions.IsAuthenticated]
     
     @action(detail=True, methods=['post'])

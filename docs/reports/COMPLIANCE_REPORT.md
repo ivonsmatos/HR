@@ -18,6 +18,15 @@ principais políticas de mercado para sistemas de Recursos Humanos.
 | ISO 27001 | ⚠️ Parcial | ✅ Alinhado | 85% |
 | SOC 2 | ⚠️ Parcial | ✅ Alinhado | 80% |
 
+### ✅ Migrations Criadas
+
+```
+apps/lgpd/migrations/0001_initial.py   - 8 modelos LGPD
+apps/nist/migrations/0001_initial.py   - 12 modelos NIST
+```
+
+**Para aplicar:** `python manage.py migrate lgpd nist`
+
 ---
 
 ## 📊 1. ANÁLISE DE GAPS (Situação Encontrada)

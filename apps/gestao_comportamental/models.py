@@ -9,7 +9,7 @@ Funcionalidades:
 """
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 
@@ -57,6 +57,7 @@ class QuestionarioProfiler(BaseModel):
     data_publicacao = models.DateTimeField(null=True, blank=True)
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Questionário Profiler'
         verbose_name_plural = 'Questionários Profiler'
         ordering = ['-created_at']
@@ -85,6 +86,7 @@ class QuestaoProfiler(BaseModel):
     opcoes = models.JSONField(default=list, help_text='Lista de opções com mapeamento DISC')
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Questão Profiler'
         verbose_name_plural = 'Questões Profiler'
         ordering = ['ordem']
@@ -122,6 +124,7 @@ class AplicacaoProfiler(BaseModel):
     token_acesso = models.UUIDField(default=uuid.uuid4, unique=True)
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Aplicação Profiler'
         verbose_name_plural = 'Aplicações Profiler'
         ordering = ['-data_envio']
@@ -143,6 +146,7 @@ class RespostaProfiler(BaseModel):
     tempo_resposta = models.IntegerField(default=0, help_text='Segundos')
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Resposta Profiler'
         verbose_name_plural = 'Respostas Profiler'
         unique_together = ['aplicacao', 'questao']
@@ -186,6 +190,7 @@ class PerfilDISC(BaseModel):
     indice_consistencia = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Perfil DISC'
         verbose_name_plural = 'Perfis DISC'
     
@@ -251,10 +256,11 @@ class PerfilIdealCargo(BaseModel):
     descricao_perfil = models.TextField(blank=True)
     
     # Responsável pela definição
-    definido_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    definido_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     data_definicao = models.DateTimeField(auto_now_add=True)
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Perfil Ideal do Cargo'
         verbose_name_plural = 'Perfis Ideais dos Cargos'
     
@@ -296,6 +302,7 @@ class CompetenciaComportamental(BaseModel):
     indicadores_negativos = models.JSONField(default=list)
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Competência Comportamental'
         verbose_name_plural = 'Competências Comportamentais'
         ordering = ['categoria', 'nome']
@@ -340,6 +347,7 @@ class MatchComportamental(BaseModel):
     analise_ia = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Match Comportamental'
         verbose_name_plural = 'Matches Comportamentais'
         unique_together = ['perfil_disc', 'perfil_ideal']
@@ -439,6 +447,7 @@ class MetricaProfiler(BaseModel):
     tempo_medio_resposta = models.IntegerField(default=0, help_text='Segundos')
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Métrica Profiler'
         verbose_name_plural = 'Métricas Profiler'
         ordering = ['-data_referencia']
@@ -473,9 +482,10 @@ class ComparacaoTime(BaseModel):
     analise_ia = models.TextField(blank=True)
     
     # Criado por
-    criado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    criado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Comparação de Time'
         verbose_name_plural = 'Comparações de Times'
         ordering = ['-created_at']
@@ -513,6 +523,7 @@ class HistoricoPerfilColaborador(BaseModel):
     observacoes = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Histórico de Perfil'
         verbose_name_plural = 'Históricos de Perfis'
         ordering = ['-created_at']
@@ -558,6 +569,7 @@ class InsightComportamental(BaseModel):
     acao_tomada = models.BooleanField(default=False)
     
     class Meta:
+        app_label = 'gestao_comportamental'
         verbose_name = 'Insight Comportamental'
         verbose_name_plural = 'Insights Comportamentais'
         ordering = ['-created_at']

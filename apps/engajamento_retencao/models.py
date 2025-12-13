@@ -12,7 +12,7 @@ Funcionalidades:
 """
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 
@@ -64,9 +64,10 @@ class PesquisaClima(BaseModel):
     score_geral = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     
     # Responsável
-    criado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='pesquisas_clima_criadas')
+    criado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='pesquisas_clima_criadas')
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Pesquisa de Clima'
         verbose_name_plural = 'Pesquisas de Clima'
         ordering = ['-data_inicio']
@@ -87,6 +88,7 @@ class DimensaoClima(BaseModel):
     score_medio = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Dimensão de Clima'
         verbose_name_plural = 'Dimensões de Clima'
         ordering = ['ordem']
@@ -114,6 +116,7 @@ class PerguntaClima(BaseModel):
     media_respostas = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Pergunta de Clima'
         verbose_name_plural = 'Perguntas de Clima'
         ordering = ['ordem']
@@ -135,6 +138,7 @@ class RespostaClima(BaseModel):
     tempo_preenchimento = models.IntegerField(default=0, help_text='Segundos')
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Resposta de Clima'
         verbose_name_plural = 'Respostas de Clima'
     
@@ -151,7 +155,7 @@ class PlanoAcaoClima(BaseModel):
     descricao = models.TextField()
     
     # Responsável
-    responsavel = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='planos_acao_clima')
+    responsavel = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='planos_acao_clima')
     
     # Prazo
     data_inicio = models.DateField()
@@ -171,6 +175,7 @@ class PlanoAcaoClima(BaseModel):
     sugerido_ia = models.BooleanField(default=False)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Plano de Ação (Clima)'
         verbose_name_plural = 'Planos de Ação (Clima)'
     
@@ -214,6 +219,7 @@ class PesquisaeNPS(BaseModel):
     score_enps = models.IntegerField(null=True, blank=True, help_text='-100 a 100')
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Pesquisa eNPS'
         verbose_name_plural = 'Pesquisas eNPS'
         ordering = ['-data_inicio']
@@ -253,6 +259,7 @@ class RespostaeNPS(BaseModel):
     data_resposta = models.DateTimeField(auto_now_add=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Resposta eNPS'
         verbose_name_plural = 'Respostas eNPS'
     
@@ -306,6 +313,7 @@ class AnaliseRotatividade(BaseModel):
     ], blank=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Análise de Rotatividade'
         verbose_name_plural = 'Análises de Rotatividade'
         ordering = ['-data_analise']
@@ -346,7 +354,7 @@ class AnaliseDemissional(BaseModel):
     # Entrevista demissional
     entrevista_realizada = models.BooleanField(default=False)
     data_entrevista = models.DateField(null=True, blank=True)
-    entrevistador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    entrevistador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     
     # Feedback
     recomendaria_empresa = models.BooleanField(null=True, blank=True)
@@ -362,6 +370,7 @@ class AnaliseDemissional(BaseModel):
     insights_ia = models.JSONField(default=list, blank=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Análise Demissional'
         verbose_name_plural = 'Análises Demissionais'
         ordering = ['-data_demissao']
@@ -381,6 +390,7 @@ class TabelaSalarial(BaseModel):
     data_vigencia = models.DateField()
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Tabela Salarial'
         verbose_name_plural = 'Tabelas Salariais'
         ordering = ['-data_vigencia']
@@ -403,6 +413,7 @@ class FaixaSalarial(BaseModel):
     steps = models.JSONField(default=list, help_text='Lista de valores de steps')
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Faixa Salarial'
         verbose_name_plural = 'Faixas Salariais'
         unique_together = ['tabela', 'cargo']
@@ -423,6 +434,7 @@ class PlanoCarreira(BaseModel):
     requisitos_transicao = models.JSONField(default=dict, help_text='Requisitos para cada transição')
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Plano de Carreira'
         verbose_name_plural = 'Planos de Carreira'
     
@@ -465,12 +477,13 @@ class SolicitacaoPromocao(BaseModel):
     ], default='rascunho')
     
     # Solicitante
-    solicitado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='promocoes_solicitadas')
+    solicitado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='promocoes_solicitadas')
     
     # Datas
     data_efetivacao = models.DateField(null=True, blank=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Solicitação de Promoção'
         verbose_name_plural = 'Solicitações de Promoção'
         ordering = ['-created_at']
@@ -517,6 +530,7 @@ class TipoBeneficio(BaseModel):
     flexivel = models.BooleanField(default=False, help_text='Permite escolha do colaborador')
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Tipo de Benefício'
         verbose_name_plural = 'Tipos de Benefícios'
     
@@ -550,6 +564,7 @@ class BeneficioColaborador(BaseModel):
     observacoes = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Benefício do Colaborador'
         verbose_name_plural = 'Benefícios dos Colaboradores'
     
@@ -592,6 +607,7 @@ class NotificacaoColaborador(BaseModel):
     data_expiracao = models.DateTimeField(null=True, blank=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Notificação'
         verbose_name_plural = 'Notificações'
         ordering = ['-created_at']
@@ -622,6 +638,7 @@ class Reconhecimento(BaseModel):
     pontos = models.IntegerField(default=10)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Reconhecimento'
         verbose_name_plural = 'Reconhecimentos'
         ordering = ['-created_at']
@@ -651,6 +668,7 @@ class FeedbackRapido(BaseModel):
     data_visualizacao = models.DateTimeField(null=True, blank=True)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Feedback Rápido'
         verbose_name_plural = 'Feedbacks Rápidos'
         ordering = ['-created_at']
@@ -696,6 +714,7 @@ class InsightEngajamento(BaseModel):
     acao_tomada = models.BooleanField(default=False)
     
     class Meta:
+        app_label = 'engajamento_retencao'
         verbose_name = 'Insight de Engajamento'
         verbose_name_plural = 'Insights de Engajamento'
         ordering = ['-created_at']

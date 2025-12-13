@@ -64,7 +64,7 @@ class PerformanceMonitor:
         return slow_queries
 
 
-def monitor_performance(endpoint_name=Nãone):
+def monitor_performance(endpoint_name=None):
     """Decorator para monitorar performance de views/funções"""
     def decorator(func):
         @wraps(func)

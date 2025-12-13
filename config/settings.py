@@ -62,6 +62,7 @@ LOCAL_APPS = [
     "apps.crm",
     "apps.recruitment",
     "apps.security",
+    "apps.security.zero_trust",  # Zero-Trust Security Architecture
     "apps.saas_admin",
     "apps.utilities",
     "apps.assistant",
@@ -90,9 +91,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "apps.security.middleware.AuditLoggingMiddleware",
+    # Security Middlewares
+    "apps.security.middleware.AuditoriaLoggingMiddleware",
     "apps.core.monitoring.PerformanceMiddleware",
     "apps.core.monitoring.PerformanceCheckMiddleware",
+    # Zero-Trust Security Architecture (NIST SP 800-207)
+    "apps.security.zero_trust.middleware.DeviceTrustMiddleware",
+    "apps.security.zero_trust.middleware.RateLimitMiddleware",
+    "apps.security.zero_trust.middleware.ZeroTrustMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -259,3 +265,129 @@ if SENTRY_DSN:
 # Django Tenants Configuration
 TENANT_MODEL = "core.Company"
 TENANT_DOMAIN_MODEL = "core.CompanyDomain"
+
+# ============================================================================
+# ZERO-TRUST SECURITY CONFIGURATION (NIST SP 800-207)
+# ============================================================================
+
+ZERO_TRUST_CONFIG = {
+    # Risk Score Thresholds
+    "RISK_THRESHOLDS": {
+        "ALLOW": 70,          # Score >= 70: Allow access
+        "MONITOR": 50,        # Score 50-70: Allow with monitoring
+        "CHALLENGE": 30,      # Score 30-50: Require MFA
+        "DENY": 0,            # Score < 30: Deny access
+    },
+    
+    # Continuous Authentication Settings
+    "CONTINUOUS_AUTH": {
+        "SESSION_TIMEOUT_MINUTES": 480,      # 8 hours
+        "CONFIDENCE_DECAY_MINUTES": 15,      # Decay interval
+        "CONFIDENCE_DECAY_POINTS": 5,        # Points per interval
+        "MIN_CONFIDENCE_SCORE": 40,          # Below this requires re-auth
+        "MAX_IDLE_MINUTES": 30,              # Idle timeout
+    },
+    
+    # Device Trust Settings
+    "DEVICE_TRUST": {
+        "FINGERPRINT_COMPONENTS": [
+            "user_agent",
+            "accept_language",
+            "accept_encoding",
+            "timezone",
+            "screen_resolution",
+        ],
+        "ELEVATION_REQUIREMENTS": {
+            "basic_to_elevated": {
+                "min_days_registered": 7,
+                "min_successful_logins": 10,
+                "mfa_required": True,
+            },
+            "elevated_to_corporate": {
+                "min_days_registered": 30,
+                "admin_approval_required": True,
+                "compliance_training_completed": True,
+            },
+        },
+    },
+    
+    # Rate Limiting
+    "RATE_LIMITING": {
+        "DEFAULT_RATE": "1000/hour",
+        "LOGIN_RATE": "5/minute",
+        "API_RATE": "100/minute",
+        "SENSITIVE_RATE": "10/minute",
+    },
+    
+    # Exempt Paths (no Zero-Trust validation)
+    "EXEMPT_PATHS": [
+        "/api/auth/login/",
+        "/api/auth/register/",
+        "/admin/login/",
+        "/static/",
+        "/media/",
+        "/api/pwa/",
+        "/health/",
+        "/favicon.ico",
+    ],
+    
+    # Sensitive Resources (require elevated trust)
+    "SENSITIVE_RESOURCES": [
+        "/api/lgpd/",
+        "/api/nist/",
+        "/api/security/",
+        "/admin/",
+        "/api/finance/",
+        "/api/payroll/",
+    ],
+    
+    # Geographic Restrictions
+    "GEO_RESTRICTIONS": {
+        "ALLOWED_COUNTRIES": ["BR", "US", "PT"],  # Empty = all allowed
+        "BLOCKED_COUNTRIES": [],
+        "HIGH_RISK_COUNTRIES": ["RU", "CN", "KP", "IR"],
+    },
+    
+    # Behavioral Analysis
+    "BEHAVIORAL_ANALYSIS": {
+        "ENABLED": True,
+        "ANOMALY_THRESHOLD": 2.0,  # Standard deviations
+        "BASELINE_DAYS": 30,
+        "FEATURES": [
+            "login_time",
+            "request_frequency",
+            "resource_patterns",
+            "device_usage",
+            "location_patterns",
+        ],
+    },
+}
+
+# ============================================================================
+# PWA CONFIGURATION
+# ============================================================================
+
+PWA_CONFIG = {
+    "APP_NAME": "SyncRH",
+    "APP_DESCRIPTION": "Sistema de Gestão de Recursos Humanos",
+    "APP_THEME_COLOR": "#2563eb",
+    "APP_BACKGROUND_COLOR": "#ffffff",
+    "APP_DISPLAY": "standalone",
+    "APP_SCOPE": "/",
+    "APP_ORIENTATION": "portrait-primary",
+    "APP_START_URL": "/",
+    "APP_STATUS_BAR_COLOR": "default",
+    "APP_ICONS": [
+        {"src": "/static/images/icons/icon-72x72.png", "sizes": "72x72", "type": "image/png"},
+        {"src": "/static/images/icons/icon-96x96.png", "sizes": "96x96", "type": "image/png"},
+        {"src": "/static/images/icons/icon-128x128.png", "sizes": "128x128", "type": "image/png"},
+        {"src": "/static/images/icons/icon-144x144.png", "sizes": "144x144", "type": "image/png"},
+        {"src": "/static/images/icons/icon-152x152.png", "sizes": "152x152", "type": "image/png"},
+        {"src": "/static/images/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png"},
+        {"src": "/static/images/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png"},
+        {"src": "/static/images/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png"},
+    ],
+    "APP_SPLASH_SCREEN": [],
+    "APP_DIR": "ltr",
+    "APP_LANG": "pt-BR",
+}

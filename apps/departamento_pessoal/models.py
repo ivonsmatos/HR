@@ -85,6 +85,7 @@ class Departamento(BaseModel):
     responsavel = models.ForeignKey(Colaborador, on_delete=models.SET_NULL, null=True, blank=True, related_name='departamentos_responsavel')
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Departamento'
         verbose_name_plural = 'Departamentos'
         ordering = ['nome']
@@ -113,6 +114,7 @@ class Cargo(BaseModel):
     departamento = models.ForeignKey(Departamento, on_delete=models.SET_NULL, null=True, related_name='cargos')
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Cargo'
         verbose_name_plural = 'Cargos'
         ordering = ['nome']
@@ -149,6 +151,7 @@ class EscalaTrabalho(BaseModel):
     horas_semanais = models.DecimalField(max_digits=4, decimal_places=2, default=44.0)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Escala de Trabalho'
         verbose_name_plural = 'Escalas de Trabalho'
     
@@ -208,6 +211,7 @@ class RegistroPonto(BaseModel):
     observacao = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Registro de Ponto'
         verbose_name_plural = 'Registros de Ponto'
         ordering = ['-data', 'colaborador']
@@ -232,10 +236,11 @@ class JustificativaPonto(BaseModel):
     ])
     descricao = models.TextField()
     documento = models.FileField(upload_to='justificativas/', null=True, blank=True)
-    aprovado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    aprovado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     data_aprovacao = models.DateTimeField(null=True, blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Justificativa de Ponto'
         verbose_name_plural = 'Justificativas de Ponto'
     
@@ -292,6 +297,7 @@ class FolhaPagamento(BaseModel):
     data_pagamento = models.DateField(null=True, blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Folha de Pagamento'
         verbose_name_plural = 'Folhas de Pagamento'
         ordering = ['-competencia', 'colaborador']
@@ -312,6 +318,28 @@ class FolhaPagamento(BaseModel):
         )
         self.salario_liquido = self.total_proventos - self.total_descontos
         self.save()
+
+
+class ItemFolha(BaseModel):
+    """Itens individuais da folha de pagamento"""
+    folha = models.ForeignKey(FolhaPagamento, on_delete=models.CASCADE, related_name='itens')
+    codigo = models.CharField(max_length=20)
+    descricao = models.CharField(max_length=255)
+    tipo = models.CharField(max_length=20, choices=[
+        ('provento', 'Provento'),
+        ('desconto', 'Desconto'),
+    ])
+    referencia = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    class Meta:
+        app_label = 'departamento_pessoal'
+        verbose_name = 'Item da Folha'
+        verbose_name_plural = 'Itens da Folha'
+        ordering = ['tipo', 'codigo']
+    
+    def __str__(self):
+        return f"{self.folha} - {self.descricao}"
 
 
 # =====================================================
@@ -346,7 +374,7 @@ class ProcessoAdmissao(BaseModel):
     link_enviado_em = models.DateTimeField(null=True, blank=True)
     
     # Responsável
-    responsavel = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='admissoes_responsavel')
+    responsavel = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='admissoes_responsavel')
     
     # Colaborador criado após conclusão
     colaborador_criado = models.OneToOneField(Colaborador, on_delete=models.SET_NULL, null=True, blank=True)
@@ -354,6 +382,7 @@ class ProcessoAdmissao(BaseModel):
     observacoes = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Processo de Admissão'
         verbose_name_plural = 'Processos de Admissão'
         ordering = ['-created_at']
@@ -383,11 +412,12 @@ class DocumentoAdmissao(BaseModel):
     arquivo = models.FileField(upload_to='admissao/documentos/')
     nome_arquivo = models.CharField(max_length=255)
     validado = models.BooleanField(default=False)
-    validado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    validado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     data_validacao = models.DateTimeField(null=True, blank=True)
     observacao = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Documento de Admissão'
         verbose_name_plural = 'Documentos de Admissão'
     
@@ -407,6 +437,7 @@ class CategoriaDocumento(BaseModel):
     icone = models.CharField(max_length=50, default='file', help_text='Nome do ícone')
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Categoria de Documento'
         verbose_name_plural = 'Categorias de Documentos'
     
@@ -438,18 +469,19 @@ class DocumentoGED(BaseModel):
     # Assinatura digital
     assinado_digitalmente = models.BooleanField(default=False)
     assinatura_hash = models.CharField(max_length=255, blank=True)
-    assinado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='documentos_assinados')
+    assinado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='documentos_assinados')
     data_assinatura = models.DateTimeField(null=True, blank=True)
     
     # Compartilhamento
     publico = models.BooleanField(default=False)
-    compartilhado_com = models.ManyToManyField(User, blank=True, related_name='documentos_compartilhados')
+    compartilhado_com = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='documentos_compartilhados')
     
     # Metadados
     tags = models.JSONField(default=list, blank=True)
-    upload_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='documentos_uploaded')
+    upload_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='documentos_uploaded')
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Documento GED'
         verbose_name_plural = 'Documentos GED'
         ordering = ['-created_at']
@@ -477,6 +509,7 @@ class PeriodoAquisitivo(BaseModel):
     vencido = models.BooleanField(default=False)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Período Aquisitivo'
         verbose_name_plural = 'Períodos Aquisitivos'
         ordering = ['-data_inicio']
@@ -514,15 +547,16 @@ class SolicitacaoFerias(BaseModel):
     ], default='rascunho')
     
     # Aprovações
-    aprovado_gestor_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='ferias_aprovadas_gestor')
+    aprovado_gestor_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='ferias_aprovadas_gestor')
     data_aprovacao_gestor = models.DateTimeField(null=True, blank=True)
-    aprovado_dp_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='ferias_aprovadas_dp')
+    aprovado_dp_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='ferias_aprovadas_dp')
     data_aprovacao_dp = models.DateTimeField(null=True, blank=True)
     
     motivo_rejeicao = models.TextField(blank=True)
     observacoes = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Solicitação de Férias'
         verbose_name_plural = 'Solicitações de Férias'
         ordering = ['-created_at']
@@ -555,6 +589,7 @@ class FeriasColetivas(BaseModel):
     observacoes = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Férias Coletivas'
         verbose_name_plural = 'Férias Coletivas'
     
@@ -575,10 +610,11 @@ class Contador(BaseModel):
     telefone = models.CharField(max_length=20, blank=True)
     
     # Acesso ao sistema
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='contador')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='contador')
     token_acesso = models.CharField(max_length=100, blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Contador'
         verbose_name_plural = 'Contadores'
     
@@ -621,6 +657,7 @@ class ExportacaoContabil(BaseModel):
     erro_mensagem = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'departamento_pessoal'
         verbose_name = 'Exportação Contábil'
         verbose_name_plural = 'Exportações Contábeis'
         ordering = ['-created_at']

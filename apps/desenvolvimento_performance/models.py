@@ -11,7 +11,7 @@ Funcionalidades:
 """
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 
@@ -61,6 +61,7 @@ class CicloAvaliacao(BaseModel):
     ], default='planejado')
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Ciclo de Avaliação'
         verbose_name_plural = 'Ciclos de Avaliação'
         ordering = ['-ano', '-semestre']
@@ -99,9 +100,10 @@ class SyncBox(BaseModel):
     plano_acao = models.TextField(blank=True)
     
     # Avaliador
-    avaliado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='syncbox_avaliados')
+    avaliado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='syncbox_avaliados')
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'SyncBox'
         verbose_name_plural = 'SyncBox'
         unique_together = ['colaborador', 'ciclo']
@@ -149,6 +151,7 @@ class ModeloAvaliacao(BaseModel):
     escala_max = models.IntegerField(default=5)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Modelo de Avaliação'
         verbose_name_plural = 'Modelos de Avaliação'
     
@@ -172,6 +175,7 @@ class CriterioAvaliacao(BaseModel):
     ordem = models.IntegerField(default=0)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Critério de Avaliação'
         verbose_name_plural = 'Critérios de Avaliação'
         ordering = ['ordem']
@@ -187,7 +191,7 @@ class AvaliacaoDesempenho(BaseModel):
     modelo = models.ForeignKey(ModeloAvaliacao, on_delete=models.SET_NULL, null=True)
     
     # Avaliador
-    avaliador = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='avaliacoes_realizadas')
+    avaliador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='avaliacoes_realizadas')
     tipo_avaliador = models.CharField(max_length=30, choices=[
         ('auto', 'Autoavaliação'),
         ('gestor', 'Gestor'),
@@ -217,6 +221,7 @@ class AvaliacaoDesempenho(BaseModel):
     data_conclusao = models.DateTimeField(null=True, blank=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Avaliação de Desempenho'
         verbose_name_plural = 'Avaliações de Desempenho'
         ordering = ['-created_at']
@@ -233,6 +238,7 @@ class RespostaAvaliacao(BaseModel):
     comentario = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Resposta de Avaliação'
         verbose_name_plural = 'Respostas de Avaliação'
         unique_together = ['avaliacao', 'criterio']
@@ -274,6 +280,7 @@ class ConsolidacaoAvaliacao(BaseModel):
     data_feedback = models.DateTimeField(null=True, blank=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Consolidação de Avaliação'
         verbose_name_plural = 'Consolidações de Avaliação'
         unique_together = ['colaborador', 'ciclo']
@@ -312,13 +319,14 @@ class PDI(BaseModel):
     progresso = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     
     # Aprovações
-    aprovado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='pdis_aprovados')
+    aprovado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='pdis_aprovados')
     data_aprovacao = models.DateTimeField(null=True, blank=True)
     
     # Gerado por IA
     gerado_ia = models.BooleanField(default=False)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'PDI'
         verbose_name_plural = 'PDIs'
         ordering = ['-created_at']
@@ -370,6 +378,7 @@ class MetaPDI(BaseModel):
     evidencias = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Meta do PDI'
         verbose_name_plural = 'Metas do PDI'
         ordering = ['data_limite']
@@ -393,9 +402,10 @@ class AcompanhamentoPDI(BaseModel):
     descricao = models.TextField()
     proximos_passos = models.TextField(blank=True)
     
-    registrado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    registrado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Acompanhamento PDI'
         verbose_name_plural = 'Acompanhamentos PDI'
         ordering = ['-data']
@@ -447,6 +457,7 @@ class MetricaColaborador(BaseModel):
     score_risco = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Métrica do Colaborador'
         verbose_name_plural = 'Métricas dos Colaboradores'
         unique_together = ['colaborador', 'periodo']
@@ -486,9 +497,10 @@ class RelatorioAnalytics(BaseModel):
     arquivo_pdf = models.FileField(upload_to='analytics/relatorios/', null=True, blank=True)
     
     # Geração
-    gerado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    gerado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Relatório Analytics'
         verbose_name_plural = 'Relatórios Analytics'
         ordering = ['-created_at']
@@ -509,6 +521,7 @@ class CategoriaCurso(BaseModel):
     icone = models.CharField(max_length=50, default='book')
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Categoria de Curso'
         verbose_name_plural = 'Categorias de Cursos'
     
@@ -564,6 +577,7 @@ class Curso(BaseModel):
     avaliacao_media = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Curso'
         verbose_name_plural = 'Cursos'
         ordering = ['-created_at']
@@ -580,6 +594,7 @@ class ModuloCurso(BaseModel):
     ordem = models.IntegerField(default=0)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Módulo do Curso'
         verbose_name_plural = 'Módulos do Curso'
         ordering = ['ordem']
@@ -618,6 +633,7 @@ class AulaCurso(BaseModel):
     perguntas_quiz = models.JSONField(default=list, blank=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Aula do Curso'
         verbose_name_plural = 'Aulas do Curso'
         ordering = ['ordem']
@@ -664,6 +680,7 @@ class MatriculaCurso(BaseModel):
     comentario_curso = models.TextField(blank=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Matrícula'
         verbose_name_plural = 'Matrículas'
         unique_together = ['colaborador', 'curso']
@@ -688,6 +705,7 @@ class ProgressoAula(BaseModel):
     tentativas_quiz = models.IntegerField(default=0)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Progresso da Aula'
         verbose_name_plural = 'Progressos das Aulas'
         unique_together = ['matricula', 'aula']
@@ -723,9 +741,10 @@ class FeedbackIA(BaseModel):
     utilizado = models.BooleanField(default=False)
     avaliacao_usuario = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(5)])
     
-    solicitado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    solicitado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     
     class Meta:
+        app_label = 'desenvolvimento_performance'
         verbose_name = 'Feedback IA'
         verbose_name_plural = 'Feedbacks IA'
         ordering = ['-created_at']

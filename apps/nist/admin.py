@@ -31,31 +31,29 @@ from .models import (
 @admin.register(AtivoInformacao)
 class AtivoInformacaoAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'tipo', 'classificacao', 'criticidade',
-        'departamento_responsavel', 'status', 'created_at'
+        'nome', 'tipo', 'classificacao', 'valor_negocio',
+        'proprietario', 'ambiente', 'created_at'
     ]
-    list_filter = ['tipo', 'classificacao', 'criticidade', 'status']
-    search_fields = ['nome', 'descricao', 'codigo_identificacao']
-    readonly_fields = ['created_at', 'updated_at']
+    list_filter = ['tipo', 'classificacao', 'valor_negocio', 'ambiente']
+    search_fields = ['nome', 'descricao', 'localizacao']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['proprietario', 'custodiante']
     
     fieldsets = (
         ('Identificação', {
-            'fields': ('codigo_identificacao', 'nome', 'descricao', 'tipo')
+            'fields': ('uuid', 'nome', 'descricao', 'tipo')
         }),
         ('Classificação', {
-            'fields': ('classificacao', 'criticidade', 'valor_estimado')
+            'fields': ('classificacao', 'valor_negocio')
         }),
         ('Responsabilidade', {
-            'fields': ('departamento_responsavel', 'proprietario', 'custodiante')
+            'fields': ('proprietario', 'custodiante')
         }),
         ('Localização', {
-            'fields': ('localizacao_fisica', 'localizacao_logica', 'ambiente')
+            'fields': ('localizacao', 'ambiente')
         }),
-        ('Conformidade', {
-            'fields': ('requisitos_conformidade', 'dados_pessoais', 'dados_sensiveis')
-        }),
-        ('Status', {
-            'fields': ('status', 'data_aquisicao', 'data_descarte')
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
 
@@ -63,51 +61,47 @@ class AtivoInformacaoAdmin(admin.ModelAdmin):
 @admin.register(AvaliacaoRisco)
 class AvaliacaoRiscoAdmin(admin.ModelAdmin):
     list_display = [
-        'ativo', 'ameaca', 'probabilidade', 'impacto',
-        'score_risco_display', 'nivel_risco', 'status'
+        'titulo', 'ativo', 'ameaca', 'probabilidade', 'impacto',
+        'nivel_risco_display', 'status', 'responsavel'
     ]
-    list_filter = ['nivel_risco', 'status', 'created_at']
-    search_fields = ['ameaca', 'vulnerabilidade']
-    readonly_fields = ['score_risco', 'nivel_risco', 'created_at', 'updated_at']
-    raw_id_fields = ['ativo', 'avaliador']
+    list_filter = ['status', 'probabilidade', 'impacto', 'created_at']
+    search_fields = ['titulo', 'ameaca', 'vulnerabilidade', 'descricao']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['ativo', 'responsavel']
     
     fieldsets = (
-        ('Ativo e Ameaça', {
-            'fields': ('ativo', 'ameaca', 'vulnerabilidade', 'cenario_risco')
+        ('Identificação', {
+            'fields': ('uuid', 'titulo', 'descricao', 'ativo')
         }),
-        ('Avaliação', {
-            'fields': ('probabilidade', 'impacto', 'score_risco', 'nivel_risco')
+        ('Análise de Risco', {
+            'fields': ('ameaca', 'vulnerabilidade', 'probabilidade', 'impacto')
         }),
         ('Tratamento', {
-            'fields': ('estrategia_tratamento', 'controles_existentes', 'controles_propostos')
-        }),
-        ('Risco Residual', {
-            'fields': ('probabilidade_residual', 'impacto_residual', 
-                      'score_residual', 'nivel_residual')
+            'fields': ('status', 'estrategia_tratamento', 'plano_acao', 'risco_residual')
         }),
         ('Responsabilidade', {
-            'fields': ('avaliador', 'responsavel_tratamento', 'prazo_tratamento')
+            'fields': ('responsavel', 'data_revisao')
         }),
-        ('Status', {
-            'fields': ('status', 'justificativa_aceitacao')
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
     
-    def score_risco_display(self, obj):
-        score = obj.score_risco
-        if score >= 20:
+    def nivel_risco_display(self, obj):
+        nivel = obj.nivel_risco
+        if nivel >= 20:
             color = 'red'
-        elif score >= 13:
+        elif nivel >= 13:
             color = 'orange'
-        elif score >= 9:
-            color = 'yellow'
+        elif nivel >= 9:
+            color = 'gold'
         else:
             color = 'green'
         return format_html(
             '<span style="color: {}; font-weight: bold;">{}/25</span>',
-            color, score
+            color, nivel
         )
-    score_risco_display.short_description = 'Score'
+    nivel_risco_display.short_description = 'Nível de Risco'
 
 
 # ============================================
@@ -117,27 +111,26 @@ class AvaliacaoRiscoAdmin(admin.ModelAdmin):
 @admin.register(ControleAcesso)
 class ControleAcessoAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'tipo_controle', 'escopo', 'criticidade',
-        'ativo', 'automatizado'
+        'ativo', 'tipo', 'status', 'efetividade',
+        'ultima_verificacao', 'is_active'
     ]
-    list_filter = ['tipo_controle', 'escopo', 'criticidade', 'ativo']
-    search_fields = ['nome', 'descricao']
+    list_filter = ['tipo', 'status', 'efetividade', 'is_active']
+    search_fields = ['descricao', 'implementacao']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['ativo']
     
     fieldsets = (
         ('Identificação', {
-            'fields': ('nome', 'descricao', 'tipo_controle')
-        }),
-        ('Aplicação', {
-            'fields': ('escopo', 'sistemas_aplicados', 'grupos_aplicados')
+            'fields': ('uuid', 'ativo', 'tipo', 'descricao')
         }),
         ('Configuração', {
-            'fields': ('criticidade', 'automatizado', 'reversivel')
-        }),
-        ('Política', {
-            'fields': ('politica_relacionada', 'procedimento_operacional')
+            'fields': ('requisitos', 'implementacao')
         }),
         ('Status', {
-            'fields': ('ativo', 'data_implementacao', 'data_ultima_revisao')
+            'fields': ('status', 'efetividade', 'ultima_verificacao')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
 
@@ -145,32 +138,50 @@ class ControleAcessoAdmin(admin.ModelAdmin):
 @admin.register(ConfiguracaoSeguranca)
 class ConfiguracaoSegurancaAdmin(admin.ModelAdmin):
     list_display = [
-        'sistema', 'ambiente', 'conformidade_status',
-        'em_conformidade', 'ultima_verificacao'
+        'nome', 'tipo_sistema', 'versao', 'data_aprovacao',
+        'proxima_revisao', 'is_active'
     ]
-    list_filter = ['ambiente', 'em_conformidade', 'criticidade']
-    search_fields = ['sistema', 'versao']
-    raw_id_fields = ['responsavel']
+    list_filter = ['tipo_sistema', 'is_active']
+    search_fields = ['nome', 'versao']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
     
-    def conformidade_status(self, obj):
-        if obj.em_conformidade:
-            return format_html('<span style="color: green;">✓ Conforme</span>')
-        return format_html('<span style="color: red;">✗ Não Conforme</span>')
-    conformidade_status.short_description = 'Conformidade'
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('uuid', 'nome', 'tipo_sistema', 'versao')
+        }),
+        ('Configurações', {
+            'fields': ('configuracoes', 'frameworks')
+        }),
+        ('Validade', {
+            'fields': ('data_aprovacao', 'proxima_revisao')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
 
 
 @admin.register(TreinamentoSeguranca)
 class TreinamentoSegurancaAdmin(admin.ModelAdmin):
     list_display = [
         'titulo', 'tipo', 'carga_horaria', 'obrigatorio',
-        'status', 'participantes_count'
+        'validade_dias', 'is_active'
     ]
-    list_filter = ['tipo', 'obrigatorio', 'status']
+    list_filter = ['tipo', 'obrigatorio', 'is_active']
     search_fields = ['titulo', 'descricao']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
     
-    def participantes_count(self, obj):
-        return len(obj.participantes) if obj.participantes else 0
-    participantes_count.short_description = 'Participantes'
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('uuid', 'titulo', 'descricao', 'tipo')
+        }),
+        ('Configuração', {
+            'fields': ('obrigatorio', 'publico_alvo', 'carga_horaria', 'validade_dias')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
 
 
 # ============================================
@@ -180,24 +191,24 @@ class TreinamentoSegurancaAdmin(admin.ModelAdmin):
 @admin.register(RegraDeteccao)
 class RegraDeteccaoAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'tipo_evento', 'severidade', 'ativa',
-        'total_acionamentos'
+        'nome', 'tipo', 'severidade', 'habilitada', 'is_active'
     ]
-    list_filter = ['tipo_evento', 'severidade', 'ativa']
+    list_filter = ['tipo', 'severidade', 'habilitada', 'is_active']
     search_fields = ['nome', 'descricao']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
     
     fieldsets = (
         ('Identificação', {
-            'fields': ('nome', 'descricao', 'tipo_evento')
+            'fields': ('uuid', 'nome', 'descricao', 'tipo')
         }),
-        ('Condições', {
-            'fields': ('condicoes', 'limiar', 'janela_tempo_segundos')
-        }),
-        ('Resposta', {
-            'fields': ('severidade', 'acoes_automaticas')
+        ('Configuração', {
+            'fields': ('condicoes', 'severidade', 'acoes')
         }),
         ('Status', {
-            'fields': ('ativa', 'total_acionamentos', 'ultimo_acionamento')
+            'fields': ('habilitada',)
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
         }),
     )
 
@@ -209,15 +220,32 @@ class AlertaSegurancaAdmin(admin.ModelAdmin):
         'atribuido_para', 'created_at'
     ]
     list_filter = ['severidade', 'status', 'created_at']
-    search_fields = ['titulo', 'descricao', 'origem']
-    readonly_fields = ['created_at']
-    raw_id_fields = ['regra', 'atribuido_para', 'resolvido_por']
+    search_fields = ['titulo', 'descricao', 'fonte']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['regra', 'atribuido_para']
+    
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('uuid', 'titulo', 'descricao', 'regra')
+        }),
+        ('Detalhes', {
+            'fields': ('severidade', 'fonte', 'dados_evento')
+        }),
+        ('Afetados', {
+            'fields': ('usuarios_afetados', 'ativos_afetados')
+        }),
+        ('Tratamento', {
+            'fields': ('status', 'atribuido_para', 'analise', 'data_resolucao')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
     
     def severidade_display(self, obj):
         cores = {
-            'informativo': 'blue',
             'baixa': 'green',
-            'media': 'yellow',
+            'media': 'gold',
             'alta': 'orange',
             'critica': 'red'
         }
@@ -236,22 +264,62 @@ class AlertaSegurancaAdmin(admin.ModelAdmin):
 @admin.register(PlanoRespostaIncidente)
 class PlanoRespostaIncidenteAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'tipo_incidente', 'severidade', 'status',
-        'data_ultima_revisao'
+        'nome', 'versao', 'tipo_incidente', 'aprovado_por',
+        'data_aprovacao', 'proxima_revisao'
     ]
-    list_filter = ['tipo_incidente', 'severidade', 'status']
-    search_fields = ['nome', 'descricao']
+    list_filter = ['tipo_incidente', 'is_active']
+    search_fields = ['nome']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['aprovado_por']
+    
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('uuid', 'nome', 'versao', 'tipo_incidente')
+        }),
+        ('Procedimentos', {
+            'fields': (
+                'procedimento_preparacao', 'procedimento_identificacao',
+                'procedimento_contencao', 'procedimento_erradicacao',
+                'procedimento_recuperacao', 'procedimento_licoes'
+            )
+        }),
+        ('Equipe', {
+            'fields': ('equipe_resposta', 'contatos_emergencia')
+        }),
+        ('Aprovação', {
+            'fields': ('aprovado_por', 'data_aprovacao', 'proxima_revisao')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
 
 
 @admin.register(AcaoResposta)
 class AcaoRespostaAdmin(admin.ModelAdmin):
     list_display = [
-        'titulo', 'incidente', 'tipo_acao', 'prioridade',
-        'status', 'responsavel'
+        'incidente', 'tipo', 'executado_por',
+        'data_inicio', 'data_conclusao', 'is_active'
     ]
-    list_filter = ['tipo_acao', 'prioridade', 'status']
-    search_fields = ['titulo', 'descricao']
-    raw_id_fields = ['incidente', 'plano', 'responsavel']
+    list_filter = ['tipo', 'is_active', 'created_at']
+    search_fields = ['descricao', 'resultado']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['incidente', 'executado_por']
+    
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('uuid', 'incidente', 'tipo', 'descricao')
+        }),
+        ('Execução', {
+            'fields': ('executado_por', 'data_inicio', 'data_conclusao')
+        }),
+        ('Resultado', {
+            'fields': ('resultado', 'evidencias')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
 
 
 # ============================================
@@ -261,17 +329,46 @@ class AcaoRespostaAdmin(admin.ModelAdmin):
 @admin.register(PlanoRecuperacao)
 class PlanoRecuperacaoAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'tipo_desastre', 'criticidade', 'status',
-        'rto_horas', 'rpo_horas', 'testado_recentemente'
+        'nome', 'versao', 'rto', 'rpo',
+        'ultimo_teste', 'proximo_teste', 'testado_recentemente'
     ]
-    list_filter = ['tipo_desastre', 'criticidade', 'status']
-    search_fields = ['nome', 'descricao']
+    list_filter = ['is_active']
+    search_fields = ['nome', 'site_contingencia']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['aprovado_por']
+    
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('uuid', 'nome', 'versao')
+        }),
+        ('Objetivos', {
+            'fields': ('rto', 'rpo')
+        }),
+        ('Sistemas', {
+            'fields': ('sistemas_criticos',)
+        }),
+        ('Procedimentos', {
+            'fields': ('procedimentos_recuperacao', 'ordem_recuperacao')
+        }),
+        ('Recursos', {
+            'fields': ('recursos_necessarios', 'site_contingencia')
+        }),
+        ('Testes', {
+            'fields': ('ultimo_teste', 'resultado_ultimo_teste', 'proximo_teste')
+        }),
+        ('Aprovação', {
+            'fields': ('aprovado_por', 'data_aprovacao')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
     
     def testado_recentemente(self, obj):
-        if not obj.data_ultimo_teste:
+        if not obj.ultimo_teste:
             return format_html('<span style="color: orange;">Nunca testado</span>')
         
-        dias = (timezone.now().date() - obj.data_ultimo_teste).days
+        dias = (timezone.now().date() - obj.ultimo_teste).days
         if dias > 365:
             return format_html('<span style="color: red;">Há {} dias</span>', dias)
         elif dias > 180:
@@ -283,22 +380,70 @@ class PlanoRecuperacaoAdmin(admin.ModelAdmin):
 @admin.register(TesteRecuperacao)
 class TesteRecuperacaoAdmin(admin.ModelAdmin):
     list_display = [
-        'plano', 'cenario', 'resultado', 'testado_por', 'created_at'
+        'plano', 'tipo', 'data_execucao', 'sucesso',
+        'rto_alcancado', 'rpo_alcancado', 'coordenado_por'
     ]
-    list_filter = ['resultado', 'created_at']
-    search_fields = ['cenario', 'observacoes']
-    raw_id_fields = ['plano', 'testado_por']
+    list_filter = ['tipo', 'sucesso', 'created_at']
+    search_fields = ['cenario', 'licoes_aprendidas']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['plano', 'coordenado_por']
+    
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('uuid', 'plano', 'tipo')
+        }),
+        ('Execução', {
+            'fields': ('data_execucao', 'participantes', 'coordenado_por')
+        }),
+        ('Cenário', {
+            'fields': ('cenario',)
+        }),
+        ('Resultados', {
+            'fields': ('sucesso', 'rto_alcancado', 'rpo_alcancado')
+        }),
+        ('Aprendizados', {
+            'fields': ('problemas_identificados', 'licoes_aprendidas', 'acoes_melhoria')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
 
 
 @admin.register(BackupRegistro)
 class BackupRegistroAdmin(admin.ModelAdmin):
     list_display = [
-        'nome', 'tipo', 'sistema', 'tamanho_display',
-        'verificado', 'integridade_ok', 'created_at'
+        'ativo', 'tipo', 'data_inicio', 'sucesso',
+        'tamanho_display', 'verificado', 'criptografado'
     ]
-    list_filter = ['tipo', 'verificado', 'integridade_ok', 'created_at']
-    search_fields = ['nome', 'sistema', 'localizacao']
-    readonly_fields = ['created_at']
+    list_filter = ['tipo', 'sucesso', 'verificado', 'criptografado', 'created_at']
+    search_fields = ['localizacao']
+    readonly_fields = ['created_at', 'updated_at', 'uuid']
+    raw_id_fields = ['ativo']
+    
+    fieldsets = (
+        ('Identificação', {
+            'fields': ('uuid', 'ativo', 'tipo')
+        }),
+        ('Execução', {
+            'fields': ('data_inicio', 'data_conclusao', 'sucesso')
+        }),
+        ('Detalhes', {
+            'fields': ('tamanho_bytes', 'localizacao')
+        }),
+        ('Verificação', {
+            'fields': ('verificado', 'data_verificacao')
+        }),
+        ('Retenção', {
+            'fields': ('data_expiracao',)
+        }),
+        ('Segurança', {
+            'fields': ('criptografado', 'algoritmo_criptografia')
+        }),
+        ('Metadados', {
+            'fields': ('is_active', 'created_at', 'updated_at')
+        }),
+    )
     
     def tamanho_display(self, obj):
         if not obj.tamanho_bytes:
