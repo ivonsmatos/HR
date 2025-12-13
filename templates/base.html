@@ -273,14 +273,12 @@
     </script>
 
     <!-- Helix Chat Widget Injection (FASE D) -->
-    {% if user.is_authenticated and helix.status %}
+    {% if request.user.is_authenticated and helix.status %}
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
     <!-- Chat Widget Container -->
     <div id="helix-chat-widget">
-      {% include "assistant/partials/chat_bubble.html" with
-      conversation=helix.current_conversation
-      ollama_available=helix.ollama_available %}
+      {% include "assistant/partials/chat_bubble.html" with conversation=helix.current_conversation ollama_available=helix.ollama_available %}
     </div>
 
     <!-- Widget Styles -->

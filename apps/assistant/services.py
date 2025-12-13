@@ -117,7 +117,7 @@ def check_ollama_connection() -> bool:
 def get_vector_db() -> Optional[PGVector]:
     """Initialize or retrieve vector database connection."""
     if not DATABASE_URL or not embeddings:
-        return Nãone
+        return None
     
     try:
         return PGVector(
@@ -127,7 +127,7 @@ def get_vector_db() -> Optional[PGVector]:
         )
     except Exception as e:
         logger.error(f"Failed to initialize PGVector: {e}")
-        return Nãone
+        return None
 
 
 class HelixConfig:
@@ -561,7 +561,7 @@ Resposta (em Português, concisa e objetiva):"""
             logger.info(f"Processing query: {query[:50]}...")
             
             # Step 1: Retrieve context if not provided
-            if context_chunks is Nãone:
+            if context_chunks is None:
                 context_chunks = RAGPipeline.retrieve_context(
                     query=query,
                     company_id=conversation.company_id,
@@ -691,7 +691,7 @@ class HelixAssistant:
             logger.info(f"✓ Created assistant message: {assistant_msg.id}")
             
             # Update conversation title if first message
-            if conversation.title is Nãone or conversation.title == '':
+            if conversation.title is None or conversation.title == '':
                 title = HelixAssistant.summarize_conversation(user_message)
                 conversation.title = title
                 conversation.save()
@@ -847,9 +847,9 @@ def get_helix_status() -> Dict[str, any]:
         'llm_model': LLM_MODEL,
         'embedding_model': EMBEDDING_MODEL,
         'models_available': verify_ollama_models(),
-        'embeddings_initialized': embeddings is not Nãone,
-        'llm_initialized': llm is not Nãone,
-        'database_available': DATABASE_URL is not Nãone,
+        'embeddings_initialized': embeddings is not None,
+        'llm_initialized': llm is not None,
+        'database_available': DATABASE_URL is not None,
     }
 
 

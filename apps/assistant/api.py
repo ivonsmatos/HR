@@ -199,7 +199,7 @@ class MensagemViewSet(viewsets.ReadOnlyModelViewSet):
                 id=conversation_id,
                 user=request.user
             )
-        except Conversa.DoesNãotExist:
+        except Conversa.DoesNotExist:
             return Response(
                 {'error': 'Conversa not found'},
                 status=status.HTTP_404_NOT_FOUND
@@ -219,7 +219,7 @@ class MensagemViewSet(viewsets.ReadOnlyModelViewSet):
             'response': response_data['response'],
             'citations': response_data['citations'],
             'status': response_data['status'],
-            'message_id': last_message.id if last_message else Nãone,
+            'message_id': last_message.id if last_message else None,
         })
 
 
@@ -282,11 +282,11 @@ try:
         
         def resolve_document(self, info, id):
             if not info.context.user.is_authenticated:
-                return Nãone
+                return None
             try:
                 return Documento.objects.get(id=id, company=info.context.user.tenant)
-            except Documento.DoesNãotExist:
-                return Nãone
+            except Documento.DoesNotExist:
+                return None
         
         def resolve_conversations(self, info):
             if not info.context.user.is_authenticated:
@@ -295,11 +295,11 @@ try:
         
         def resolve_conversation(self, info, id):
             if not info.context.user.is_authenticated:
-                return Nãone
+                return None
             try:
                 return Conversa.objects.get(id=id, user=info.context.user)
-            except Conversa.DoesNãotExist:
-                return Nãone
+            except Conversa.DoesNotExist:
+                return None
     
     
     class SendMensagemMutation(graphene.Mutation):
@@ -322,7 +322,7 @@ try:
                     id=conversation_id,
                     user=info.context.user
                 )
-            except Conversa.DoesNãotExist:
+            except Conversa.DoesNotExist:
                 raise Exception("Conversa not found")
             
             response_data = HelixAssistant.chat(
@@ -345,6 +345,6 @@ try:
     # Create schema
     schema = graphene.Schema(query=Query, mutation=Mutation)
     
-except ImportarErro:
-    schema = Nãone
+except ImportError:
+    schema = None
 

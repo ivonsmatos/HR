@@ -25,9 +25,9 @@ class AuditoriaLoggingMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         """Store request details for later processing."""
-        request._start_time = request.META.get("SERVER_TIME", Nãone)
-        request._audit_user = request.user if request.user.is_authenticated else Nãone
-        return Nãone
+        request._start_time = request.META.get("SERVER_TIME", None)
+        request._audit_user = request.user if request.user.is_authenticated else None
+        return None
 
     def process_response(self, request, response):
         """Log the response and create audit entries if needed."""

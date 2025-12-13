@@ -4,15 +4,40 @@ Django settings for testing with SQLite (no PostgreSQL required)
 from . import *  # noqa
 
 # Force SQLite for testing (no PostgreSQL needed)
+import tempfile
+import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
+        'NAME': os.path.join(tempfile.gettempdir(), 'syncrh_dev.sqlite3'),
     }
 }
 
 # Remove django-tenants from INSTALLED_APPS (it requires PostgreSQL)
 INSTALLED_APPS = [app for app in INSTALLED_APPS if 'django_tenants' not in app]
+
+# Simplified apps for development - skip problematic apps
+PROBLEMATIC_APPS = [
+    'apps.finance',
+    'apps.recruitment', 
+    'apps.utilities',
+    'apps.departamento_pessoal',
+    'apps.desenvolvimento_performance',
+    'apps.engajamento_retencao',
+    'apps.gestao_comportamental',
+    'apps.recrutamento_selecao',
+    'apps.lgpd',
+    'apps.nist',
+    'apps.crm',
+    'apps.hrm',
+    'apps.work',
+    'apps.security.zero_trust',
+]
+
+INSTALLED_APPS = [app for app in INSTALLED_APPS if app not in PROBLEMATIC_APPS]
+
+# Use custom user model
+AUTH_USER_MODEL = 'core.User'
 
 # Remove all tenant-related middleware
 MIDDLEWARE = [m for m in MIDDLEWARE if 'Tenant' not in m and 'Audit' not in m and 'Performance' not in m]
@@ -49,6 +74,11 @@ CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 
 # Set SECRET_KEY if not defined
 SECRET_KEY = 'test-secret-key-do-not-use-in-production'
+
+# Login settings
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
 
 
 

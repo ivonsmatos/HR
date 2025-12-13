@@ -77,7 +77,7 @@ class GPUManager:
                     'gpu_type': 'cpu',
                     'device_count': 0,
                     'device_memory': [],
-                    'driver_version': Nãone,
+                    'driver_version': None,
                     'available': False,
                 }
         
@@ -87,7 +87,7 @@ class GPUManager:
                 'gpu_type': 'cpu',
                 'device_count': 0,
                 'device_memory': [],
-                'driver_version': Nãone,
+                'driver_version': None,
                 'available': False,
                 'error': str(e)
             }
@@ -164,7 +164,7 @@ class GPUManager:
                     return line.split('CUDA Versão')[1].strip().split('|')[0].strip()
         except Exception:
             pass
-        return Nãone
+        return None
     
     @staticmethod
     def _get_rocm_device_count() -> int:
@@ -219,7 +219,7 @@ class GPUManager:
             return result.stdout.strip()
         except Exception:
             pass
-        return Nãone
+        return None
     
     @staticmethod
     def configure_environment(gpu_type: str = 'auto') -> Dict[str, str]:

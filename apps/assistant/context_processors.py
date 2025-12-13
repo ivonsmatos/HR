@@ -23,7 +23,7 @@ def helix_context(request):
     - {{ helix.ollama_available }} - Boolean
     - {{ helix.models_available }} - List of model names
     - {{ helix.has_conversations }} - Boolean
-    - {{ helix.current_conversation }} - Current conversation or Nãone
+    - {{ helix.current_conversation }} - Current conversation or None
     """
     context = {
         'helix': {
@@ -31,7 +31,7 @@ def helix_context(request):
             'ollama_available': False,
             'models_available': [],
             'has_conversations': False,
-            'current_conversation': Nãone,
+            'current_conversation': None,
             'user_authenticated': request.user.is_authenticated,
         }
     }
@@ -48,11 +48,19 @@ def helix_context(request):
         context['helix']['models_available'] = status.get('models_available', [])
         
         # Check for user's conversations
-        conversations = Conversa.objects.filter(
-            user=request.user,
-            company=request.user.tenant,
-            is_active=True
-        ).first()
+        # Get company from user if available (multi-tenant)
+        filter_kwargs = {
+            'user': request.user,
+            'is_active': True
+        }
+        
+        # Add company filter if user has tenant attribute
+        if hasattr(request.user, 'tenant') and request.user.tenant:
+            filter_kwargs['company'] = request.user.tenant
+        elif hasattr(request.user, 'company') and request.user.company:
+            filter_kwargs['company'] = request.user.company
+        
+        conversations = Conversa.objects.filter(**filter_kwargs).first()
         
         if conversations:
             context['helix']['has_conversations'] = True
